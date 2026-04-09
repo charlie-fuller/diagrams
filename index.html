@@ -89,11 +89,12 @@
     transform: translateY(-1px);
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
   }
-  .diagram-list a .path {
-    font-family: var(--font-mono);
-    font-size: 11px;
+  .diagram-list a .desc {
+    font-size: 12px;
     color: var(--text-dim);
-    margin-top: 2px;
+    margin-top: 3px;
+    line-height: 1.4;
+    font-weight: 400;
   }
   @media (max-width: 600px) {
     body { padding: 20px; }
@@ -111,15 +112,15 @@
     <ul class="diagram-list">
       <li><a href="hire-to-retire/full-map.html">
         Full Process Map
-        <div class="path">hire-to-retire/full-map.html</div>
+        <div class="desc">End-to-end employee lifecycle from recruiting through offboarding with system touchpoints</div>
       </a></li>
       <li><a href="hire-to-retire/process-maps.html">
         Process Maps
-        <div class="path">hire-to-retire/process-maps.html</div>
+        <div class="desc">Detailed stage-by-stage breakdowns of each hire-to-retire phase</div>
       </a></li>
       <li><a href="hire-to-retire/flags.html">
         Workshop and Review Flags
-        <div class="path">hire-to-retire/flags.html</div>
+        <div class="desc">Pain points and automation opportunities identified during Katelynn's process mapping sessions</div>
       </a></li>
     </ul>
   </div>
@@ -129,11 +130,11 @@
     <ul class="diagram-list">
       <li><a href="procurement/process-map.html">
         Process Map
-        <div class="path">procurement/process-map.html</div>
+        <div class="desc">Contract lifecycle from request through renewal with approval gates and system handoffs</div>
       </a></li>
       <li><a href="procurement/ai-strategy.html">
         AI Implementation Roadmap
-        <div class="path">procurement/ai-strategy.html</div>
+        <div class="desc">Phased plan for AI-assisted contract review, risk flagging, and vendor management</div>
       </a></li>
     </ul>
   </div>
@@ -143,15 +144,15 @@
     <ul class="diagram-list">
       <li><a href="deal-desk/process-map.html">
         Process Maps
-        <div class="path">deal-desk/process-map.html</div>
+        <div class="desc">Quote-to-close workflow with discount approvals, rev rec, and deal structuring paths</div>
       </a></li>
       <li><a href="deal-desk/glean-actions-architecture.html">
-        Hybrid Architecture -- Glean Actions + Deterministic Calculators
-        <div class="path">deal-desk/glean-actions-architecture.html</div>
+        Hybrid Architecture -- Glean Actions + Calculators
+        <div class="desc">How Glean agents call deterministic calculator APIs for math while LLMs handle language</div>
       </a></li>
       <li><a href="deal-desk/infrastructure-path.html">
-        Infrastructure Path -- Where the Calculator Lives
-        <div class="path">deal-desk/infrastructure-path.html</div>
+        Infrastructure Path
+        <div class="desc">Three-phase deployment: local validation, temp demo, Contentful sandbox (G07)</div>
       </a></li>
     </ul>
   </div>
@@ -161,11 +162,11 @@
     <ul class="diagram-list">
       <li><a href="strategic-account-planning/process-map.html">
         To-Be Process Map
-        <div class="path">strategic-account-planning/process-map.html</div>
+        <div class="desc">Target-state strategic account planning process with AI-assisted research and scoring</div>
       </a></li>
       <li><a href="strategic-account-planning/process-map-with-data.html">
         Process Map with Data Mapping
-        <div class="path">strategic-account-planning/process-map-with-data.html</div>
+        <div class="desc">Same process map overlaid with data sources, system integrations, and field mappings</div>
       </a></li>
     </ul>
   </div>
@@ -174,8 +175,8 @@
     <div class="project-name">AI Platform</div>
     <ul class="diagram-list">
       <li><a href="ai-platform/decision-tree.html">
-        AI Platform Selection Decision Tree v3.0
-        <div class="path">ai-platform/decision-tree.html</div>
+        Platform Selection Decision Tree v3.0
+        <div class="desc">Decision framework for choosing between Glean, custom build, and third-party AI tools</div>
       </a></li>
     </ul>
   </div>
@@ -185,7 +186,7 @@
     <ul class="diagram-list">
       <li><a href="aesop/hydra-process-map.html">
         The Hydra -- Process Map
-        <div class="path">aesop/hydra-process-map.html</div>
+        <div class="desc">Adversarial evaluation swarm architecture for stress-testing AI agent instructions</div>
       </a></li>
     </ul>
   </div>
