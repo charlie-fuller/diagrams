@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IS AI Diagrams</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+    --bg: #fafaf9;
+    --surface: #ffffff;
+    --border: rgba(0, 0, 0, 0.07);
+    --border-bright: rgba(0, 0, 0, 0.14);
+    --text: #1c1917;
+    --text-dim: #78716c;
+    --accent: #4f46e5;
+    --accent-dim: rgba(79, 70, 229, 0.07);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0c0a09;
+      --surface: #1c1917;
+      --border: rgba(255, 255, 255, 0.06);
+      --border-bright: rgba(255, 255, 255, 0.12);
+      --text: #fafaf9;
+      --text-dim: #a8a29e;
+      --accent: #818cf8;
+      --accent-dim: rgba(129, 140, 248, 0.12);
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    padding: 48px 40px;
+    min-height: 100vh;
+  }
+  .container { max-width: 800px; margin: 0 auto; }
+  h1 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    margin-bottom: 36px;
+  }
+  .project {
+    margin-bottom: 28px;
+  }
+  .project-name {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+    padding-left: 2px;
+  }
+  .diagram-list {
+    list-style: none;
+  }
+  .diagram-list li {
+    margin-bottom: 6px;
+  }
+  .diagram-list a {
+    display: block;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    text-decoration: none;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+    transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .diagram-list a:hover {
+    border-color: var(--accent);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+  }
+  .diagram-list a .path {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+  @media (max-width: 600px) {
+    body { padding: 20px; }
+    h1 { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>IS AI Diagrams</h1>
+  <p class="subtitle">interactive architecture and strategy diagrams</p>
+
+  <div class="project">
+    <div class="project-name">Deal Desk</div>
+    <ul class="diagram-list">
+      <li><a href="deal-desk/glean-actions-architecture.html">
+        Hybrid Architecture -- Glean Actions + Deterministic Calculators
+        <div class="path">deal-desk/glean-actions-architecture.html</div>
+      </a></li>
+      <li><a href="deal-desk/infrastructure-path.html">
+        Infrastructure Path -- Where the Calculator Lives
+        <div class="path">deal-desk/infrastructure-path.html</div>
+      </a></li>
+    </ul>
+  </div>
+
+  <div class="project">
+    <div class="project-name">AI Platform</div>
+    <ul class="diagram-list">
+      <li><a href="ai-platform/decision-tree.html">
+        AI Platform Selection Decision Tree v3.0
+        <div class="path">ai-platform/decision-tree.html</div>
+      </a></li>
+    </ul>
+  </div>
+
+  <div class="project">
+    <div class="project-name">AESOP</div>
+    <ul class="diagram-list">
+      <li><a href="aesop/hydra-process-map.html">
+        The Hydra -- Process Map
+        <div class="path">aesop/hydra-process-map.html</div>
+      </a></li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>
