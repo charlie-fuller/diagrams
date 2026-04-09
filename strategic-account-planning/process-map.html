@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategic Account Plan - To-Be Process Map</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #1E3A5F;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+        .legend-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        .legend-ae { background: #3B82F6; }
+        .legend-bdr { background: #8B5CF6; }
+        .legend-csm { background: #10B981; }
+        .legend-pm { background: #F59E0B; }
+        .legend-se { background: #EF4444; }
+        .legend-ve { background: #EC4899; }
+        .legend-ai { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .legend-data { background: #6B7280; }
+
+        .swimlanes {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .lane-labels {
+            background: #1E3A5F;
+            color: white;
+        }
+        .lane-label {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 10px;
+            font-weight: 600;
+            font-size: 11px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .lane-label:last-child {
+            border-bottom: none;
+        }
+        .process-area {
+            overflow-x: auto;
+        }
+        .phases {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(200px, 1fr));
+            min-width: 1200px;
+        }
+        .phase-header {
+            background: #2C5282;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 13px;
+            border-right: 1px solid rgba(255,255,255,0.2);
+        }
+        .phase-header:last-child {
+            border-right: none;
+        }
+        .phase-column {
+            border-right: 1px solid #e5e7eb;
+            min-height: 100%;
+        }
+        .phase-column:last-child {
+            border-right: none;
+        }
+        .lane-row {
+            height: 120px;
+            padding: 8px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: flex-start;
+        }
+        .lane-row:last-child {
+            border-bottom: none;
+        }
+        .task {
+            background: #f3f4f6;
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 10px;
+            border-left: 3px solid;
+            width: 100%;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .task:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .task-ae { border-color: #3B82F6; background: #EFF6FF; }
+        .task-bdr { border-color: #8B5CF6; background: #F5F3FF; }
+        .task-csm { border-color: #10B981; background: #ECFDF5; }
+        .task-pm { border-color: #F59E0B; background: #FFFBEB; }
+        .task-se { border-color: #EF4444; background: #FEF2F2; }
+        .task-ve { border-color: #EC4899; background: #FDF2F8; }
+        .task-ai { border-color: #7C3AED; background: linear-gradient(135deg, #F5F3FF 0%, #FDF2F8 100%); }
+        .task-data { border-color: #6B7280; background: #F9FAFB; }
+
+        .task-title {
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .task-detail {
+            color: #666;
+            font-size: 9px;
+        }
+        .tool-badge {
+            display: inline-block;
+            background: #1E3A5F;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 8px;
+            margin-top: 3px;
+        }
+        .automation-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 8px;
+            margin-top: 3px;
+        }
+        .output-section {
+            margin-top: 30px;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .output-section h2 {
+            color: #1E3A5F;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .outputs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .output-card {
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 15px;
+            transition: border-color 0.2s;
+        }
+        .output-card:hover {
+            border-color: #3B82F6;
+        }
+        .output-card h3 {
+            color: #1E3A5F;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        .output-card ul {
+            font-size: 11px;
+            color: #666;
+            padding-left: 15px;
+        }
+        .output-card li {
+            margin-bottom: 4px;
+        }
+        .data-flow {
+            margin-top: 30px;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .data-flow h2 {
+            color: #1E3A5F;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .data-sources {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+        .data-source {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 12px;
+            border-left: 4px solid #6B7280;
+        }
+        .data-source h4 {
+            font-size: 12px;
+            color: #1E3A5F;
+            margin-bottom: 6px;
+        }
+        .data-source p {
+            font-size: 10px;
+            color: #666;
+        }
+        .data-source.gap {
+            border-left-color: #EF4444;
+            background: #FEF2F2;
+        }
+        .notes-section {
+            margin-top: 30px;
+            background: #FFFBEB;
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid #F59E0B;
+        }
+        .notes-section h2 {
+            color: #92400E;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .notes-section ul {
+            font-size: 12px;
+            color: #78350F;
+            padding-left: 20px;
+        }
+        .notes-section li {
+            margin-bottom: 6px;
+        }
+        .arrow-down {
+            text-align: center;
+            padding: 10px;
+            color: #9CA3AF;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Strategic Account Plan Creation - "To-Be" Process Map</h1>
+        <p class="subtitle">Workshop Consensus | January 16, 2026 | Target: 70-80% Automation</p>
+
+        <div class="legend">
+            <div class="legend-item"><div class="legend-box legend-ae"></div> Account Executive (Owner)</div>
+            <div class="legend-item"><div class="legend-box legend-bdr"></div> BDR (Resource)</div>
+            <div class="legend-item"><div class="legend-box legend-csm"></div> CSM</div>
+            <div class="legend-item"><div class="legend-box legend-pm"></div> Partner Manager</div>
+            <div class="legend-item"><div class="legend-box legend-se"></div> Sales Engineer</div>
+            <div class="legend-item"><div class="legend-box legend-ve"></div> Value Engineering</div>
+            <div class="legend-item"><div class="legend-box legend-ai"></div> AI/Agent Assisted</div>
+            <div class="legend-item"><div class="legend-box legend-data"></div> Data Source</div>
+        </div>
+
+        <div class="swimlanes">
+            <div class="lane-labels">
+                <div class="lane-label" style="height: 50px; background: #2C5282;">PHASE</div>
+                <div class="lane-label">Account<br>Executive</div>
+                <div class="lane-label">BDR</div>
+                <div class="lane-label">CSM</div>
+                <div class="lane-label">Partner<br>Manager</div>
+                <div class="lane-label">Sales<br>Engineer</div>
+                <div class="lane-label">Value<br>Engineering</div>
+                <div class="lane-label">AI / Agents</div>
+                <div class="lane-label">Data<br>Sources</div>
+            </div>
+
+            <div class="process-area">
+                <div class="phases">
+                    <!-- Phase Headers -->
+                    <div class="phase-header">1. KICKOFF<br><span style="font-size:10px;font-weight:normal;">Define Scope & Roles</span></div>
+                    <div class="phase-header">2. LANDSCAPE &<br>WHITESPACE<br><span style="font-size:10px;font-weight:normal;">Unified Map Creation</span></div>
+                    <div class="phase-header">3. INTERNAL<br>FOOTPRINT<br><span style="font-size:10px;font-weight:normal;">Existing Customer Data</span></div>
+                    <div class="phase-header">4. PARTNER<br>LEVERAGE<br><span style="font-size:10px;font-weight:normal;">SI/ISV Mapping</span></div>
+                    <div class="phase-header">5. POWER MAPPING<br><span style="font-size:10px;font-weight:normal;">(Simplified)</span></div>
+                    <div class="phase-header">6. STRATEGIC<br>ALIGNMENT<br><span style="font-size:10px;font-weight:normal;">The 3 Whys</span></div>
+                </div>
+
+                <!-- AE Row -->
+                <div class="phases">
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-ae">
+                                <div class="task-title">Initiate Account Plan</div>
+                                <div class="task-detail">Select strategic account, define objectives</div>
+                            </div>
+                            <div class="task task-ae">
+                                <div class="task-title">Assign BDR Division</div>
+                                <div class="task-detail">AE: above line | BDR: below line & wide</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-ae">
+                                <div class="task-title">Review & Validate Output</div>
+                                <div class="task-detail">QA Deep Research results, verify subsidiaries</div>
+                            </div>
+                            <div class="task task-ae">
+                                <div class="task-title">Populate Unified Map</div>
+                                <div class="task-detail">Nationwide template + MAPs, Delivery Arch</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-ae">
+                                <div class="task-title">Merge Footprint Data</div>
+                                <div class="task-detail">Add ARR, renewal, health to whitespace</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-ae">
+                                <div class="task-title">Request Partner Intel</div>
+                                <div class="task-detail">Submit Partner Intelligence Request to PM</div>
+                            </div>
+                            <div class="task task-ae">
+                                <div class="task-title">Add SI/ISV Columns</div>
+                                <div class="task-detail">Integrate into unified whitespace map</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-ae">
+                                <div class="task-title">Capture C-Suite Baseline</div>
+                                <div class="task-detail">CEO, CMO, CDO, CTO, CIO + VP level</div>
+                            </div>
+                            <div class="task task-ae">
+                                <div class="task-title">Note Known Champions</div>
+                                <div class="task-detail">Existing relationships, detractors</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-ae">
+                                <div class="task-title">Review 3 Whys Output</div>
+                                <div class="task-detail">Why Now, Why Change, Why Contentful</div>
+                            </div>
+                            <div class="task task-ae">
+                                <div class="task-title">Finalize Account Plan</div>
+                                <div class="task-detail">Present to leadership, iterate</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BDR Row -->
+                <div class="phases">
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-bdr">
+                                <div class="task-title">Receive Assignment</div>
+                                <div class="task-detail">Understand account, agree on division</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-bdr">
+                                <div class="task-title">Execute Landscape Research</div>
+                                <div class="task-detail">At AE-level quality</div>
+                            </div>
+                            <div class="task task-bdr">
+                                <div class="task-title">Validate Tech Stack</div>
+                                <div class="task-detail">BuiltWith, Wappalyzer verification</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-bdr">
+                                <div class="task-title">Research Previous Contacts</div>
+                                <div class="task-detail">Explore closed/lost relationships</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row"></div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-bdr">
+                                <div class="task-title">Build Contact List</div>
+                                <div class="task-detail">Below power line, go wide</div>
+                                <span class="tool-badge">Outreach</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row"></div>
+                    </div>
+                </div>
+
+                <!-- CSM Row -->
+                <div class="phases">
+                    <div class="phase-column">
+                        <div class="lane-row"></div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row"></div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-csm">
+                                <div class="task-title">Provide CSM Brief</div>
+                                <div class="task-detail">Account health, usage trends, risks</div>
+                            </div>
+                            <div class="task task-csm">
+                                <div class="task-title">Share Success Stories</div>
+                                <div class="task-detail">Use case references, expansion signals</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row"></div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-csm">
+                                <div class="task-title">Identify Key Relationships</div>
+                                <div class="task-detail">Champions, stakeholders at account</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row"></div>
+                    </div>
+                </div>
+
+                <!-- PM Row -->
+                <div class="phases">
+                    <div class="phase-column">
+                        <div class="lane-row"></div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row"></div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row"></div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-pm">
+                                <div class="task-title">Pull Crossbeam Data</div>
+                                <div class="task-detail">AEs don't have direct access</div>
+                                <span class="tool-badge">Crossbeam</span>
+                            </div>
+                            <div class="task task-pm">
+                                <div class="task-title">Provide Partner Context</div>
+                                <div class="task-detail">Role in account, next steps</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row"></div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row"></div>
+                    </div>
+                </div>
+
+                <!-- SE Row -->
+                <div class="phases">
+                    <div class="phase-column">
+                        <div class="lane-row"></div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-se">
+                                <div class="task-title">Review BuiltWith Data</div>
+                                <div class="task-detail">Technical context on stack</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-se">
+                                <div class="task-title">Access Close/Lost History</div>
+                                <div class="task-detail">Technical reasons for past outcomes</div>
+                                <span class="tool-badge">Salesforce</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row"></div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row"></div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-se" style="opacity: 0.5;">
+                                <div class="task-title">Technical Blueprinting</div>
+                                <div class="task-detail">⚠️ MOVED TO OPPORTUNITY STAGE</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VE Row -->
+                <div class="phases">
+                    <div class="phase-column">
+                        <div class="lane-row"></div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row"></div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row"></div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row"></div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row"></div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-ve">
+                                <div class="task-title">Transform to IVP Doc</div>
+                                <div class="task-detail">Deep Research → Exec Brief</div>
+                            </div>
+                            <div class="task task-ve">
+                                <div class="task-title">Create Visual POV</div>
+                                <div class="task-detail">Signet Exec Brief format</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI/Agent Row -->
+                <div class="phases">
+                    <div class="phase-column">
+                        <div class="lane-row"></div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-ai">
+                                <div class="task-title">Deep Research</div>
+                                <div class="task-detail">Subsidiaries, domains, tech stack</div>
+                                <span class="automation-badge">Gemini / ChatGPT</span>
+                            </div>
+                            <div class="task task-ai">
+                                <div class="task-title">QA Agent Validation</div>
+                                <div class="task-detail">Confidence scoring, citation check</div>
+                                <span class="automation-badge">75-80% auto QA</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-ai">
+                                <div class="task-title">Account Navigator</div>
+                                <div class="task-detail">Existing customer patterns</div>
+                                <span class="automation-badge">Glean</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-ai">
+                                <div class="task-title">Partner Mapping Agent</div>
+                                <div class="task-detail">Crossbeam + BuiltWith synthesis</div>
+                                <span class="automation-badge">Future</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-ai">
+                                <div class="task-title">Alfred V2 / Prospector</div>
+                                <div class="task-detail">Contact research, org mapping</div>
+                                <span class="automation-badge">Glean</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-ai">
+                                <div class="task-title">Deep Research - 3 Whys</div>
+                                <div class="task-detail">10-K analysis, earnings calls</div>
+                                <span class="automation-badge">One-shot prompt</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Sources Row -->
+                <div class="phases">
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-data">
+                                <div class="task-title">Salesforce Account</div>
+                                <div class="task-detail">Account hierarchy, history</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-data">
+                                <div class="task-title">SEC 10-K (Exhibit 21)</div>
+                                <div class="task-detail">Subsidiaries list</div>
+                            </div>
+                            <div class="task task-data">
+                                <div class="task-title">BuiltWith (parsed)</div>
+                                <div class="task-detail">CMS, Frontend, Commerce, P13N</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-data">
+                                <div class="task-title">Tableau / Gatekeeper</div>
+                                <div class="task-detail">Usage, spaces, content types</div>
+                            </div>
+                            <div class="task task-data" style="border-color: #EF4444; background: #FEF2F2;">
+                                <div class="task-title">⚠️ SunRush (GAP)</div>
+                                <div class="task-detail">MAPs data needed</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-data">
+                                <div class="task-title">Crossbeam (via PM)</div>
+                                <div class="task-detail">SI/ISV relationships</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-data">
+                                <div class="task-title">LinkedIn Sales Nav</div>
+                                <div class="task-detail">Org chart, titles</div>
+                            </div>
+                            <div class="task task-data">
+                                <div class="task-title">ZoomInfo</div>
+                                <div class="task-detail">Contact data (verify!)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-column">
+                        <div class="lane-row">
+                            <div class="task task-data">
+                                <div class="task-title">Annual Reports / IR</div>
+                                <div class="task-detail">Strategy, priorities, big bets</div>
+                            </div>
+                            <div class="task task-data">
+                                <div class="task-title">Earnings Calls</div>
+                                <div class="task-detail">Executive mandates</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="arrow-down">▼</div>
+
+        <div class="output-section">
+            <h2>📄 Output Artifacts</h2>
+            <div class="outputs-grid">
+                <div class="output-card">
+                    <h3>Unified Whitespace Map</h3>
+                    <ul>
+                        <li>Business Unit / LOB rows</li>
+                        <li>Product columns (Web, Commerce, Mobile, KB, P13N, Portal)</li>
+                        <li><strong>ADDED:</strong> MAPs, Delivery Architecture, Current Spend</li>
+                        <li>SI/ISV Partner columns</li>
+                        <li>Internal footprint merged (ARR, Health)</li>
+                        <li>Status: SOLD | Competitor | Whitespace</li>
+                    </ul>
+                </div>
+                <div class="output-card">
+                    <h3>Partner Leverage Plan</h3>
+                    <ul>
+                        <li>Partner Account name</li>
+                        <li>Use Cases supported</li>
+                        <li>Key Stakeholders</li>
+                        <li>Role in Account (Value Driver, Inactive, etc.)</li>
+                        <li>Notable Next Steps</li>
+                    </ul>
+                </div>
+                <div class="output-card">
+                    <h3>Power Map (Simplified)</h3>
+                    <ul>
+                        <li>C-Suite: CEO, CMO, CDO, CTO, CIO</li>
+                        <li>VP Level: Marketing, IT/Digital</li>
+                        <li>Known Champions</li>
+                        <li>Known Detractors</li>
+                        <li><em>Detailed mapping → Opportunity Stage</em></li>
+                    </ul>
+                </div>
+                <div class="output-card">
+                    <h3>IVP Document (3 Whys)</h3>
+                    <ul>
+                        <li>Strategic Mandate</li>
+                        <li>Why Now (triggers, pressures)</li>
+                        <li>Why Change (pain points, gaps)</li>
+                        <li>Why Contentful (value alignment)</li>
+                        <li>Projected Business Outcomes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="data-flow">
+            <h2>🗄️ Data Sources & Gaps</h2>
+            <div class="data-sources">
+                <div class="data-source">
+                    <h4>Salesforce</h4>
+                    <p>Account hierarchy, close/lost, BuiltWith blob</p>
+                </div>
+                <div class="data-source">
+                    <h4>Glean</h4>
+                    <p>Account Navigator, Alfred V2, internal docs</p>
+                </div>
+                <div class="data-source">
+                    <h4>Tableau / Gatekeeper</h4>
+                    <p>Product usage (fragmented across views)</p>
+                </div>
+                <div class="data-source">
+                    <h4>Crossbeam (via PM)</h4>
+                    <p>Partner relationships, overlaps</p>
+                </div>
+                <div class="data-source">
+                    <h4>LinkedIn Sales Nav</h4>
+                    <p>Org charts, contacts (limited usefulness)</p>
+                </div>
+                <div class="data-source">
+                    <h4>Deep Research</h4>
+                    <p>Gemini/ChatGPT for 10-K, earnings, web crawl</p>
+                </div>
+                <div class="data-source gap">
+                    <h4>⚠️ GAP: SunRush</h4>
+                    <p>MAPs data not yet available</p>
+                </div>
+                <div class="data-source gap">
+                    <h4>⚠️ GAP: BuiltWith Parsing</h4>
+                    <p>Currently unstructured "blob" in SF</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="notes-section">
+            <h2>⚠️ Key Workshop Decisions</h2>
+            <ul>
+                <li><strong>Technical Blueprinting REMOVED</strong> from account planning - moved to opportunity stage</li>
+                <li><strong>Power Mapping SIMPLIFIED</strong> to C-Suite baseline only - detailed mapping at opportunity stage</li>
+                <li><strong>Prompt Library NOT recommended</strong> - focus on conversational AI fluency ("cognitive shifts" training)</li>
+                <li><strong>AE/BDR Division</strong> kept organic - agree at kickoff per account, AE accountable</li>
+                <li><strong>Deep Research</strong> preferred over standard ChatGPT (~99% vs unreliable accuracy)</li>
+                <li><strong>QA still required</strong> - "Trust but verify" even with AI assistance</li>
+                <li><strong>Target: 70-80% automation</strong> - break into 10% incremental improvements</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deal Desk — Process Maps</title>
+<style>
+:root {
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --text: #1a1a2e;
+  --text-2: #4a5568;
+  --text-3: #718096;
+  --border: #e2e8f0;
+  --border-light: #f1f5f9;
+
+  --sales:     #1d4ed8; --sales-bg:     #eff6ff;
+  --dd:        #6d28d9; --dd-bg:        #f5f3ff;
+  --approver:  #b45309; --approver-bg:  #fffbeb;
+  --sig:       #047857; --sig-bg:       #ecfdf5;
+
+  --decision-bg: #fef9c3; --decision-bdr: #facc15;
+  --start-bg:    #d1fae5; --start-bdr:    #10b981;
+  --stop-bg:     #fee2e2; --stop-bdr:     #ef4444;
+  --iface-bg:    #e0e7ff; --iface-bdr:    #6366f1;
+  --reject-bg:   #fef2f2; --reject-bdr:   #dc2626;
+
+  --flag-red: #dc2626;
+  --flag-bg:  #fef2f2;
+  --warn:     #d97706; --warn-bg: #fffbeb;
+  --low:      #6366f1; --low-bg:  #eef2ff;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.container { max-width: 100%; padding: 24px; }
+
+h1 { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+.subtitle { color: var(--text-2); font-size: 14px; margin-bottom: 20px; }
+
+/* === TABS === */
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 24px;
+  overflow-x: auto;
+}
+.tab {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-2);
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.tab:hover { color: var(--text); background: #f8fafc; }
+.tab.active { color: var(--dd); border-bottom-color: var(--dd); font-weight: 600; }
+.tab .flag-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px; height: 17px;
+  background: var(--flag-red);
+  color: white;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 700;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* === LEGEND === */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 12px 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 12px;
+  color: var(--text-2);
+}
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-swatch {
+  width: 20px; height: 14px;
+  border-radius: 3px;
+  border: 2px solid;
+  flex-shrink: 0;
+}
+.legend-swatch.process  { background: var(--card);        border-color: #cbd5e0; }
+.legend-swatch.decision { background: var(--decision-bg); border-color: var(--decision-bdr); }
+.legend-swatch.start    { background: var(--start-bg);    border-color: var(--start-bdr);    border-radius: 7px; }
+.legend-swatch.stop     { background: var(--stop-bg);     border-color: var(--stop-bdr);     border-radius: 7px; }
+.legend-swatch.iface    { background: var(--iface-bg);    border-color: var(--iface-bdr); }
+.legend-swatch.reject   { background: var(--reject-bg);   border-color: var(--reject-bdr); }
+.legend-flag { width: 8px; height: 8px; background: var(--flag-red); border-radius: 50%; flex-shrink: 0; }
+
+/* === STATS BAR === */
+.stats-bar {
+  display: flex;
+  gap: 24px;
+  padding: 12px 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+.stat { display: flex; align-items: center; gap: 6px; }
+.stat-num { font-weight: 800; font-size: 20px; line-height: 1; }
+.stat-num.red  { color: var(--flag-red); }
+.stat-num.warn { color: var(--warn); }
+.stat-num.blue { color: var(--dd); }
+.stat-label { color: var(--text-2); font-size: 12px; }
+
+/* === FILTER BAR === */
+.filter-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.filter-label { font-size: 13px; font-weight: 600; color: var(--text-2); }
+.filter-btn {
+  padding: 4px 14px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--card);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.filter-btn:hover { border-color: var(--dd); color: var(--dd); }
+.filter-btn.active { background: var(--dd); color: white; border-color: var(--dd); }
+
+/* === SWIMLANE === */
+.swimlane-diagram { overflow-x: auto; padding-bottom: 16px; }
+.swimlane {
+  display: flex;
+  border-bottom: 1px solid var(--border-light);
+  min-height: 100px;
+  align-items: stretch;
+}
+.swimlane:last-child { border-bottom: none; }
+
+.lane-label {
+  min-width: 120px; width: 120px;
+  padding: 16px 10px;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: #f8fafc;
+  border-right: 3px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+.lane-label.sales    { color: var(--sales);    border-color: var(--sales);    background: var(--sales-bg); }
+.lane-label.dd       { color: var(--dd);       border-color: var(--dd);       background: var(--dd-bg); }
+.lane-label.approver { color: var(--approver); border-color: var(--approver); background: var(--approver-bg); }
+.lane-label.sig      { color: var(--sig);      border-color: var(--sig);      background: var(--sig-bg); }
+
+.lane-content {
+  display: flex;
+  align-items: center;
+  padding: 16px 12px;
+  gap: 6px;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+
+/* === STEP CARDS === */
+.step {
+  position: relative;
+  min-width: 160px;
+  max-width: 210px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 2px solid var(--border);
+  background: var(--card);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  user-select: none;
+}
+.step:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); transform: translateY(-1px); }
+.step.expanded { max-width: 380px; }
+.step.start, .step.end { border-radius: 20px; }
+.step.start    { background: var(--start-bg);    border-color: var(--start-bdr); }
+.step.end      { background: var(--start-bg);    border-color: var(--start-bdr); }
+.step.decision { background: var(--decision-bg); border-color: var(--decision-bdr); }
+.step.reject   { background: var(--reject-bg);   border-color: var(--reject-bdr); }
+.step.iface    { background: var(--iface-bg);    border-color: var(--iface-bdr); }
+
+.step-title { font-weight: 700; font-size: 12px; line-height: 1.4; margin-bottom: 2px; }
+.step-summary { color: var(--text-3); font-size: 11px; line-height: 1.3; }
+.step-badges { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 5px; }
+
+.sys-tag {
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+}
+.sys-tag.sfdc { background: #dbeafe; color: #1e40af; }
+.sys-tag.cpq  { background: #ede9fe; color: #5b21b6; }
+.sys-tag.ds   { background: #d1fae5; color: #065f46; }
+
+.flag-dot {
+  width: 8px; height: 8px;
+  background: var(--flag-red);
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 1px;
+  title: "Has improvement flag";
+}
+
+/* Decision paths shown in expanded view */
+.decision-paths { display: flex; gap: 6px; margin-top: 6px; }
+.path-yes, .path-no {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+.path-yes { background: var(--start-bg); color: var(--sig); }
+.path-no  { background: var(--stop-bg);  color: var(--flag-red); }
+
+/* Expanded detail content */
+.step-detail {
+  display: none;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+.step.expanded .step-detail { display: block; }
+.step-detail p { margin-bottom: 6px; }
+.step-detail p:last-child { margin-bottom: 0; }
+
+.flag-note {
+  margin-top: 8px;
+  padding: 8px 10px;
+  background: var(--flag-bg);
+  border-left: 3px solid var(--flag-red);
+  border-radius: 0 4px 4px 0;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.flag-note + .flag-note { margin-top: 4px; }
+.flag-note strong { color: var(--flag-red); font-weight: 700; }
+
+/* === ARROWS === */
+.arrow {
+  display: flex; align-items: center; justify-content: center;
+  width: 20px; flex-shrink: 0;
+  color: #cbd5e0; font-size: 14px;
+  font-weight: 700;
+}
+.arrow.down { transform: rotate(90deg); width: auto; padding: 4px 0; font-size: 12px; color: #a0aec0; }
+
+/* === PROCESS NOTE === */
+.process-note {
+  margin: 12px 0 8px;
+  padding: 10px 14px;
+  background: #f8fafc;
+  border-left: 3px solid var(--dd);
+  border-radius: 0 6px 6px 0;
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+.process-note strong { color: var(--text); }
+
+/* === SECTION HEADER === */
+.section-hdr {
+  font-size: 16px; font-weight: 700;
+  margin: 24px 0 8px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+}
+.section-desc { font-size: 13px; color: var(--text-2); margin-bottom: 16px; line-height: 1.5; }
+
+/* === IMPROVEMENT FLAGS PAGE === */
+.flag-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 700px) { .flag-cards { grid-template-columns: 1fr; } }
+.flag-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 20px;
+  border-left: 4px solid var(--flag-red);
+}
+.flag-card.medium { border-left-color: var(--warn); }
+.flag-card.low    { border-left-color: var(--low); }
+.flag-card__head {
+  display: flex; align-items: flex-start; gap: 10px;
+  margin-bottom: 10px;
+}
+.flag-card__priority {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;
+  padding: 2px 8px; border-radius: 4px;
+  flex-shrink: 0; margin-top: 1px;
+}
+.priority-high   { background: var(--flag-bg);  color: var(--flag-red); }
+.priority-medium { background: var(--warn-bg);   color: var(--warn); }
+.priority-low    { background: var(--low-bg);    color: var(--low); }
+.flag-card__title { font-size: 14px; font-weight: 700; line-height: 1.3; }
+.flag-card__body  { font-size: 13px; color: var(--text-2); line-height: 1.6; margin-bottom: 10px; }
+.flag-card__meta  { display: flex; gap: 8px; flex-wrap: wrap; }
+.flag-card__tag {
+  font-size: 11px; font-weight: 500;
+  padding: 2px 9px; border-radius: 4px;
+  background: #f1f5f9; color: var(--text-2);
+}
+.flag-card__action {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text-2);
+  border: 1px solid var(--border);
+}
+.flag-card__action strong { color: var(--text); display: block; margin-bottom: 2px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* Filter hiding */
+.step.hidden { display: none; }
+
+/* Dimming */
+.step.dimmed { opacity: 0.2; pointer-events: none; }
+
+@media (max-width: 700px) {
+  .lane-label { min-width: 80px; width: 80px; font-size: 10px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Deal Desk Process Map</h1>
+  <p class="subtitle">Source: FY27 Booking Policy + Deal Desk Reference Guide + Discovery call 3.9.2026 &nbsp;|&nbsp; <a href="deal-desk-index.html" style="color:var(--dd);">← Back to index</a></p>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-swatch start"></div> Start / End</div>
+    <div class="legend-item"><div class="legend-swatch process"></div> Process step</div>
+    <div class="legend-item"><div class="legend-swatch decision"></div> Decision</div>
+    <div class="legend-item"><div class="legend-swatch iface"></div> System interface</div>
+    <div class="legend-item"><div class="legend-swatch reject"></div> Rejection / stop</div>
+    <div class="legend-item"><div class="legend-flag"></div> Improvement flag</div>
+    <div class="legend-item"><span class="sys-tag sfdc">SFDC</span> Salesforce</div>
+    <div class="legend-item"><span class="sys-tag cpq">CPQ</span> Salesforce CPQ</div>
+    <div class="legend-item"><span class="sys-tag ds">DocuSign</span></div>
+    <div style="font-size:12px;color:var(--text-3);margin-left:auto;">Click any step to expand detail</div>
+  </div>
+
+  <div id="panels"></div>
+</div>
+
+<script>
+// ─── DATA ──────────────────────────────────────────────────────────────────
+
+const LANE_DEFS = {
+  sales:    { label: 'Sales Rep',          cls: 'sales' },
+  dd:       { label: 'Deal Desk',          cls: 'dd' },
+  approver: { label: 'Approvers',          cls: 'approver' },
+  sig:      { label: 'DocuSign / Contracts', cls: 'sig' },
+};
+
+const PROCESSES = [
+
+// ─── TAB 1: INTAKE & TRIAGE ───────────────────────────────────────────────
+{
+  id: 'intake',
+  title: 'Intake & Triage',
+  description: 'How a request enters the system, gets classified, and reaches the right workflow.',
+  flags: 8,
+  lanes: [
+    {
+      id: 'sales',
+      steps: [
+        { id: 's-submit', type: 'start', title: 'Rep submits request',
+          summary: 'SF Case · Slack/Chatter · Email alias',
+          detail: 'Three channels exist. Salesforce case (from Account or Opportunity page) is the preferred and tracked method. Slack/Chatter direct to the team is common but creates untracked work. Email to the dealdesk@ alias is also untracked. Slack and email submissions inflate true demand beyond what case metrics show.',
+          flags: ['Untracked submissions via Slack and email mean case metrics undercount real Deal Desk volume. Any agent solution needs to intercept or redirect these channels to be fully effective — not just the Salesforce case path.'],
+          sys: null },
+        { id: 's-case', type: 'iface', title: 'Case in Salesforce', sys: 'sfdc',
+          summary: 'Auto-links to opportunity when submitted from opp page',
+          detail: 'If submitted via Slack or email, Deal Desk must manually create the case record and link it to the opportunity. This adds time and loses original context from the message.',
+          flags: ['When a rep has attempted to build a quote before submitting a case, there is no automatic linkage between the case and that draft quote. DD must hunt for the draft manually. Auto-linking draft quotes to cases would speed triage significantly.'] },
+      ]
+    },
+    {
+      id: 'dd',
+      steps: [
+        { id: 'd-open', type: 'process', title: 'Open case · set In Progress', sys: 'sfdc',
+          summary: 'Assign, open, update status immediately',
+          detail: 'Open from the Deal Desk queue. Update status from "New" to "In Progress" to log start of work. The timestamp feeds SLA measurement — but only if status is updated correctly and consistently.',
+          flags: ['Case hygiene is inconsistently applied across the team. Some cases sit at "New" for days with no owner. Others are closed immediately without intermediate tracking. SLA data is unreliable — there is currently no accurate baseline for average resolution time. This matters because it makes it impossible to prove the agent is reducing DD workload without a credible pre-agent benchmark.'] },
+        { id: 'd-review', type: 'process', title: 'Review case details', sys: 'sfdc',
+          summary: 'Reason for Case · SO Type · Description · Attachments',
+          detail: 'Review: (1) Reason for Case pick list — tells you request type. (2) Opportunity Type — Initial, Renewal, Expansion, or Services. (3) Description — rep\'s notes. (4) Attachments. Check that attachments match what\'s in the case fields. Mismatches between a screenshot, a pricing calculator, and the case fields are a major source of back-and-forth.',
+          flags: ['Case classification is imprecise. Reps select the closest pick list value, not always the correct one. Reporting on request type trends cannot be fully trusted without manual review.',
+            'Attachments frequently contradict case fields and each other. Screenshots, pricing calculators, and opportunity data may all show different values. DD must manually reconcile before work can begin. A standardized attachment format with a naming convention would eliminate this.'] },
+        { id: 'd-reason', type: 'decision', title: 'Reason for Case?',
+          summary: 'SO Creation · Quote Assist · Account Validation · Other',
+          detail: 'The primary routing decision. Pick list values: SO Creation, Quote Assistance, Account Validation, P&P Assistance, Training & Enablement, DocuSign, Other. Roughly 80% of cases fall into SO Creation or Quote Assistance.',
+          yes: 'SO Creation → validate authority', no: 'Other → proceed to Quote Building', flags: ['Advisory requests ("I don\'t know what to offer my client given their budget") are a distinct use case not captured by any current pick list value. These consultative requests require product catalog and pricing knowledge, not policy lookup. They currently land under "Other" or "Quote Assistance" and are indistinguishable from simpler requests.'] },
+        { id: 'd-so-valid', type: 'decision', title: 'Valid reason for DD-assisted SO?',
+          summary: 'Only 4 scenarios qualify',
+          detail: 'Deal Desk should only assist with initial SO creation for: (1) Ramp deal structure, (2) Special or custom terms language, (3) Custom invoicing schedule, (4) System blocker. All other initial SOs should be built by the rep independently.',
+          yes: 'Valid reason → check required fields', no: 'No valid reason → kick back',
+          flags: ['The line between "DD should help" and "rep should do it themselves" is not consistently enforced. Some team members kick back immediately, others build the SO without pushing back. Before the agent can route this correctly, the team needs a documented, agreed list of valid DD-assisted scenarios. This is the highest-priority design decision for Phase 1 agent scope.'] },
+        { id: 'd-kickback', type: 'reject', title: 'Kick back to rep',
+          summary: 'Education note + self-service instruction',
+          detail: 'Reply to the case explaining that initial SO creation is within scope for the rep to complete themselves. Include the relevant Reference Guide section and a note about when DD assistance is appropriate. Re-classify the case.',
+          flags: [] },
+        { id: 'd-fields', type: 'process', title: 'Check required fields', sys: 'sfdc',
+          summary: '10 fields must be present before quoting',
+          detail: 'Required before any quote can begin: Bill To contact (full address + email), Ship To contact (full address + email), Start date, End date, SO Type (Initial/Renewal/Expansion), Products + quantities, Payment terms, Discount info (or explicit 0%), Org Key. If any are missing, do not begin the quote.',
+          flags: [
+            'Missing fields can be submitted. There is no Salesforce validation preventing a case from being submitted with key fields blank. This causes multi-step back-and-forth that delays every case. Validation rules on the case form are needed.',
+            'Contacts can be selected even when their Salesforce address or email is incomplete. The gap surfaces only when DD tries to stamp the contract — late in the process when it is most disruptive. An upstream warning when a rep selects a contact with incomplete address data would prevent this.',
+            'No cross-record validation between Case, Opportunity, and Quote. The same data exists in all three places with no automated check that they agree. DD finds conflicting values across objects and must manually reconcile.',
+            'Several case form fields accept freeform text where structured pick lists would improve data quality and make automated triage reliable.'
+          ] },
+        { id: 'd-fields-dec', type: 'decision', title: 'All required fields present?',
+          summary: '',
+          detail: 'Check all 10 required fields. A single missing field means you cannot proceed accurately.',
+          yes: 'All present → proceed to Quote Building', no: 'Fields missing → request info from rep', flags: [] },
+        { id: 'd-req-info', type: 'process', title: 'Request missing info from rep',
+          summary: 'Name each missing field explicitly · do not guess',
+          detail: 'Reply to the case with an explicit list of what is needed. Name each field by name. Do not attempt to fill in missing info or make assumptions — incorrect guesses create more back-and-forth than a single clear ask. Return to "Check required fields" when the rep responds.',
+          flags: ['Reps frequently answer only some of the requested questions, triggering multi-round spirals. Managers get tagged in without context. Cases can stall for days. An agent or template should track which questions remain unanswered and re-ask only the open items.'] },
+        { id: 'd-proceed', type: 'end', title: '→ Proceed to Quote Building',
+          summary: 'Continue to Tab 2',
+          detail: 'All required information is confirmed. Move to building the quote using the workflow for the correct opportunity type.',
+          flags: [] },
+      ]
+    }
+  ]
+},
+
+// ─── TAB 2: QUOTE BUILDING ────────────────────────────────────────────────
+{
+  id: 'quote',
+  title: 'Quote Building',
+  description: 'Building the Service Order for each deal type. Use the filter to focus on one type.',
+  flags: 2,
+  filterTypes: ['initial', 'renewal', 'expansion', 'services'],
+  lanes: [
+    {
+      id: 'dd',
+      steps: [
+        { id: 'q-entity', type: 'process', title: 'Verify entity', sys: 'cpq', filterTypes: ['initial','renewal','expansion','services'],
+          summary: 'Americas + ANZ = Inc · Rest of World = GmbH',
+          detail: 'Entity is driven by the Sold To address. Americas and ANZ accounts bill under Contentful Inc. All other regions bill under Contentful GmbH (or GmbH UK for UK-specific deals). This determines which signing group to use in DocuSign and which currency (USD vs EUR) applies.',
+          flags: [] },
+
+        // INITIAL
+        { id: 'q-nb-dates', type: 'process', title: 'Set term dates (Initial)', sys: 'cpq', filterTypes: ['initial'],
+          summary: 'End date = 1 day before full-year term',
+          detail: 'Term must be a standard length: 12, 24, or 36 months. End date is always 1 day before the full-year anniversary. Example: start Jan 1 → end Dec 31. Ramp deals: 2-year minimum average $25K/yr; Year 1 must be ≥30% of TCV (2-yr contract) or ≥20% (3-yr contract).',
+          flags: [] },
+        { id: 'q-nb-discount', type: 'process', title: 'Apply discount + uplift language (Initial)', sys: 'cpq', filterTypes: ['initial'],
+          summary: 'Pro max 20% · check plan limits · add uplift language',
+          detail: 'Pro plan: maximum 20% discount. Standard plans: vary. SLA charges cannot be discounted or modified. TAM add-on is not discountable. Titanium SLA requires subtotal ARR ≥$170K. Always add uplift language to the quote. Reference MSSA hyperlink by default; negotiated MSSA only if customer annual spend ≥$75K and legal approves.',
+          flags: [] },
+
+        // RENEWAL
+        { id: 'q-rn-match', type: 'process', title: 'Match prior agreement (Renewal)', sys: 'cpq', filterTypes: ['renewal'],
+          summary: 'Products · quantities · entity · legal agreement',
+          detail: 'Match all products and quantities from the prior agreement including any midterm upsells. Verify entity hasn\'t changed. Check the "MSA Type" and "MSA Date Signed" fields on the Account page to confirm legal agreement type.',
+          flags: [] },
+        { id: 'q-rn-compliance', type: 'process', title: 'Check usage compliance (Renewal)', sys: 'sfdc', filterTypes: ['renewal'],
+          summary: 'Users · asset bandwidth · API calls',
+          detail: 'Verify the customer\'s actual usage against their contracted limits for users, asset bandwidth, and API calls. If they are over their limits, add-ons must be included in the renewal quote. Do not renew at the old limits if usage has exceeded them.',
+          flags: [] },
+        { id: 'q-rn-mssa', type: 'decision', title: 'Customer on outdated MSA/CECA terms?', filterTypes: ['renewal'],
+          summary: '',
+          detail: 'Check MSA Type on the Account. If the customer is on old MSA or CECA terms, they must migrate to the current MSSA at renewal. This is mandatory — not optional. Reference the new MSSA hyperlink in the Terms & Conditions section of the quote.',
+          yes: 'Outdated terms → must migrate to current MSSA', no: 'Current terms → proceed', flags: [] },
+
+        // EXPANSION
+        { id: 'q-ex-coterm', type: 'process', title: 'Co-term + match governing agreement (Expansion)', sys: 'cpq', filterTypes: ['expansion'],
+          summary: 'End date · address · quote number · billing frequency',
+          detail: 'End date must match the governing agreement exactly — no exceptions. The address on the expansion quote must exactly match the governing agreement. Reference the governing agreement quote number in the "Special Notes & Terms" field. Billing frequency must match — cannot change midterm. The expansion is invoiced on a prorated basis but ARV reflects the full annualized total.',
+          flags: [] },
+        { id: 'q-ex-stub', type: 'decision', title: 'Stub deal? Start ≤90 days from renewal?', filterTypes: ['expansion'],
+          summary: '',
+          detail: 'If the expansion start date is 90 days or fewer from the customer\'s upcoming renewal date, it is classified as a Stub Deal. Stub deals carry significant attrition risk — the customer may not renew the expansion at renewal, triggering a de-booking and clawback.',
+          yes: 'Stub deal → DD approval + CSM/AM acknowledgement required', no: 'Not a stub deal → proceed to approval',
+          flags: ['No automated system check flags when an expansion start date falls within the 90-day stub deal window. Deal Desk must manually calculate this on every expansion case. A Salesforce validation or alert would prevent stub deals from progressing without the required approvals.'] },
+        { id: 'q-ex-stub-ok', type: 'process', title: 'Obtain Stub Deal approval', filterTypes: ['expansion'],
+          summary: 'DD approval + written CSM/AM acknowledgement',
+          detail: 'Get explicit Deal Desk approval for the stub deal. Obtain written acknowledgement from the CSM and/or AM that they understand the attrition risk — if the customer does not renew the expansion products, the expansion deal will be de-booked and the commission clawed back.',
+          flags: [] },
+
+        // SERVICES
+        { id: 'q-svc-address', type: 'process', title: 'Match governing agreement (Services)', sys: 'cpq', filterTypes: ['services'],
+          summary: 'Address · PSA reference · PS discount path',
+          detail: 'Address must match the governing agreement. If the customer is under an old MSA agreement, reference the PSA hyperlink (not MSSA) in Terms & Conditions. Services billed upfront if the quote also contains subscription products. PS discount approvals go through manager, not the standard discount chain.',
+          flags: [] },
+
+        { id: 'q-proceed', type: 'end', title: '→ Proceed to Approval', filterTypes: ['initial','renewal','expansion','services'],
+          summary: 'Continue to Tab 3',
+          detail: 'Quote is built. Submit for discount approval.',
+          flags: [] },
+      ]
+    }
+  ]
+},
+
+// ─── TAB 3: APPROVAL & SIGNATURE ──────────────────────────────────────────
+{
+  id: 'approval',
+  title: 'Approval & Signature',
+  description: 'Discount approval chain, then getting the contract signed.',
+  flags: 1,
+  lanes: [
+    {
+      id: 'dd',
+      steps: [
+        { id: 'a-disc-submit', type: 'process', title: 'Submit discount in Salesforce', sys: 'sfdc',
+          summary: 'All subscription opps require submission — enter 0 if no discount',
+          detail: 'Every subscription opportunity must be submitted for discount approval — even if no discount is applied. If no discount, enter 0 in the Special Incentives field. Do not leave it blank. For ramp deals, submit the Year 1 discount percentage (the highest). Use the Explanation for Discount field to document year-over-year percentages and ACV.',
+          flags: ['No system enforcement prevents a rep from leaving the discount field blank and progressing the opportunity. A Salesforce validation rule requiring the field to be populated before moving to the Approval stage would eliminate this gap.'] },
+      ]
+    },
+    {
+      id: 'approver',
+      steps: [
+        { id: 'a-disc-dec', type: 'decision', title: 'Approval required?',
+          summary: 'Based on discount % and opportunity type',
+          detail: 'Approval chain is determined by discount percentage and opportunity type. The full matrix is in Salesforce. Renewals are based on forecasted amount and net ACV/price uplift. Non-standard payment terms (>Net 30) require Credit team approval. AWS renewals with <5% increase require Todd Watts (SVP CX) + Steven Odell (Finance).',
+          yes: 'Approval needed → route per matrix', no: '0% or pre-approved → approved', flags: [] },
+        { id: 'a-disc-matrix', type: 'process', title: 'Route per discount approval matrix', sys: 'sfdc',
+          summary: 'Chain determined by discount %; renewal = ARV vs Amount',
+          detail: 'For initial deals and expansions: approval chain is based on the discount percentage per the matrix in Salesforce. For renewals: actual uplift % is auto-calculated from ARV and Amount fields. If the Amount field is changed after approval — the existing approval is deleted and must be re-submitted. Price uplift approval must be obtained before moving to Signature stage.',
+          flags: [] },
+        { id: 'a-ps-disc', type: 'process', title: 'PS discount approval (Services Only)',
+          summary: 'Inc → Chelsea Holm · GmbH → Georgina Linnell',
+          detail: 'Professional Services discounts follow a separate approval path. Inc cases go to Chelsea Holm (Manager of PS, Inc). GmbH cases go to Georgina Linnell. This is entirely separate from the standard subscription discount chain.',
+          flags: [] },
+        { id: 'a-approved', type: 'end', title: 'Discount approved',
+          summary: 'All required approvals confirmed',
+          detail: 'All required discount and/or uplift approvals are in place. Ready to proceed to signature.',
+          flags: [] },
+      ]
+    },
+    {
+      id: 'sig',
+      steps: [
+        { id: 's-stamp', type: 'process', title: 'Contentful stamp required', sys: 'ds',
+          summary: 'All executable docs must carry the stamp',
+          detail: 'Every document that requires signature — Service Order, MSSA, SOW, NDA — must carry the Contentful stamp near the signature blocks. Contracts submitted without the stamp will not be accepted and the deal will not be closed. The stamp is located near the signature blocks on all standard templates.',
+          flags: [] },
+        { id: 's-path', type: 'decision', title: 'Signature path?', sys: 'ds',
+          summary: 'Standard · Customer initiates · AE has DocuSign',
+          detail: 'Three paths exist. (1) Standard: DD sends via DocuSign, rep is CC\'d on the envelope and notified when signed — this is the default. (2) Customer initiates: provide the dealdesk@ alias with option to delegate — never share the signatory\'s direct email address. (3) AE has a DocuSign license and initiates: must select the correct signing group (Inc: Contentful Inc. Signing Group; GmbH: Contentful GmbH Signing Group) and add contracts@contentful.com to receive a copy.',
+          yes: 'Standard → DD sends via DocuSign', no: 'Exception → customer or AE initiates', flags: [] },
+        { id: 's-std', type: 'process', title: 'DD sends via DocuSign · rep CC\'d', sys: 'ds',
+          summary: 'Default path',
+          detail: 'Deal Desk sends the DocuSign envelope. Provide the name and email of the customer\'s signers. The rep is automatically CC\'d and receives a notification once the contract is signed.',
+          flags: [] },
+        { id: 's-cust', type: 'process', title: 'Customer initiates via dealdesk@ alias',
+          summary: 'Exception A · never share signatory direct email',
+          detail: 'Provide the customer with the dealdesk@ alias and an option to delegate. Deal Desk will route it for countersignature. Do not share the signatory\'s direct email address under any circumstances.',
+          flags: [] },
+        { id: 's-ae', type: 'process', title: 'AE initiates via DocuSign license', sys: 'ds',
+          summary: 'Exception B · must use correct signing group',
+          detail: 'If the AE has a DocuSign license: they must select the correct signing group (Inc: "Contentful Inc. Signing Group"; GmbH: "Contentful GmbH Signing Group"). Add contracts@contentful.com to receive a copy on the envelope. Alternatively, assign dealdesk@ for signature and we will delegate.',
+          flags: [] },
+        { id: 's-executed', type: 'end', title: 'Contract fully executed',
+          summary: 'All signatures obtained · proceed to booking',
+          detail: 'Both parties have signed. All required documents are fully executed. Ready for booking.',
+          flags: [] },
+      ]
+    }
+  ]
+},
+
+// ─── TAB 4: BOOKING ───────────────────────────────────────────────────────
+{
+  id: 'booking',
+  title: 'Booking',
+  description: 'When a deal gets booked and what is required before it can be.',
+  flags: 1,
+  lanes: [
+    {
+      id: 'dd',
+      steps: [
+        { id: 'b-rule', type: 'decision', title: 'Booking date rule', sys: 'sfdc',
+          summary: 'Later of: subscription start date OR signature date',
+          detail: 'Booking date = the later of the subscription start date or the signature date of the Service Order / MSSA. All required documents must be fully executed before booking — partial execution does not qualify. For auto-renewals: booked on subscription start date (no signature). For Professional Services: booked on latest signature date.',
+          yes: 'Standard → later of start/signature date', no: 'Auto-renewal / PS → see exceptions', flags: [] },
+        { id: 'b-mad', type: 'process', title: 'Month-and-Day exception check',
+          summary: 'Initials and Expansions only · not Renewals',
+          detail: 'Applies to Initial and Expansion deals only. If the subscription start date is one month and one day from the last day of the current month, AND the contract is signed and submitted in the current month, the deal books in the current month. Closing and booking date is set to the last day of the current month. Submission must arrive before noon on the 1st of the following month. Example: Start date April 1, signed in February → books as February. Start date April 2 → books as March.',
+          flags: [] },
+        { id: 'b-orgkey', type: 'process', title: 'Verify Org Key in handover notes', sys: 'sfdc',
+          summary: 'Required for all subscription deals before booking',
+          detail: 'The Org Key must be confirmed in the handover notes for every subscription deal. If the Org Key is missing, the opportunity will not be booked. For Teams/Self Serve upgrade to Enterprise: follow the upgrade steps. For net new customer: customer creates a free account and locates the Org Key in their settings.',
+          flags: ['No automated validation prevents booking when the Org Key field is missing from handover notes. This relies entirely on manual checking. A Salesforce validation rule requiring the Org Key before moving to Closed Won would prevent late-stage blockers.'] },
+        { id: 'b-booked', type: 'end', title: 'Deal Booked',
+          summary: 'Opportunity moves to Closed Won',
+          detail: 'All requirements met. Booking date is set. Opportunity moves to Closed Won. Order to Cash processes the contract.',
+          flags: [] },
+      ]
+    }
+  ]
+},
+
+// ─── TAB 5: IMPROVEMENT FLAGS ─────────────────────────────────────────────
+{
+  id: 'flags',
+  title: 'Improvement Flags',
+  description: 'Process gaps and design decisions that need to be resolved — either before building the agent, or to make the agent more effective.',
+  flags: 16,
+  isFlags: true,
+  items: [
+    { priority: 'high', title: 'SO Creation boundary is undefined and inconsistently enforced',
+      body: 'Policy says reps should build initial SOs themselves. In practice, enforcement varies by team member — some push back, others comply. Before the agent can route SO creation cases correctly, the team needs a written, agreed list of what qualifies as a valid DD-assisted SO scenario.',
+      owner: 'DD Process', area: 'Agent design', action: 'Define and document the list of valid DD-assisted SO scenarios. Socialize with the team and get sign-off before writing agent instructions.' },
+    { priority: 'high', title: 'No accurate baseline for Deal Desk resolution time',
+      body: 'Case hygiene is inconsistent — status updates are missed, time-spent fields are guessed, and Slack/email requests are not counted. Without a reliable pre-agent baseline, it will be impossible to demonstrate that the agent is reducing DD workload.',
+      owner: 'DD Process', area: 'KPI measurement', action: 'Add "Audit Information" web part to Deal Desk case record type (currently available in CX Operations cases). Establish consistent hygiene practice before agent launch to create a clean baseline.' },
+    { priority: 'high', title: 'Slack and email submissions are invisible to metrics',
+      body: 'A significant share of DD support happens via Slack/Chatter and email — none of it tracked in Salesforce. Case counts alone undercount true demand. The agent will only intercept Salesforce-submitted cases unless it is deployed to Slack as well.',
+      owner: 'IT / Glean permissions', area: 'Agent scope', action: 'Confirm with Tyler/IT whether the Glean agent can be deployed to Slack. If yes, this becomes a Phase 2 priority.' },
+    { priority: 'medium', title: 'Required fields can be submitted blank — no validation',
+      body: 'Cases can be submitted with key SO creation fields empty (Bill To/Ship To contact, address, product details). DD must then follow up, creating multi-step back-and-forth on nearly every case.',
+      owner: 'Salesforce / CPQ team', area: 'Salesforce enhancement', action: 'Add validation rules to the Deal Desk case form requiring the critical SO creation fields before submission. Prioritize with Jeanette and the CPQ team.' },
+    { priority: 'medium', title: 'Contact address gaps not flagged at selection time',
+      body: 'A rep can select a Bill To / Ship To contact whose Salesforce address or email is incomplete. This is not surfaced until DD tries to stamp the contract — the latest possible point in the process. An upstream warning would catch it in seconds rather than days.',
+      owner: 'Salesforce / CPQ team', area: 'Salesforce enhancement', action: 'Add a pop-up or inline warning when a rep selects a contact with incomplete address data on the case or quote record.' },
+    { priority: 'medium', title: 'No stub deal early warning in Salesforce',
+      body: 'There is no system check that flags when a midterm expansion start date falls within the 90-day stub deal window. Deal Desk must manually calculate this on every expansion case. A stub deal that progresses without DD/CSM approval creates attrition risk and potential clawback.',
+      owner: 'Salesforce / CPQ team', area: 'Salesforce enhancement', action: 'Add a Salesforce validation or workflow rule that alerts DD when a new expansion opportunity has a start date within 90 days of the governing agreement renewal date.' },
+    { priority: 'medium', title: 'Org Key not validated before Closed Won',
+      body: 'The Org Key is required for every subscription deal before booking, but there is no system enforcement. Deals can move to Closed Won without it, creating a late-stage blocker after the contract is signed.',
+      owner: 'Salesforce / CPQ team', area: 'Salesforce enhancement', action: 'Add a Salesforce validation rule on the Opportunity that prevents moving to Closed Won if the Org Key field in handover notes is blank.' },
+    { priority: 'low', title: 'Discount submission has no 0% enforcement',
+      body: 'All subscription opportunities require discount submission — even if no discount applies (enter 0). There is no system enforcement preventing reps from leaving the field blank and proceeding. This causes approval workflow issues downstream.',
+      owner: 'Salesforce / CPQ team', area: 'Salesforce enhancement', action: 'Add a validation rule on the Opportunity Discount Info section requiring the Special Incentives field to be populated (with 0 or a value) before the approval step.' },
+    { priority: 'low', title: 'Case classification pick list does not cover all request types',
+      body: 'Reps select the closest matching value from the Reason for Case pick list rather than an accurate one. "Other" and "SO Creation" each catch a wide variety of underlying request types. This makes trend analysis unreliable.',
+      owner: 'DD Process', area: 'Reporting accuracy', action: 'Review the current Reason for Case pick list values and add or restructure to better capture the actual distribution of request types. Prioritize after the first 90 days of agent testing, when better data exists.' },
+    { priority: 'high', title: 'Conflicting attachments across case, opportunity, and quote',
+      body: 'Reps attach screenshots, pricing calculators, and case field data that contradict each other. DD must manually reconcile mismatches across multiple artifacts before work can begin, adding significant time to every case.',
+      owner: 'DD Process', area: 'Agent design', action: 'Define a required attachment format with a naming convention (e.g. the official price book). Reject cases that do not include an approved-format attachment. Can be enforced via Salesforce validation or agent triage check.' },
+    { priority: 'high', title: 'No cross-record data validation between Case, Opportunity, and Quote',
+      body: 'The same data (products, quantities, dates, contacts) exists on the Case, Opportunity, and Quote records with no automated reconciliation. DD finds conflicting values across all three, requiring manual verification. An agent reading only the case may act on data that contradicts the opportunity or quote.',
+      owner: 'Salesforce / CPQ team', area: 'Salesforce enhancement', action: 'Add validation rules or flow checks that compare key fields across the Case, Opportunity, and Quote objects, surfacing mismatches to DD at triage rather than downstream.' },
+    { priority: 'medium', title: 'Freeform text fields on case form should be constrained pick lists',
+      body: 'Beyond the Reason for Case pick list, several other case form fields accept freeform text where structured values would improve data quality. Freeform input creates inconsistent data that makes automated triage and reporting unreliable.',
+      owner: 'Salesforce / CPQ team', area: 'Salesforce enhancement', action: 'Audit all freeform text fields on the Deal Desk case form. Convert fields with a finite set of valid values to pick lists. Mirror pick list options to existing price books where applicable.' },
+    { priority: 'medium', title: 'Partial responses to clarification requests create multi-round spirals',
+      body: 'When DD requests missing information, reps often answer only some of the questions. Managers get tagged in without context. Cases stall in multi-round back-and-forth that can span days. The process map treats this as a single loop, but in practice it spirals.',
+      owner: 'DD Process', area: 'Agent design', action: 'Agent should track which questions remain unanswered and re-ask only the open items. Consider an escalation trigger after N rounds of incomplete responses. Standardize the clarification request format to make partial responses harder.' },
+    { priority: 'medium', title: 'No automatic linkage between draft quotes and cases',
+      body: 'When a rep has attempted to build a quote before submitting a case, there is no automatic link between the case and that draft quote. DD must hunt for it manually. Knowing a draft quote exists (and what is in it) would dramatically speed up triage.',
+      owner: 'Salesforce / CPQ team', area: 'Salesforce enhancement', action: 'Add a lookup or auto-link between the Deal Desk case and any draft quotes on the related opportunity. Surface the draft quote details on the case record so DD can verify immediately.' },
+    { priority: 'medium', title: 'Advisory use case not modeled in routing ("I don\'t know what to offer")',
+      body: 'Reps sometimes ask DD for package recommendations given a client budget -- a consultative request qualitatively different from SO creation or quote assistance. The current Reason for Case pick list and routing logic do not distinguish this scenario.',
+      owner: 'DD Process', area: 'Agent design', action: 'Add an advisory/recommendation category to the Reason for Case pick list. Design agent handling that draws on product catalog and pricing knowledge, not just policy lookup. Route complex advisory cases to DD rather than attempting full automation.' },
+  ]
+}
+
+]; // end PROCESSES
+
+// ─── RENDER ────────────────────────────────────────────────────────────────
+
+function toggleStep(el) {
+  el.classList.toggle('expanded');
+}
+
+function buildSysTag(sys) {
+  if (!sys) return '';
+  return `<span class="sys-tag ${sys}">${sys.toUpperCase()}</span>`;
+}
+
+function buildStep(step) {
+  const hasFlags = step.flags && step.flags.length > 0;
+  const flagDot  = hasFlags ? `<span class="flag-dot" title="${step.flags.length} improvement flag${step.flags.length > 1 ? 's' : ''}"></span>` : '';
+  const sysTag   = buildSysTag(step.sys);
+
+  let decisionPaths = '';
+  if (step.type === 'decision' && (step.yes || step.no)) {
+    decisionPaths = `<div class="decision-paths">
+      ${step.yes ? `<span class="path-yes">YES: ${step.yes}</span>` : ''}
+      ${step.no  ? `<span class="path-no">NO: ${step.no}</span>` : ''}
+    </div>`;
+  }
+
+  const flagNotes = (step.flags || []).map(f =>
+    `<div class="flag-note"><strong>Improvement flag:</strong> ${f}</div>`
+  ).join('');
+
+  return `
+    <div class="step ${step.type || 'process'}${step.filterTypes ? ' ' + step.filterTypes.map(t => 'ftype-' + t).join(' ') : ''}"
+         onclick="toggleStep(this)">
+      <div class="step-title">${step.title}</div>
+      ${step.summary ? `<div class="step-summary">${step.summary}</div>` : ''}
+      <div class="step-badges">
+        ${sysTag}
+        ${flagDot}
+      </div>
+      <div class="step-detail">
+        <p>${step.detail}</p>
+        ${decisionPaths}
+        ${flagNotes}
+      </div>
+    </div>`;
+}
+
+function buildArrow() {
+  return `<div class="arrow">›</div>`;
+}
+
+function buildSwimlaneDiagram(proc) {
+  let html = '<div class="swimlane-diagram">';
+  for (const lane of proc.lanes) {
+    const def = LANE_DEFS[lane.id];
+    html += `<div class="swimlane">
+      <div class="lane-label ${def.cls}">${def.label}</div>
+      <div class="lane-content">`;
+    lane.steps.forEach((step, i) => {
+      if (i > 0) html += buildArrow();
+      html += buildStep(step);
+    });
+    html += `</div></div>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+function buildFlagsPanel(proc) {
+  const owners = [...new Set(proc.items.map(i => i.owner))];
+  let html = `<div class="filter-bar" id="flag-filter-bar">
+    <span class="filter-label">Owner:</span>
+    <button class="filter-btn active" data-owner="all" onclick="filterFlags('all')">All</button>`;
+  owners.forEach(o => {
+    html += `<button class="filter-btn" data-owner="${o}" onclick="filterFlags('${o}')">${o}</button>`;
+  });
+  html += `</div>`;
+  html += `<div class="flag-cards">`;
+  for (const item of proc.items) {
+    html += `<div class="flag-card ${item.priority}" data-flag-owner="${item.owner}">
+      <div class="flag-card__head">
+        <div>
+          <span class="flag-card__priority priority-${item.priority}">${item.priority.toUpperCase()}</span>
+        </div>
+        <div class="flag-card__title">${item.title}</div>
+      </div>
+      <div class="flag-card__body">${item.body}</div>
+      <div class="flag-card__meta">
+        <span class="flag-card__tag">Owner: ${item.owner}</span>
+        <span class="flag-card__tag">${item.area}</span>
+      </div>
+      <div class="flag-card__action">
+        <strong>Recommended action</strong>
+        ${item.action}
+      </div>
+    </div>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+function filterFlags(owner) {
+  document.querySelectorAll('#flag-filter-bar .filter-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.owner === owner);
+  });
+  document.querySelectorAll('.flag-card').forEach(c => {
+    if (owner === 'all') { c.style.display = ''; return; }
+    c.style.display = c.dataset.flagOwner === owner ? '' : 'none';
+  });
+}
+
+function buildFilterBar(types) {
+  let html = `<div class="filter-bar" id="filter-bar">
+    <span class="filter-label">Show:</span>
+    <button class="filter-btn active" data-type="all" onclick="filterQuote('all')">All</button>`;
+  types.forEach(t => {
+    const labels = { initial: 'New Business', renewal: 'Renewal', expansion: 'Midterm Expansion', services: 'Services Only' };
+    html += `<button class="filter-btn" data-type="${t}" onclick="filterQuote('${t}')">${labels[t]}</button>`;
+  });
+  html += '</div>';
+  return html;
+}
+
+function filterQuote(type) {
+  document.querySelectorAll('#filter-bar .filter-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.type === type);
+  });
+  document.querySelectorAll('.step[class*="ftype-"]').forEach(s => {
+    if (type === 'all') { s.classList.remove('hidden'); return; }
+    s.classList.toggle('hidden', !s.classList.contains('ftype-' + type));
+  });
+}
+
+// Count total flags across all processes
+function countAllFlags() {
+  let total = 0, steps = 0;
+  PROCESSES.forEach(p => {
+    if (p.isFlags) return;
+    (p.lanes || []).forEach(l => {
+      (l.steps || []).forEach(s => {
+        steps++;
+        total += (s.flags || []).length;
+      });
+    });
+  });
+  return { total, steps };
+}
+
+function render() {
+  const tabsEl   = document.getElementById('tabs');
+  const panelsEl = document.getElementById('panels');
+  const { total: totalFlags, steps: totalSteps } = countAllFlags();
+
+  // Stats bar (global)
+  panelsEl.innerHTML = `<div class="stats-bar">
+    <div class="stat"><span class="stat-num blue">${totalSteps}</span><span class="stat-label">process steps</span></div>
+    <div class="stat"><span class="stat-num red">${totalFlags}</span><span class="stat-label">improvement flags</span></div>
+    <div class="stat"><span class="stat-num warn">4</span><span class="stat-label">opportunity types</span></div>
+    <div class="stat"><span class="stat-num blue">7</span><span class="stat-label">workflow stages</span></div>
+  </div>`;
+
+  PROCESSES.forEach((proc, i) => {
+    const isActive = i === 0;
+    const flagBadge = proc.flags > 0 ? `<span class="flag-count">${proc.flags}</span>` : '';
+
+    // Tab button
+    const tab = document.createElement('button');
+    tab.className = 'tab' + (isActive ? ' active' : '');
+    tab.innerHTML = proc.title + flagBadge;
+    tab.onclick = () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('panel-' + proc.id).classList.add('active');
+    };
+    tabsEl.appendChild(tab);
+
+    // Panel content
+    const panel = document.createElement('div');
+    panel.id = 'panel-' + proc.id;
+    panel.className = 'tab-panel' + (isActive ? ' active' : '');
+
+    let inner = `<div class="section-desc">${proc.description}</div>`;
+
+    if (proc.isFlags) {
+      inner += buildFlagsPanel(proc);
+    } else {
+      if (proc.filterTypes) {
+        inner += buildFilterBar(proc.filterTypes);
+      }
+      inner += buildSwimlaneDiagram(proc);
+    }
+
+    panel.innerHTML = inner;
+    panelsEl.appendChild(panel);
+  });
+}
+
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Procurement Contracts -- Process Map</title>
+<style>
+:root {
+  --bg-page: #f8fafc;
+  --bg-card: #ffffff;
+  --text-primary: #1a1a2e;
+  --text-secondary: #4a5568;
+  --text-muted: #718096;
+  --border: #e2e8f0;
+  --border-light: #f1f5f9;
+  --accent: #3b82f6;
+  --accent-light: #dbeafe;
+  --jira: #2563eb;
+  --jira-bg: #dbeafe;
+  --omnia: #7c3aed;
+  --omnia-bg: #ede9fe;
+  --linksquares: #059669;
+  --linksquares-bg: #d1fae5;
+  --coupa: #d97706;
+  --coupa-bg: #fef3c7;
+  --docusign: #dc2626;
+  --docusign-bg: #fee2e2;
+  --datagrail: #0891b2;
+  --datagrail-bg: #cffafe;
+  --flag-red: #dc2626;
+  --flag-bg: #fef2f2;
+  --flag-border: #fecaca;
+  --decision-bg: #fef9c3;
+  --decision-border: #facc15;
+  --start-bg: #d1fae5;
+  --start-border: #10b981;
+  --stop-bg: #fee2e2;
+  --stop-border: #ef4444;
+  --interface-bg: #e0e7ff;
+  --interface-border: #6366f1;
+  --opportunity-bg: #f0fdf4;
+  --opportunity-border: #22c55e;
+  --ref-bg: #1e40af;
+  --ref-text: #ffffff;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.container {
+  max-width: 100%;
+  padding: 24px;
+}
+h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+/* Stats bar */
+.stats-bar {
+  display: flex;
+  gap: 24px;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.stat-num {
+  font-weight: 700;
+  font-size: 18px;
+}
+.stat-num.red { color: var(--flag-red); }
+.stat-num.blue { color: var(--accent); }
+.stat-num.green { color: var(--opportunity-border); }
+.stat-label { color: var(--text-secondary); }
+
+/* Legend */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 24px;
+  font-size: 12px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.legend-swatch {
+  width: 20px;
+  height: 14px;
+  border-radius: 3px;
+  border: 2px solid;
+  flex-shrink: 0;
+}
+.legend-swatch.process { background: var(--bg-card); border-color: var(--accent); }
+.legend-swatch.decision { background: var(--decision-bg); border-color: var(--decision-border); }
+.legend-swatch.start { background: var(--start-bg); border-color: var(--start-border); border-radius: 7px; }
+.legend-swatch.stop { background: var(--stop-bg); border-color: var(--stop-border); border-radius: 7px; }
+.legend-swatch.interface { background: var(--interface-bg); border-color: var(--interface-border); }
+.legend-swatch.opportunity { background: var(--opportunity-bg); border-color: var(--opportunity-border); }
+.legend-flag {
+  width: 8px; height: 8px;
+  background: var(--flag-red);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.legend-opp {
+  width: 8px; height: 8px;
+  background: var(--opportunity-border);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.legend-sys {
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+}
+.legend-sys.ji { background: var(--jira-bg); color: var(--jira); }
+.legend-sys.om { background: var(--omnia-bg); color: var(--omnia); }
+.legend-sys.ls { background: var(--linksquares-bg); color: var(--linksquares); }
+
+/* Filter bar */
+.filter-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.filter-bar label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.filter-btn {
+  padding: 4px 12px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+.filter-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+.filter-btn.active-green { background: var(--opportunity-border); color: white; border-color: var(--opportunity-border); }
+.filter-btn.active-red { background: var(--flag-red); color: white; border-color: var(--flag-red); }
+
+/* Swimlane diagram */
+.swimlane-diagram {
+  overflow-x: auto;
+  padding-bottom: 16px;
+}
+.swimlane {
+  display: flex;
+  border-bottom: 1px solid var(--border-light);
+  min-height: 100px;
+}
+.swimlane:last-child { border-bottom: none; }
+.lane-label {
+  min-width: 140px;
+  width: 140px;
+  padding: 16px 12px;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-primary);
+  background: var(--gray-50);
+  border-right: 3px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+.lane-content {
+  display: flex;
+  align-items: center;
+  padding: 16px 12px;
+  gap: 4px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+/* Step cards */
+.step {
+  position: relative;
+  min-width: 170px;
+  max-width: 220px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 2px solid var(--border);
+  background: var(--bg-card);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.step:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transform: translateY(-1px);
+}
+.step.expanded {
+  max-width: 400px;
+}
+.step-title {
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+.step-summary {
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.step.expanded .step-summary {
+  -webkit-line-clamp: unset;
+}
+.step-detail {
+  display: none;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-light);
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.step.expanded .step-detail { display: block; }
+
+/* Step types */
+.step.start {
+  background: var(--start-bg);
+  border-color: var(--start-border);
+  border-radius: 20px;
+  min-width: 70px;
+  max-width: 90px;
+  text-align: center;
+}
+.step.stop {
+  background: var(--stop-bg);
+  border-color: var(--stop-border);
+  border-radius: 20px;
+  min-width: 70px;
+  max-width: 90px;
+  text-align: center;
+}
+.step.decision {
+  background: var(--decision-bg);
+  border-color: var(--decision-border);
+}
+.step.interface {
+  background: var(--interface-bg);
+  border-color: var(--interface-border);
+}
+.step.opportunity {
+  border-color: var(--opportunity-border);
+  background: var(--opportunity-bg);
+}
+
+/* System badges */
+.sys-badges {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+.sys-badge {
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.sys-badge.jira { background: var(--jira-bg); color: var(--jira); }
+.sys-badge.omnia { background: var(--omnia-bg); color: var(--omnia); }
+.sys-badge.linksquares { background: var(--linksquares-bg); color: var(--linksquares); }
+.sys-badge.coupa { background: var(--coupa-bg); color: var(--coupa); }
+.sys-badge.docusign { background: var(--docusign-bg); color: var(--docusign); }
+.sys-badge.datagrail { background: var(--datagrail-bg); color: var(--datagrail); }
+
+/* Flag indicator */
+.flag-dot {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 10px;
+  height: 10px;
+  background: var(--flag-red);
+  border-radius: 50%;
+  border: 2px solid var(--bg-card);
+  z-index: 1;
+}
+.flag-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  min-width: 18px;
+  height: 18px;
+  background: var(--flag-red);
+  color: white;
+  border-radius: 9px;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  z-index: 1;
+}
+.flag-list {
+  margin-top: 8px;
+  padding: 8px;
+  background: var(--flag-bg);
+  border: 1px solid var(--flag-border);
+  border-radius: 4px;
+}
+.flag-item {
+  font-size: 11px;
+  color: var(--flag-red);
+  line-height: 1.4;
+  padding: 2px 0;
+}
+.flag-item + .flag-item {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid var(--flag-border);
+}
+.flag-source {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* Opportunity indicator */
+.opp-dot {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  width: 10px;
+  height: 10px;
+  background: var(--opportunity-border);
+  border-radius: 50%;
+  border: 2px solid var(--bg-card);
+  z-index: 1;
+}
+.opp-count {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  min-width: 18px;
+  height: 18px;
+  background: var(--opportunity-border);
+  color: white;
+  border-radius: 9px;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  z-index: 1;
+}
+.opp-list {
+  margin-top: 8px;
+  padding: 8px;
+  background: var(--opportunity-bg);
+  border: 1px solid var(--opportunity-border);
+  border-radius: 4px;
+}
+.opp-item {
+  font-size: 11px;
+  color: #166534;
+  line-height: 1.4;
+  padding: 2px 0;
+}
+.opp-item + .opp-item {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid #bbf7d0;
+}
+
+/* Cross-lane reference */
+.ref-marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--ref-bg);
+  color: var(--ref-text);
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* Arrow connector */
+.arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  flex-shrink: 0;
+  color: var(--gray-400);
+  font-size: 16px;
+}
+
+/* Process note */
+.process-note {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: var(--gray-50);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 6px 6px 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Dimming for filter */
+.step.dimmed { opacity: 0.2; }
+.swimlane.dimmed .lane-label { opacity: 0.3; }
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 24px;
+  overflow-x: auto;
+}
+.tab {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.tab:hover { color: var(--text-primary); background: var(--gray-50); }
+.tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Playbook rules */
+.playbook {
+  margin-top: 20px;
+  padding: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.playbook h3 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.playbook-rule {
+  display: flex;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 12px;
+}
+.playbook-rule:last-child { border-bottom: none; }
+.rule-label {
+  min-width: 140px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.rule-value {
+  color: var(--text-secondary);
+}
+
+/* Section separator */
+.section-sep {
+  margin: 32px 0 24px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+@media print {
+  .tabs, .filter-bar { display: none; }
+  .tab-panel { display: block !important; page-break-after: always; }
+  .step { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Procurement Contracts -- Process Map</h1>
+  <p class="subtitle">Source: Morgan / Charlie Discovery Session (Mar 5, 2026)</p>
+
+  <div class="stats-bar">
+    <div class="stat-item"><span class="stat-num blue">~25</span><span class="stat-label">Process Steps</span></div>
+    <div class="stat-item"><span class="stat-num red">8</span><span class="stat-label">Pain Points</span></div>
+    <div class="stat-item"><span class="stat-num green">6</span><span class="stat-label">AI Opportunities</span></div>
+    <div class="stat-item"><span class="stat-num" style="color:var(--omnia)">6</span><span class="stat-label">Systems</span></div>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-swatch start"></div> Start/End</div>
+    <div class="legend-item"><div class="legend-swatch process"></div> Process Step</div>
+    <div class="legend-item"><div class="legend-swatch decision"></div> Decision</div>
+    <div class="legend-item"><div class="legend-swatch interface"></div> System Interface</div>
+    <div class="legend-item"><div class="legend-swatch opportunity"></div> AI Opportunity</div>
+    <div class="legend-item"><div class="legend-flag"></div> Pain Point</div>
+    <div class="legend-item"><div class="legend-opp"></div> Automation Candidate</div>
+    <div class="legend-item"><span class="legend-sys ji">Jira</span></div>
+    <div class="legend-item"><span class="legend-sys om">Omnia</span></div>
+    <div class="legend-item"><span class="legend-sys ls">LinkSquares</span></div>
+  </div>
+
+  <div class="filter-bar" id="filterBar">
+    <label>Filter:</label>
+  </div>
+
+  <div id="panels"></div>
+</div>
+
+<script>
+var PROCESSES = [
+{
+  id: 'intake-routing',
+  title: '1. Intake and Routing',
+  description: 'Requester submits a procurement request (software renewal, new purchase, event, etc.) and the system routes it through parallel approval workflows based on request type.',
+  note: 'Currently in Jira, migrating to Omnia. Omnia will serve as the orchestration layer wrapping all downstream tools (Coupa, DataGrail, LinkSquares, DocuSign).',
+  lanes: [
+    {
+      name: 'Requester',
+      color: '#2563eb',
+      steps: [
+        { type:'start', title:'Start', summary:'' },
+        { title:'Submit Procurement Request', summary:'Requester fills out intake form with purchase details: what, how many licenses, renewal term (1/2/3 years), purpose.',
+          systems:['jira','omnia'],
+          detail:'Requester answers intake questions and submits for approval. Example: IT requests 300 Slack licenses for a 2-year renewal.',
+          flags:[{text:'Requesters often do not understand the difference between MSA, SOW, and NDA. Submit wrong document types ~40% of the time.', source:'Morgan'},{text:'Requesters sometimes upload online terms of service instead of a Word/PDF document as instructed.', source:'Morgan'}],
+          opportunities:[{text:'AI document classifier on upload: detect document type (MSA vs NDA vs SOW vs online terms) and reject/redirect immediately on submission, before it enters the approval queue.'}]
+        },
+        { title:'Attach SOW and/or MSA', summary:'Requester works with supplier to obtain the Statement of Work and uploads it to the ticket. May also upload existing MSA.',
+          systems:['jira','omnia'],
+          detail:'SOW comes from the supplier. Requester is responsible for working with supplier to finalize it, or get it to a point where they are comfortable with the contents.',
+          flags:[{text:'~40% of SOWs are submitted incorrectly: missing quantities, wrong document type, incomplete line items.', source:'Morgan'},{text:'Requesters put in NDAs thinking they are MSAs. "They both end in A" but serve completely different purposes.', source:'Morgan'}],
+          opportunities:[{text:'AI completeness check on SOW: validate required fields (quantities, pricing, term length, payment terms) are present. Flag incomplete submissions back to requester before procurement review.'}]
+        },
+        { type:'decision', title:'Request Type?', summary:'System routes based on procurement category: software, event, services, etc. Different types trigger different approval workflows.',
+          detail:'Software triggers security and privacy reviews. Events or food purchases would not trigger security. All types go through FP&A and manager approval.'
+        }
+      ]
+    },
+    {
+      name: 'Omnia (Orchestration)',
+      color: '#7c3aed',
+      steps: [
+        { type:'interface', title:'Workflow Routing Engine', summary:'Omnia orchestrates the full approval workflow. Requester and all approvers can see status, who needs to approve, and where in the process the request sits.',
+          systems:['omnia'],
+          detail:'Replaces the current multi-tool approach (Jira + Coupa + DataGrail + LinkSquares + DocuSign). Single pane of glass for the entire process. Notifications via email and/or Slack (configurable).'
+        },
+        { title:'Notify FP&A + Manager', summary:'Parallel notifications sent to FP&A (budget check) and requester\'s manager for approval. Both must approve to proceed.',
+          systems:['omnia'],
+          detail:'Currently notifications go via email and Slack. Omnia may allow users to choose notification preference. Looking to reduce notification volume.',
+          flags:[{text:'FP&A and manager approvals can take 1-2+ weeks. Managers on vacation cause significant delays. By the time procurement sees the request, urgency has built up.', source:'Morgan'}],
+          opportunities:[{text:'If SOW/MSA are already in the system, begin AI pre-review in parallel with FP&A/manager approval -- do not wait for procurement to be notified.'}]
+        },
+        { title:'Route to Review Teams', summary:'Based on request type, route to applicable reviewers: Procurement, Legal, Security, Privacy. Software triggers all four.',
+          systems:['omnia'],
+          detail:'Non-software purchases (events, food) skip security review. All purchases go through procurement and legal.'
+        }
+      ]
+    }
+  ]
+},
+{
+  id: 'procurement-review',
+  title: '2. Procurement Review',
+  description: 'Procurement team reviews the contract documents, validates completeness, checks terms against the negotiation playbook, and either redlines or sends feedback to the requester.',
+  note: 'Morgan and Rory are the primary reviewers. They work in parallel with Legal on contract review.',
+  lanes: [
+    {
+      name: 'Procurement',
+      color: '#d97706',
+      steps: [
+        { title:'Receive Notification', summary:'Procurement team receives Slack and email notification that a new procurement request is ready for review.',
+          systems:['jira','omnia'],
+          flags:[{text:'By the time procurement is notified, the request may have already been in process for 2+ weeks waiting on FP&A/manager approval.', source:'Morgan'}]
+        },
+        { title:'Check for Existing MSA', summary:'Verify whether an existing Master Service Agreement is in place with the supplier.',
+          systems:['linksquares','jira'],
+          detail:'Check LinkSquares (legal CLM) first. If not found there, check previous Jira tickets for historical agreements. For renewals, also pull the last SOW/order.',
+          flags:[{text:'Historical contracts split across LinkSquares and old Jira tickets. No single source of truth yet. Omnia will eventually consolidate.', source:'Morgan'}]
+        },
+        { title:'Validate SOW Completeness', summary:'Review submitted SOW for completeness: line items, quantities, pricing, SKUs, term length, payment terms, implementation language.',
+          detail:'Check that all required information is present and correctly formatted. For new software with implementation, verify implementation fee language allows payment after work is completed, not upfront.',
+          flags:[{text:'Complex SOWs (like Slack) need specific clauses around price caps, implementation payment timing, and scope definition that vary by supplier type.', source:'Morgan'}],
+          opportunities:[{text:'AI contract review: analyze SOW against completeness checklist and known playbook rules. Flag missing fields, vague language, and non-standard terms. Morgan has tested this with Glean and was "very impressed" by the detail level.'}]
+        },
+        { type:'decision', title:'SOW Complete?', summary:'Is the Statement of Work complete and properly formatted?',
+          detail:'If No: Send back to requester with specific feedback on what is missing. If Yes: Proceed to terms review.'
+        },
+        { title:'Review Terms Against Playbook', summary:'Check contract terms against procurement negotiation playbook: payment terms, auto-renewal clauses, price increase caps, and other key provisions.',
+          detail:'Key playbook items: Net 60 payment terms preferred (net 45/30 acceptable). No auto-renewal clauses. Price increase caps (ideally <=5% per year). No unlimited price increase clauses. For multi-year deals, request discount on subsequent years.'
+        },
+        { type:'decision', title:'Terms Acceptable?', summary:'Do the contract terms meet playbook standards?',
+          detail:'If Yes: Approve and move forward. If No: Redline the document or provide feedback to requester for supplier negotiation.'
+        },
+        { title:'Redline or Provide Feedback', summary:'If document is in Word format, procurement redlines directly. If PDF-only, write out requested changes for the requester to take back to the supplier.',
+          systems:['jira','omnia'],
+          detail:'Goal is to keep requester responses simple -- provide the exact language or redlines so they can just forward to the supplier rather than having to understand contract law. Procurement tries to convert PDFs to Word when possible to enable direct redlining.',
+          flags:[{text:'Some suppliers only provide non-redlinable PDFs. PDF-to-Word conversion sometimes produces formatting artifacts.', source:'Morgan'}],
+          opportunities:[{text:'AI redline generation: given the playbook rules and identified issues, auto-generate redline suggestions or requester-ready feedback language.'}]
+        }
+      ]
+    },
+    {
+      name: 'Requester',
+      color: '#2563eb',
+      steps: [
+        { title:'Negotiate with Supplier', summary:'Requester takes procurement feedback or redlined document back to the supplier for negotiation.',
+          detail:'Requester acts as intermediary between procurement and supplier. Procurement typically does not deal with suppliers directly.',
+          flags:[{text:'Requesters sometimes wait 2+ weeks before engaging with procurement feedback, then come back saying "I need it now" regardless of contract concerns.', source:'Morgan'}]
+        },
+        { title:'Resubmit Updated Documents', summary:'Requester uploads revised SOW/contract from supplier for procurement re-review.',
+          systems:['jira','omnia']
+        }
+      ]
+    },
+    {
+      name: 'Procurement (Comparison)',
+      color: '#b45309',
+      steps: [
+        { title:'Cross-Reference Past Agreements', summary:'For renewals, compare new terms against previous SOW/order. Check for price increases >5%, new clauses snuck in, changed terms.',
+          systems:['linksquares','jira'],
+          detail:'Pull previous agreement from LinkSquares or prior Jira tickets. Compare line by line for any changes the supplier may have introduced, even when the requester says "nothing changed."',
+          flags:[{text:'Suppliers -- especially large ones -- frequently sneak in unfavorable new clauses (unlimited price increases, auto-renewal) assuming Contentful won\'t read carefully or can\'t negotiate.', source:'Morgan'}],
+          opportunities:[{text:'AI contract comparison: diff new contract against previous version. Highlight every change, flag risk items (new auto-renewal, removed caps, price increases beyond threshold). This is a high-value, high-accuracy use case for AI.'}]
+        }
+      ]
+    }
+  ]
+},
+{
+  id: 'parallel-reviews',
+  title: '3. Parallel Reviews (Legal, Security, Privacy)',
+  description: 'Legal, Security, and Privacy teams conduct their reviews in parallel with procurement. All findings are consolidated in the ticket for the requester.',
+  note: 'Procurement and Legal work hand-in-hand. Security and Privacy reviews are triggered based on request type (software purchases).',
+  lanes: [
+    {
+      name: 'Legal',
+      color: '#dc2626',
+      steps: [
+        { title:'Review Contract Terms', summary:'Legal reviews the contract for legal risk, liability clauses, data processing terms, IP provisions, and other legal concerns.',
+          systems:['linksquares'],
+          detail:'Legal can escalate concerns and recommend that procurement not proceed if risk is too high. In practice, outright stops are rare because requesters are generally reasonable in what they ask for.'
+        },
+        { title:'Provide Legal Redlines', summary:'Legal redlines or provides commentary on contract language. Combined with procurement redlines into a single set of changes.',
+          detail:'Procurement and Legal coordinate their redlines. All feedback visible to requester and all approvers in the Jira/Omnia ticket.'
+        },
+        { type:'decision', title:'Acceptable Risk?', summary:'Legal determines if the contract risk level is acceptable.',
+          detail:'If excessive risk: Legal flags concerns and may require manager sign-off on specific risks. Very rarely stops a deal outright. If acceptable: Legal approves.'
+        }
+      ]
+    },
+    {
+      name: 'Security',
+      color: '#0891b2',
+      steps: [
+        { title:'Security Review', summary:'Security team evaluates the software/service for security posture, data handling, and compliance requirements.',
+          systems:['datagrail'],
+          detail:'Only triggered for software purchases. Events, food, and other non-software purchases skip this review.'
+        }
+      ]
+    },
+    {
+      name: 'Privacy',
+      color: '#8b5cf6',
+      steps: [
+        { title:'Privacy Review', summary:'Privacy team evaluates data processing implications, GDPR compliance, and data residency requirements.',
+          detail:'Runs in parallel with security. Both teams may flag specific contract clauses that need modification.'
+        }
+      ]
+    },
+    {
+      name: 'All Teams',
+      color: '#374151',
+      steps: [
+        { title:'Consolidate Redlines', summary:'All redlines from Procurement, Legal, Security, and Privacy consolidated. Combined feedback sent to requester via ticket.',
+          systems:['jira','omnia'],
+          detail:'There can be significant back-and-forth between the security/privacy reviewer, the legal reviewer, and procurement over specific clauses. All tracked in the ticket.'
+        },
+        { type:'decision', title:'All Approved?', summary:'All required reviewers have signed off on the contract.',
+          detail:'If all approve: Proceed to execution. If any team has outstanding concerns: Continue negotiation cycle with supplier via requester.'
+        },
+        { type:'stop', title:'Complete', summary:'' }
+      ]
+    }
+  ]
+}
+];
+
+// ── RENDER ENGINE ─────────────────────────────────────────────────────────
+
+function renderTabs() {
+  var tabsEl = document.getElementById('tabs');
+  PROCESSES.forEach(function(p, i) {
+    var btn = document.createElement('button');
+    btn.className = 'tab' + (i === 0 ? ' active' : '');
+    btn.textContent = p.title;
+    btn.dataset.target = p.id;
+    btn.onclick = function() { switchTab(p.id); };
+    tabsEl.appendChild(btn);
+  });
+}
+
+function switchTab(id) {
+  document.querySelectorAll('.tab').forEach(function(t) {
+    t.classList.toggle('active', t.dataset.target === id);
+  });
+  document.querySelectorAll('.tab-panel').forEach(function(p) {
+    p.classList.toggle('active', p.id === 'panel-' + id);
+  });
+}
+
+function renderProcess(process) {
+  var panel = document.createElement('div');
+  panel.className = 'tab-panel' + (process === PROCESSES[0] ? ' active' : '');
+  panel.id = 'panel-' + process.id;
+
+  // Description
+  var desc = document.createElement('p');
+  desc.className = 'process-note';
+  desc.innerHTML = '<strong>' + process.title + ':</strong> ' + process.description;
+  panel.appendChild(desc);
+
+  if (process.note) {
+    var note = document.createElement('p');
+    note.className = 'process-note';
+    note.style.borderLeftColor = '#d97706';
+    note.style.marginTop = '8px';
+    note.innerHTML = '<strong>Note:</strong> ' + process.note;
+    panel.appendChild(note);
+  }
+
+  // Swimlane diagram
+  var diagram = document.createElement('div');
+  diagram.className = 'swimlane-diagram';
+  diagram.style.marginTop = '16px';
+
+  process.lanes.forEach(function(lane) {
+    var swimlane = document.createElement('div');
+    swimlane.className = 'swimlane';
+
+    var label = document.createElement('div');
+    label.className = 'lane-label';
+    label.style.borderRightColor = lane.color;
+    label.textContent = lane.name;
+    swimlane.appendChild(label);
+
+    var content = document.createElement('div');
+    content.className = 'lane-content';
+
+    lane.steps.forEach(function(step, si) {
+      if (si > 0) {
+        var arrow = document.createElement('div');
+        arrow.className = 'arrow';
+        arrow.innerHTML = '&#8594;';
+        content.appendChild(arrow);
+      }
+
+      var el = document.createElement('div');
+      var classes = ['step'];
+      if (step.type) classes.push(step.type);
+      if (step.opportunities && step.opportunities.length) classes.push('opportunity');
+      el.className = classes.join(' ');
+      el.setAttribute('data-systems', (step.systems || []).join(','));
+      el.setAttribute('data-has-flags', step.flags ? 'true' : 'false');
+      el.setAttribute('data-has-opps', step.opportunities ? 'true' : 'false');
+
+      // Flag indicator
+      if (step.flags && step.flags.length) {
+        var flagInd = document.createElement('div');
+        if (step.flags.length > 1) {
+          flagInd.className = 'flag-count';
+          flagInd.textContent = step.flags.length;
+        } else {
+          flagInd.className = 'flag-dot';
+        }
+        el.appendChild(flagInd);
+      }
+
+      // Opportunity indicator
+      if (step.opportunities && step.opportunities.length) {
+        var oppInd = document.createElement('div');
+        if (step.opportunities.length > 1) {
+          oppInd.className = 'opp-count';
+          oppInd.textContent = step.opportunities.length;
+        } else {
+          oppInd.className = 'opp-dot';
+        }
+        el.appendChild(oppInd);
+      }
+
+      // Reference marker out
+      if (step.ref) {
+        var refOut = document.createElement('div');
+        refOut.className = 'ref-marker';
+        refOut.style.position = 'absolute';
+        refOut.style.bottom = '-8px';
+        refOut.style.right = '8px';
+        refOut.textContent = step.ref;
+        el.appendChild(refOut);
+      }
+
+      // Reference marker in
+      if (step.ref_in) {
+        var refIn = document.createElement('div');
+        refIn.className = 'ref-marker';
+        refIn.style.marginRight = '4px';
+        refIn.textContent = step.ref_in;
+        content.appendChild(refIn);
+      }
+
+      var title = document.createElement('div');
+      title.className = 'step-title';
+      title.textContent = step.title;
+      el.appendChild(title);
+
+      if (step.summary) {
+        var sum = document.createElement('div');
+        sum.className = 'step-summary';
+        sum.textContent = step.summary;
+        el.appendChild(sum);
+      }
+
+      // System badges
+      if (step.systems && step.systems.length) {
+        var badges = document.createElement('div');
+        badges.className = 'sys-badges';
+        step.systems.forEach(function(s) {
+          var badge = document.createElement('span');
+          badge.className = 'sys-badge ' + s;
+          badge.textContent = s.charAt(0).toUpperCase() + s.slice(1);
+          badges.appendChild(badge);
+        });
+        el.appendChild(badges);
+      }
+
+      // Expandable detail
+      var detailDiv = document.createElement('div');
+      detailDiv.className = 'step-detail';
+      var detailParts = [];
+      if (step.detail) detailParts.push(step.detail);
+      detailDiv.innerHTML = detailParts.join('<br><br>');
+
+      // Flags in detail
+      if (step.flags && step.flags.length) {
+        var flagList = document.createElement('div');
+        flagList.className = 'flag-list';
+        step.flags.forEach(function(f) {
+          var fi = document.createElement('div');
+          fi.className = 'flag-item';
+          fi.innerHTML = f.text + (f.source ? ' <span class="flag-source">-- ' + f.source + '</span>' : '');
+          flagList.appendChild(fi);
+        });
+        detailDiv.appendChild(flagList);
+      }
+
+      // Opportunities in detail
+      if (step.opportunities && step.opportunities.length) {
+        var oppList = document.createElement('div');
+        oppList.className = 'opp-list';
+        step.opportunities.forEach(function(o) {
+          var oi = document.createElement('div');
+          oi.className = 'opp-item';
+          oi.textContent = o.text;
+          oppList.appendChild(oi);
+        });
+        detailDiv.appendChild(oppList);
+      }
+
+      el.appendChild(detailDiv);
+
+      el.onclick = function(e) {
+        e.stopPropagation();
+        el.classList.toggle('expanded');
+      };
+
+      content.appendChild(el);
+    });
+
+    swimlane.appendChild(content);
+    diagram.appendChild(swimlane);
+  });
+
+  panel.appendChild(diagram);
+
+  return panel;
+}
+
+function renderFilters() {
+  var bar = document.getElementById('filterBar');
+  var systems = ['Jira', 'Omnia', 'LinkSquares', 'DataGrail', 'DocuSign', 'Coupa'];
+  systems.forEach(function(sys) {
+    var btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.textContent = sys;
+    btn.dataset.system = sys.toLowerCase();
+    btn.onclick = function() { toggleFilter(btn); };
+    bar.appendChild(btn);
+  });
+
+  // Pain points filter
+  var sep = document.createElement('span');
+  sep.style.cssText = 'width:1px;height:20px;background:var(--border);margin:0 4px;';
+  bar.appendChild(sep);
+
+  var flagBtn = document.createElement('button');
+  flagBtn.className = 'filter-btn';
+  flagBtn.textContent = 'Pain Points';
+  flagBtn.dataset.filter = 'flags';
+  flagBtn.onclick = function() { toggleSpecialFilter(flagBtn, 'flags'); };
+  bar.appendChild(flagBtn);
+
+  var oppBtn = document.createElement('button');
+  oppBtn.className = 'filter-btn';
+  oppBtn.textContent = 'AI Opportunities';
+  oppBtn.dataset.filter = 'opps';
+  oppBtn.onclick = function() { toggleSpecialFilter(oppBtn, 'opps'); };
+  bar.appendChild(oppBtn);
+}
+
+var activeFilter = null;
+var activeSpecial = null;
+
+function toggleFilter(btn) {
+  var sys = btn.dataset.system;
+  if (activeFilter === sys) {
+    activeFilter = null;
+    btn.classList.remove('active');
+    clearDimming();
+  } else {
+    activeFilter = sys;
+    activeSpecial = null;
+    document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active','active-red','active-green'); });
+    btn.classList.add('active');
+    applySystemFilter(sys);
+  }
+}
+
+function toggleSpecialFilter(btn, type) {
+  if (activeSpecial === type) {
+    activeSpecial = null;
+    btn.classList.remove('active-red', 'active-green');
+    clearDimming();
+  } else {
+    activeSpecial = type;
+    activeFilter = null;
+    document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active','active-red','active-green'); });
+    btn.classList.add(type === 'flags' ? 'active-red' : 'active-green');
+    applySpecialFilter(type);
+  }
+}
+
+function applySystemFilter(sys) {
+  document.querySelectorAll('.step').forEach(function(s) {
+    var systems = s.getAttribute('data-systems') || '';
+    s.classList.toggle('dimmed', systems.indexOf(sys) === -1);
+  });
+}
+
+function applySpecialFilter(type) {
+  var attr = type === 'flags' ? 'data-has-flags' : 'data-has-opps';
+  document.querySelectorAll('.step').forEach(function(s) {
+    s.classList.toggle('dimmed', s.getAttribute(attr) !== 'true');
+  });
+}
+
+function clearDimming() {
+  document.querySelectorAll('.step').forEach(function(s) { s.classList.remove('dimmed'); });
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+
+renderTabs();
+renderFilters();
+var panelsEl = document.getElementById('panels');
+PROCESSES.forEach(function(p) {
+  panelsEl.appendChild(renderProcess(p));
+});
+
+// Add playbook section after processes
+var playbookSection = document.createElement('div');
+playbookSection.innerHTML = '<div class="section-sep">Negotiation Playbook (Key Rules)</div>' +
+  '<div class="playbook">' +
+  '<h3>Contract Terms -- Standard Requirements</h3>' +
+  '<div class="playbook-rule"><span class="rule-label">Payment Terms</span><span class="rule-value">Net 60 preferred. Net 45 or Net 30 acceptable.</span></div>' +
+  '<div class="playbook-rule"><span class="rule-label">Auto-Renewal</span><span class="rule-value">Not accepted. All auto-renewal clauses must be removed.</span></div>' +
+  '<div class="playbook-rule"><span class="rule-label">Price Increases</span><span class="rule-value">Cap at 5% per year maximum. Unlimited price increase clauses never accepted.</span></div>' +
+  '<div class="playbook-rule"><span class="rule-label">Multi-Year Discounts</span><span class="rule-value">For 2+ year deals, request discount on subsequent years.</span></div>' +
+  '<div class="playbook-rule"><span class="rule-label">Implementation Fees</span><span class="rule-value">Payment should be after implementation is complete, not upfront.</span></div>' +
+  '<div class="playbook-rule"><span class="rule-label">Document Format</span><span class="rule-value">Word format preferred for redlining. PDF acceptable but harder to negotiate.</span></div>' +
+  '</div>' +
+  '<div class="playbook" style="margin-top:12px">' +
+  '<h3>Systems Landscape</h3>' +
+  '<div class="playbook-rule"><span class="rule-label">Jira (current)</span><span class="rule-value">Ticketing and workflow. Being replaced by Omnia.</span></div>' +
+  '<div class="playbook-rule"><span class="rule-label">Omnia (future)</span><span class="rule-value">Orchestration layer. Single pane of glass for entire procurement workflow. Integrates with LinkSquares, Vanta, DataGrail, DocuSign.</span></div>' +
+  '<div class="playbook-rule"><span class="rule-label">Coupa</span><span class="rule-value">Procurement platform (current, unclear future role with Omnia).</span></div>' +
+  '<div class="playbook-rule"><span class="rule-label">LinkSquares</span><span class="rule-value">Legal CLM. Contract repository and source of truth for existing MSAs.</span></div>' +
+  '<div class="playbook-rule"><span class="rule-label">DataGrail</span><span class="rule-value">Security and privacy review platform.</span></div>' +
+  '<div class="playbook-rule"><span class="rule-label">DocuSign</span><span class="rule-value">Contract execution and signature.</span></div>' +
+  '</div>';
+panelsEl.appendChild(playbookSection);
+</script>
+</body>
+</html>

@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hire to Retire -- Workshop &amp; Review Flags</title>
+<style>
+:root {
+  --bg-page: #f8fafc;
+  --bg-card: #ffffff;
+  --text-primary: #1a1a2e;
+  --text-secondary: #4a5568;
+  --text-muted: #718096;
+  --border: #e2e8f0;
+  --border-light: #f1f5f9;
+  --accent: #3b82f6;
+  --flag-red: #dc2626;
+  --flag-bg: #fef2f2;
+  --flag-border: #fecaca;
+  --theme-1: #6366f1;
+  --theme-2: #d97706;
+  --theme-3: #059669;
+  --theme-4: #0891b2;
+  --theme-5: #7c3aed;
+  --theme-6: #0891b2;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+h1 {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 4px;
+}
+.subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--accent);
+  text-decoration: none;
+  margin-bottom: 24px;
+}
+.back-link:hover { text-decoration: underline; }
+
+/* Summary strip */
+.summary-strip {
+  display: flex;
+  gap: 1px;
+  background: var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+.summary-cell {
+  flex: 1;
+  background: var(--bg-card);
+  padding: 16px 20px;
+  text-align: center;
+}
+.summary-cell:first-child { border-radius: 10px 0 0 10px; }
+.summary-cell:last-child { border-radius: 0 10px 10px 0; }
+.summary-num {
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+.summary-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Themes */
+.themes {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+.themes h2 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.theme-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.theme-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--bg-page);
+}
+.theme-count {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 14px;
+  color: white;
+  flex-shrink: 0;
+}
+.theme-text strong {
+  font-size: 13px;
+  display: block;
+  margin-bottom: 2px;
+}
+.theme-text span {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* Process area sections */
+.area {
+  margin-bottom: 32px;
+}
+.area-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px 10px 0 0;
+  cursor: pointer;
+}
+.area-header:hover { background: var(--bg-page); }
+.area-header h2 {
+  font-size: 17px;
+  font-weight: 700;
+}
+.area-count {
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--flag-bg);
+  color: var(--flag-red);
+}
+.area-count.zero {
+  background: #f3f4f6;
+  color: var(--text-muted);
+}
+.area-body {
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  background: var(--bg-card);
+}
+
+/* Lane group */
+.lane-group {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-light);
+}
+.lane-group:last-child { border-bottom: none; }
+.lane-name {
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+/* Step group */
+.step-group {
+  margin-bottom: 16px;
+}
+.step-group:last-child { margin-bottom: 0; }
+.step-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+/* Flag item */
+.flag {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  background: var(--flag-bg);
+  border: 1px solid var(--flag-border);
+  border-radius: 6px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+.flag:last-child { margin-bottom: 0; }
+.flag-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--flag-red);
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+.flag-source {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 2px;
+}
+
+/* Empty area */
+.area-empty {
+  padding: 20px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.footer {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  margin-top: 16px;
+}
+
+@media (max-width: 700px) {
+  .theme-grid { grid-template-columns: 1fr; }
+  .summary-strip { flex-wrap: wrap; }
+  .summary-cell { flex-basis: 50%; border-radius: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <a href="hire-to-retire-index.html" class="back-link">&larr; Back to Index</a>
+
+  <h1>Workshop &amp; Review Flags</h1>
+  <p class="subtitle">Pain points, rework, manual processes, and errors identified during the CKO Workshop (Feb 12, 2026), from recruiting process documentation, and from the Payroll Review Meeting (Mar 4, 2026). Grouped by process area.</p>
+
+  <div class="summary-strip">
+    <div class="summary-cell"><div class="summary-num" style="color:var(--flag-red)">32</div><div class="summary-label">Total Flags</div></div>
+    <div class="summary-cell"><div class="summary-num" style="color:var(--accent)">5</div><div class="summary-label">Process Areas</div></div>
+    <div class="summary-cell"><div class="summary-num" style="color:var(--theme-2)">22</div><div class="summary-label">Steps Affected</div></div>
+    <div class="summary-cell"><div class="summary-num" style="color:var(--theme-3)">6</div><div class="summary-label">Key Themes</div></div>
+  </div>
+
+  <div class="themes">
+    <h2>Top Themes</h2>
+    <div class="theme-grid">
+      <div class="theme-item">
+        <div class="theme-count" style="background:var(--theme-4)">8</div>
+        <div class="theme-text"><strong>Payroll Manual Burden</strong><span>Redundant completeness checks, manual spreadsheet reconciliation, Slack-based approval evidence, off-cycle 401K timing mismatches</span></div>
+      </div>
+      <div class="theme-item">
+        <div class="theme-count" style="background:var(--theme-3)">6</div>
+        <div class="theme-text"><strong>Onboarding Timing</strong><span>IT provisioning delays, Workday access restrictions, payroll deadline pressure, batch vs sequential processing</span></div>
+      </div>
+      <div class="theme-item">
+        <div class="theme-count" style="background:var(--theme-1)">5</div>
+        <div class="theme-text"><strong>Slack as Workflow</strong><span>Approvals, change requests, and cross-team coordination all routed through Slack rather than structured systems</span></div>
+      </div>
+      <div class="theme-item">
+        <div class="theme-count" style="background:var(--theme-2)">5</div>
+        <div class="theme-text"><strong>Manual System Sync</strong><span>Greenhouse/Workday mismatches, manual field checks, one-way integrations requiring human reconciliation</span></div>
+      </div>
+      <div class="theme-item">
+        <div class="theme-count" style="background:var(--theme-5)">4</div>
+        <div class="theme-text"><strong>Edge Case Gaps</strong><span>Contractor conversions, upleveling, VIP onboarding, and working students lack defined processes</span></div>
+      </div>
+      <div class="theme-item">
+        <div class="theme-count" style="background:var(--theme-4)">3</div>
+        <div class="theme-text"><strong>EMEA Manual Burden</strong><span>Benefits administration, compliance windows, and right-to-work documentation disproportionately manual for EMEA</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. Hire to First Paycheck -->
+  <div class="area">
+    <div class="area-header" onclick="this.parentElement.classList.toggle('collapsed')">
+      <h2>1. Hire to First Paycheck</h2>
+      <span class="area-count">23 flags</span>
+    </div>
+    <div class="area-body">
+
+      <div class="lane-group">
+        <div class="lane-name">Recruiting</div>
+
+        <div class="step-group">
+          <div class="step-name">Create Job Requisition</div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Rework: If level needs adjustment, HM works with FP&amp;A and budget owner -- all coordination via Slack.</div><div class="flag-source">Recruiting Notes</div></div></div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Heavy Slack dependency for awareness and approvals instead of structured system workflows.</div><div class="flag-source">CKO Workshop</div></div></div>
+        </div>
+
+        <div class="step-group">
+          <div class="step-name">Review by Comp, FP&amp;A, ELT</div>
+          <div class="flag"><div class="flag-dot"></div><div><div>If manager decides to change anything after kickoff (up-leveling), this is a manual change requiring FP&amp;A sign-off with recurring meetings and Slack.</div><div class="flag-source">CKO Workshop</div></div></div>
+        </div>
+
+        <div class="step-group">
+          <div class="step-name">Interface 1: Workday to Greenhouse</div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Changes to req title, level, and HM between role creation in GH and posting may cause inconsistencies if not caught by recruiter.</div><div class="flag-source">Recruiting Notes</div></div></div>
+          <div class="flag"><div class="flag-dot"></div><div><div>If change happens in Greenhouse, the update to Workday is manual. Usually communicated via Slack.</div><div class="flag-source">CKO Workshop</div></div></div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Manual review does not check every field -- checks job title but not job level.</div><div class="flag-source">CKO Workshop</div></div></div>
+        </div>
+
+        <div class="step-group">
+          <div class="step-name">Recruiter Screen</div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Right to Work: Only verbal confirmation obtained during recruiting. No formal document (Visa, Residence Permit, Citizenship) collected.</div><div class="flag-source">CKO Workshop</div></div></div>
+        </div>
+
+        <div class="step-group">
+          <div class="step-name">Interview Process</div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Legal check handled manually via email to Will Simmons -- no structured/embedded workflow.</div><div class="flag-source">CKO Workshop</div></div></div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Check for skill overlap done with Comp team over Slack.</div><div class="flag-source">CKO Workshop</div></div></div>
+        </div>
+
+        <div class="step-group">
+          <div class="step-name">Offer Approval</div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Upleveling requires manual business case, connecting with FP&amp;A via Slack for HC and budget approval, then internal parity check with PBPs.</div><div class="flag-source">CKO Workshop</div></div></div>
+        </div>
+
+        <div class="step-group">
+          <div class="step-name">Mark Hired &amp; Notify</div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Recruiter must flag candidate as hired for subsequent steps to kick off -- some manual chasing by the team to get the checkbox checked.</div><div class="flag-source">CKO Workshop</div></div></div>
+        </div>
+      </div>
+
+      <div class="lane-group">
+        <div class="lane-name">People Ops</div>
+
+        <div class="step-group">
+          <div class="step-name">Create New Hire Profile</div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Integration breakdowns usually caused by text field mismatches between Greenhouse and Workday -- things like zip codes having dashes.</div><div class="flag-source">CKO Workshop</div></div></div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Once in Workday, POps gets notification to start compensation process. Comp, stock, and CF email entered here.</div><div class="flag-source">CKO Workshop</div></div></div>
+        </div>
+
+        <div class="step-group">
+          <div class="step-name">Submit Profile &amp; Trigger Email</div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Workday cannot be accessed prior to hire date. Dual authenticator does not work yet.</div><div class="flag-source">CKO Workshop</div></div></div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Communicating to other stakeholders about onboarding type (VIP, confidential) is a gap.</div><div class="flag-source">CKO Workshop</div></div></div>
+          <div class="flag"><div class="flag-dot"></div><div><div>People Ops also checks for anyone being "slow" and manually reaches out. Payroll deadlines can be a problem.</div><div class="flag-source">CKO Workshop</div></div></div>
+        </div>
+
+        <div class="step-group">
+          <div class="step-name">IT Provisioning</div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Onboarding sheet only updated once a day. Activation takes about 3 days. Communication issue back to People Ops team.</div><div class="flag-source">CKO Workshop</div></div></div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Laptop standards by role (Mac vs Windows) not clearly defined or enforced. Comp would prefer Windows.</div><div class="flag-source">CKO Workshop</div></div></div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Contentful Email should be activated one week prior to start date; process needs IT review.</div><div class="flag-source">CKO Workshop</div></div></div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Contractor conversion is a separate issue not well handled.</div><div class="flag-source">CKO Workshop</div></div></div>
+        </div>
+
+        <div class="step-group">
+          <div class="step-name">Pending Report &amp; Compliance</div>
+          <div class="flag"><div class="flag-dot"></div><div><div>POps does bi-weekly audits for compliance on the tight EMEA window to get all hiring documentation in -- dependent on the new employee to respond.</div><div class="flag-source">CKO Workshop</div></div></div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Workday only moves when everything is completed; then POps gets it all at once. They want it to happen sequentially.</div><div class="flag-source">CKO Workshop</div></div></div>
+        </div>
+      </div>
+
+      <div class="lane-group">
+        <div class="lane-name">Benefits</div>
+
+        <div class="step-group">
+          <div class="step-name">Interface 2: Benefits Vendors</div>
+          <div class="flag"><div class="flag-dot"></div><div><div>EMEA benefits processing is a very manual load for the benefits administrator.</div><div class="flag-source">CKO Workshop</div></div></div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Forma integration from Workday should be immediate but is currently only once a week. Suggestion: Okta-Forma integration.</div><div class="flag-source">CKO Workshop</div></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 2. Compensation Cycle -->
+  <div class="area">
+    <div class="area-header" onclick="this.parentElement.classList.toggle('collapsed')">
+      <h2>2. Compensation -- Main Comp Cycle</h2>
+      <span class="area-count zero">0 flags</span>
+    </div>
+    <div class="area-body">
+      <div class="area-empty">No flags identified in this process area.</div>
+    </div>
+  </div>
+
+  <!-- 3. People Ops Audits -->
+  <div class="area">
+    <div class="area-header" onclick="this.parentElement.classList.toggle('collapsed')">
+      <h2>3. People Ops Audits</h2>
+      <span class="area-count">1 flag</span>
+    </div>
+    <div class="area-body">
+      <div class="lane-group">
+        <div class="lane-name">POps Audits (Global)</div>
+        <div class="step-group">
+          <div class="step-name">Stock Grants Review</div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Stock/equity process does not properly handle contractor conversions, interns, or working students.</div><div class="flag-source">CKO Workshop</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. PAFs -->
+  <div class="area">
+    <div class="area-header" onclick="this.parentElement.classList.toggle('collapsed')">
+      <h2>4. PAFs -- Annual Variable Compensation</h2>
+      <span class="area-count zero">0 flags</span>
+    </div>
+    <div class="area-body">
+      <div class="area-empty">No flags identified in this process area.</div>
+    </div>
+  </div>
+
+  <!-- 5. US Payroll Processing -->
+  <div class="area">
+    <div class="area-header" onclick="this.parentElement.classList.toggle('collapsed')">
+      <h2>5. US Payroll Processing</h2>
+      <span class="area-count">8 flags</span>
+    </div>
+    <div class="area-body">
+
+      <div class="lane-group">
+        <div class="lane-name">Payroll Specialist</div>
+
+        <div class="step-group">
+          <div class="step-name">New Hire Completeness Checks</div>
+          <div class="flag"><div class="flag-dot"></div><div><div>No official new hire process specific to payroll. Tax election checks are fragmented across multiple checklist items.</div><div class="flag-source">Payroll Review (Mar 4)</div></div></div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Many completeness checks are vestiges from pre-integration era when Workday-OSV sync was unreliable. IT General Controls now govern that integration, enabling more system reliance.</div><div class="flag-source">Payroll Review (Mar 4)</div></div></div>
+        </div>
+
+        <div class="step-group">
+          <div class="step-name">Check State Registrations</div>
+          <div class="flag"><div class="flag-dot"></div><div><div>New state registrations can hold up entire payroll if not caught before processing. No proactive notification from People Ops to payroll.</div><div class="flag-source">Payroll Review (Mar 4)</div></div></div>
+        </div>
+
+        <div class="step-group">
+          <div class="step-name">Chase Hourly Time Approvals</div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Managers consistently miss time approval deadlines despite calendar reminders. Payroll specialist has to chase or approve on their behalf with manual notation.</div><div class="flag-source">Payroll Review (Mar 4)</div></div></div>
+        </div>
+
+        <div class="step-group">
+          <div class="step-name">Run Bonus Reports</div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Redundant reports: same process checked multiple ways on different checklist items. Different checklist step but basically the same process done earlier.</div><div class="flag-source">Payroll Review (Mar 4)</div></div></div>
+        </div>
+
+        <div class="step-group">
+          <div class="step-name">Build Reconciliation</div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Reconciliation is a heavy manual spreadsheet process comparing multiple Workday reports with pivot tables. Very labor-intensive.</div><div class="flag-source">Payroll Review (Mar 4)</div></div></div>
+        </div>
+
+        <div class="step-group">
+          <div class="step-name">Fund Schwab 401K</div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Off-cycle 401K timing mismatch: Schwab gets funded immediately on ad hoc payments but Workday records it in next pay period, creating reconciliation variances that must be manually tracked and excluded.</div><div class="flag-source">Payroll Review (Mar 4)</div></div></div>
+          <div class="flag"><div class="flag-dot"></div><div><div>December integration failure with Schwab went undetected -- the funding completeness check would not catch election-level mismatches between what employees elected and what was actually sent.</div><div class="flag-source">Payroll Review (Mar 4)</div></div></div>
+        </div>
+      </div>
+
+      <div class="lane-group">
+        <div class="lane-name">Payroll Manager</div>
+
+        <div class="step-group">
+          <div class="step-name">Approve Payroll</div>
+          <div class="flag"><div class="flag-dot"></div><div><div>Approval evidence is a Slack screenshot attached to reconciliation spreadsheet -- not a structured system workflow or audit trail.</div><div class="flag-source">Payroll Review (Mar 4)</div></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    Generated from Hire to Retire process map data. Sources: CKO Workshop (Feb 12, 2026), Recruiting Notes, Hire to Paycheck Process Map (Jun 2024), Payroll Review Meeting (Mar 4, 2026).
+  </div>
+</div>
+
+<script>
+// Collapse/expand support
+document.querySelectorAll('.area-header').forEach(function(h) {
+  h.style.cursor = 'pointer';
+});
+// CSS for collapsed state
+var style = document.createElement('style');
+style.textContent = '.area.collapsed .area-body { display: none; } .area-header::after { content: ""; display: inline-block; width: 8px; height: 8px; border-right: 2px solid #9ca3af; border-bottom: 2px solid #9ca3af; transform: rotate(45deg); transition: transform 0.2s; margin-left: 8px; } .area.collapsed .area-header::after { transform: rotate(-45deg); }';
+document.head.appendChild(style);
+</script>
+
+</body>
+</html>

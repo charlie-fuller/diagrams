@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Procurement Contracts -- AI Implementation Roadmap</title>
+<style>
+:root {
+  --bg-page: #f8fafc;
+  --bg-card: #ffffff;
+  --text-primary: #1a1a2e;
+  --text-secondary: #4a5568;
+  --text-muted: #718096;
+  --border: #e2e8f0;
+  --border-light: #f1f5f9;
+  --accent: #3b82f6;
+  --accent-light: #dbeafe;
+  --green: #059669;
+  --green-light: #d1fae5;
+  --green-dark: #047857;
+  --purple: #7c3aed;
+  --purple-light: #ede9fe;
+  --orange: #d97706;
+  --orange-light: #fef3c7;
+  --red: #dc2626;
+  --red-light: #fee2e2;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--accent);
+  text-decoration: none;
+  margin-bottom: 24px;
+}
+.back-link:hover { text-decoration: underline; }
+h1 {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+.intro {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 40px;
+  max-width: 720px;
+}
+
+/* Phase timeline */
+.timeline {
+  position: relative;
+  padding-left: 32px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--gray-200);
+}
+.phase {
+  position: relative;
+  margin-bottom: 40px;
+}
+.phase:last-child { margin-bottom: 0; }
+.phase-dot {
+  position: absolute;
+  left: -32px;
+  top: 2px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+  z-index: 1;
+}
+.phase-dot.p1 { background: var(--green); }
+.phase-dot.p2 { background: var(--accent); }
+.phase-dot.p3 { background: var(--purple); }
+.phase-dot.p4 { background: var(--orange); }
+
+.phase-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+.phase-title {
+  font-size: 20px;
+  font-weight: 700;
+}
+.phase-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 10px;
+}
+.phase-tag.now { background: var(--green-light); color: var(--green-dark); }
+.phase-tag.next { background: var(--accent-light); color: var(--accent); }
+.phase-tag.future { background: var(--purple-light); color: var(--purple); }
+.phase-tag.horizon { background: var(--orange-light); color: var(--orange); }
+
+.phase-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.phase-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.what-section, .why-section, .how-section, .prereq-section, .outcome-section {
+  margin-bottom: 16px;
+}
+.what-section:last-child, .why-section:last-child, .how-section:last-child, .prereq-section:last-child, .outcome-section:last-child {
+  margin-bottom: 0;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.section-content {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.section-content ul {
+  margin: 0;
+  padding-left: 18px;
+}
+.section-content li {
+  margin-bottom: 4px;
+}
+.section-content li:last-child { margin-bottom: 0; }
+
+.highlight {
+  background: var(--green-light);
+  color: var(--green-dark);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.highlight.blue {
+  background: var(--accent-light);
+  color: var(--accent);
+}
+.highlight.purple {
+  background: var(--purple-light);
+  color: var(--purple);
+}
+
+/* Decision box */
+.decision-box {
+  margin-top: 16px;
+  padding: 14px 16px;
+  background: #fffbeb;
+  border: 1px solid #fbbf24;
+  border-radius: 8px;
+  font-size: 13px;
+}
+.decision-box strong {
+  color: var(--orange);
+}
+
+/* Dependency arrow between phases */
+.dep-arrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: -20px 0 -12px 0;
+  padding-left: 4px;
+  font-size: 12px;
+  color: var(--gray-400);
+}
+.dep-arrow .line {
+  flex: 1;
+  height: 1px;
+  background: var(--gray-300);
+  max-width: 60px;
+}
+
+/* Summary table */
+.summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 40px;
+  font-size: 13px;
+}
+.summary-table th {
+  text-align: left;
+  padding: 10px 12px;
+  background: var(--gray-50);
+  border-bottom: 2px solid var(--border);
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.summary-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-light);
+  vertical-align: top;
+}
+.summary-table tr:last-child td { border-bottom: none; }
+.phase-badge {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 12px;
+}
+.phase-badge.p1 { background: var(--green-light); color: var(--green-dark); }
+.phase-badge.p2 { background: var(--accent-light); color: var(--accent); }
+.phase-badge.p3 { background: var(--purple-light); color: var(--purple); }
+.phase-badge.p4 { background: var(--orange-light); color: var(--orange); }
+
+/* Next steps */
+.next-steps {
+  margin-top: 40px;
+  padding: 20px;
+  background: var(--bg-card);
+  border: 2px solid var(--green);
+  border-radius: 10px;
+}
+.next-steps h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--green-dark);
+}
+.next-steps ol {
+  padding-left: 20px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+.next-steps li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+.next-steps li:last-child { margin-bottom: 0; }
+
+@media print {
+  .container { max-width: 100%; padding: 24px; }
+  .phase { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="back-link">&larr; Back to project home</a>
+
+  <h1>AI Implementation Roadmap</h1>
+  <p class="subtitle">Phased approach to automating procurement contract review</p>
+  <p class="intro">
+    Strategy is designed to deliver value immediately with a manual workflow, then progressively automate as Omnia integration matures. Each phase builds on the previous one and can be paused or adjusted based on what we learn. The guiding principle: don't build what we'll have to maintain if the platform can do it natively.
+  </p>
+
+  <div class="timeline">
+
+    <!-- Phase 1 -->
+    <div class="phase">
+      <div class="phase-dot p1">1</div>
+      <div class="phase-header">
+        <div class="phase-title">Manual Document Review</div>
+        <span class="phase-tag now">Start Here</span>
+      </div>
+      <p class="phase-subtitle">Morgan uploads documents manually, AI reviews against playbook rules</p>
+      <div class="phase-card">
+        <div class="what-section">
+          <div class="section-label">What We Build</div>
+          <div class="section-content">
+            <ul>
+              <li>A simple interface where Morgan or Rory can upload an SOW and/or MSA</li>
+              <li>AI reviews the documents and returns a structured report covering:
+                <ul>
+                  <li><strong>Document type classification</strong> -- is this actually an SOW, MSA, NDA, or online terms?</li>
+                  <li><strong>Completeness check</strong> -- are required fields present (quantities, pricing, term length, payment terms, SKUs)?</li>
+                  <li><strong>Playbook compliance</strong> -- flag auto-renewal clauses, payment terms worse than net 60, missing price caps, unlimited increase language</li>
+                  <li><strong>Risk items</strong> -- any unusual clauses or language that warrants closer human review</li>
+                </ul>
+              </li>
+              <li>Output is a structured checklist Morgan can act on immediately</li>
+            </ul>
+          </div>
+        </div>
+        <div class="why-section">
+          <div class="section-label">Why Start Here</div>
+          <div class="section-content">
+            <ul>
+              <li>Zero integration dependencies -- works today with no API access or Omnia changes</li>
+              <li>Morgan already tested contract review in Glean and was "very impressed" by the detail</li>
+              <li>Validates accuracy before we connect it to anything automated</li>
+              <li>Immediate time savings on the ~40% of submissions that are incomplete or wrong doc type</li>
+            </ul>
+          </div>
+        </div>
+        <div class="how-section">
+          <div class="section-label">Implementation</div>
+          <div class="section-content">
+            <ul>
+              <li>Encode the negotiation playbook rules (payment terms, auto-renewal, price caps, etc.) as structured review criteria</li>
+              <li>Build a prompt pipeline that processes uploaded documents against the criteria</li>
+              <li>Return results as a clear pass/fail checklist with specific findings</li>
+            </ul>
+          </div>
+        </div>
+        <div class="outcome-section">
+          <div class="section-label">Success Criteria</div>
+          <div class="section-content">
+            <ul>
+              <li>Correctly classifies document type (SOW vs MSA vs NDA vs online terms)</li>
+              <li>Catches the major playbook violations Morgan would catch manually</li>
+              <li>Morgan and Rory trust the output enough to use it as a first pass</li>
+            </ul>
+          </div>
+        </div>
+        <div class="decision-box">
+          <strong>Build vs. Buy Decision:</strong> This could be a standalone tool or a Glean agent, depending on whether the output needs to go back into Omnia/Jira. Since the initial use is just Morgan reviewing the report, a lightweight build is fine. Glean is not ideal here because the value is in structured output back to the requester, not company-wide search.
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 2 -->
+    <div class="phase">
+      <div class="phase-dot p2">2</div>
+      <div class="phase-header">
+        <div class="phase-title">Omnia API Integration</div>
+        <span class="phase-tag next">Next</span>
+      </div>
+      <p class="phase-subtitle">Auto-trigger document review when a procurement request hits the queue</p>
+      <div class="phase-card">
+        <div class="prereq-section">
+          <div class="section-label">Prerequisites</div>
+          <div class="section-content">
+            <ul>
+              <li>Phase 1 validated -- AI review is accurate enough to trust</li>
+              <li>API access to Omnia confirmed (meet with Morgan's Omnia rep)</li>
+              <li>Understand Omnia's native capabilities -- they may already support some of this</li>
+            </ul>
+          </div>
+        </div>
+        <div class="what-section">
+          <div class="section-label">What We Build</div>
+          <div class="section-content">
+            <ul>
+              <li><strong>Event trigger:</strong> When a new procurement request is submitted in Omnia with attached documents, automatically pick them up for review</li>
+              <li><strong>Same AI review pipeline</strong> from Phase 1, now triggered automatically instead of manually</li>
+              <li><strong>Results written back</strong> to the Omnia ticket as a structured review summary</li>
+              <li><strong>Auto-reject for clear failures:</strong> If the system is highly confident the document is incomplete (e.g., NDA uploaded instead of MSA), send it back to the requester immediately with guidance -- before it ever reaches procurement</li>
+            </ul>
+          </div>
+        </div>
+        <div class="why-section">
+          <div class="section-label">Why This Matters</div>
+          <div class="section-content">
+            <ul>
+              <li>Eliminates the 1-2 week delay where bad documents sit in the queue waiting for human review</li>
+              <li>Requester gets feedback in minutes, not weeks</li>
+              <li>Procurement team only sees requests that have already passed basic validation</li>
+              <li>Review happens in parallel with FP&A/manager approval -- no sequential bottleneck</li>
+            </ul>
+          </div>
+        </div>
+        <div class="decision-box">
+          <strong>Key Question for Omnia Rep:</strong> Does Omnia have webhook/API support for new request events? Can we write results back to the ticket via API? Does Omnia have any native document validation or AI capabilities we should use instead of building?
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 3 -->
+    <div class="phase">
+      <div class="phase-dot p3">3</div>
+      <div class="phase-header">
+        <div class="phase-title">Contract Comparison and Redlining</div>
+        <span class="phase-tag future">Future</span>
+      </div>
+      <p class="phase-subtitle">AI compares new contracts against previous versions and generates redline suggestions</p>
+      <div class="phase-card">
+        <div class="prereq-section">
+          <div class="section-label">Prerequisites</div>
+          <div class="section-content">
+            <ul>
+              <li>Phase 2 running -- automated document intake is working</li>
+              <li>LinkSquares integration or API access for pulling historical contracts</li>
+              <li>Sufficient historical contract data accessible programmatically</li>
+            </ul>
+          </div>
+        </div>
+        <div class="what-section">
+          <div class="section-label">What We Build</div>
+          <div class="section-content">
+            <ul>
+              <li><strong>Contract diff engine:</strong> For renewals, automatically pull the previous SOW/MSA from LinkSquares and compare against the new submission</li>
+              <li><strong>Change detection:</strong> Highlight every difference between old and new -- price changes, new clauses, removed protections, term modifications</li>
+              <li><strong>Risk scoring:</strong> Flag changes that violate playbook rules (price increase >5%, new auto-renewal clause, removed caps)</li>
+              <li><strong>Redline generation:</strong> For identified issues, suggest specific contract language changes that procurement can send directly to the requester</li>
+            </ul>
+          </div>
+        </div>
+        <div class="why-section">
+          <div class="section-label">Why This Is High Value</div>
+          <div class="section-content">
+            <ul>
+              <li>Suppliers -- especially large ones -- frequently sneak in unfavorable terms assuming Contentful won't read carefully</li>
+              <li>Manual comparison is time-consuming and error-prone</li>
+              <li>Morgan's goal: give the requester something they can forward directly to the supplier</li>
+              <li>AI is well-suited to exhaustive document comparison at speed</li>
+            </ul>
+          </div>
+        </div>
+        <div class="decision-box">
+          <strong>Integration Path:</strong> LinkSquares already integrates with Omnia. If we can query LinkSquares for the most recent agreement with a given supplier, the diff can be fully automated for renewals. New vendor contracts would still go through Phase 2 review only.
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 4 -->
+    <div class="phase">
+      <div class="phase-dot p4">4</div>
+      <div class="phase-header">
+        <div class="phase-title">Full-Cycle Automation</div>
+        <span class="phase-tag horizon">Horizon</span>
+      </div>
+      <p class="phase-subtitle">End-to-end automation from submission to requester-ready feedback</p>
+      <div class="phase-card">
+        <div class="what-section">
+          <div class="section-label">What This Looks Like</div>
+          <div class="section-content">
+            <ul>
+              <li><strong>Requester guidance at submission:</strong> AI assistant helps the requester understand what documents they need (MSA vs SOW vs NDA), checks uploads in real-time, and prevents bad submissions entirely</li>
+              <li><strong>Parallel pre-review:</strong> The moment documents are uploaded -- even before FP&A or manager approves -- the AI runs completeness, playbook, and comparison checks</li>
+              <li><strong>Auto-generated requester responses:</strong> For standard issues (wrong doc type, missing fields, playbook violations), generate the exact feedback message or redlined document the requester needs to send back to the supplier</li>
+              <li><strong>Procurement dashboard:</strong> When the request reaches Morgan and Rory, the AI review is already complete. They validate the AI findings, handle the nuanced cases, and approve</li>
+              <li><strong>Learning loop:</strong> Track which AI findings procurement agrees/disagrees with to refine accuracy over time</li>
+            </ul>
+          </div>
+        </div>
+        <div class="why-section">
+          <div class="section-label">Nuance That Stays Human</div>
+          <div class="section-content">
+            <ul>
+              <li>Complex implementation fee structures that vary by supplier type</li>
+              <li>Large vendor negotiations where leverage and relationship context matter</li>
+              <li>Novel clause types the playbook doesn't yet cover</li>
+              <li>Judgment calls on when to push back vs. accept slightly non-standard terms</li>
+              <li>These are the cases Morgan and Rory should be spending their time on -- not catching missing line items</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Summary table -->
+  <table class="summary-table">
+    <thead>
+      <tr>
+        <th>Phase</th>
+        <th>Trigger</th>
+        <th>AI Capability</th>
+        <th>Integration Needed</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="phase-badge p1">Phase 1</span></td>
+        <td>Manual upload</td>
+        <td>Doc classification, completeness check, playbook compliance</td>
+        <td>None</td>
+      </tr>
+      <tr>
+        <td><span class="phase-badge p2">Phase 2</span></td>
+        <td>Omnia event</td>
+        <td>Same as Phase 1, auto-triggered + auto-reject</td>
+        <td>Omnia API</td>
+      </tr>
+      <tr>
+        <td><span class="phase-badge p3">Phase 3</span></td>
+        <td>Omnia event (renewals)</td>
+        <td>Contract diff, change detection, redline generation</td>
+        <td>Omnia API + LinkSquares</td>
+      </tr>
+      <tr>
+        <td><span class="phase-badge p4">Phase 4</span></td>
+        <td>Submission-time</td>
+        <td>Guided intake, parallel pre-review, auto-response drafting</td>
+        <td>Omnia (deep), LinkSquares, Jira history</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Next steps -->
+  <div class="next-steps">
+    <h3>Immediate Next Steps</h3>
+    <ol>
+      <li><strong>Schedule meeting with Morgan's Omnia rep</strong> to understand API capabilities, webhook support, and any native AI/validation features Omnia already offers</li>
+      <li><strong>Get a few sample contracts from Morgan</strong> (one clean SOW, one incomplete SOW, one with playbook violations) to build and test the Phase 1 review pipeline</li>
+      <li><strong>Encode the negotiation playbook</strong> as structured review criteria -- Morgan to confirm the full rule set beyond what was discussed in discovery</li>
+      <li><strong>Build Phase 1 prototype</strong> and have Morgan/Rory test it against contracts they've already reviewed to validate accuracy</li>
+    </ol>
+  </div>
+
+</div>
+</body>
+</html>

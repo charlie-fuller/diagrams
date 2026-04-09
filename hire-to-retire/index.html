@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hire to Retire -- Document Index</title>
+<style>
+:root {
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --text: #1a1a2e;
+  --text-2: #4a5568;
+  --text-3: #718096;
+  --border: #e2e8f0;
+  --accent: #3b82f6;
+  --green: #059669;
+  --amber: #d97706;
+  --red: #dc2626;
+  --indigo: #6366f1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+.page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+h1 {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+.subtitle {
+  font-size: 15px;
+  color: var(--text-2);
+  max-width: 600px;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+.meta {
+  display: flex;
+  gap: 24px;
+  margin-top: 16px;
+  margin-bottom: 40px;
+  font-size: 13px;
+  color: var(--text-3);
+}
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.meta-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 32px;
+}
+.card {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+.card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  transform: translateY(-3px);
+}
+.card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+}
+.card-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 6px;
+}
+.card h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.card p {
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.6;
+  margin-bottom: 16px;
+  flex-grow: 1;
+}
+.card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+}
+.card:hover .card-cta { text-decoration: underline; }
+
+.card.full-width {
+  grid-column: 1 / -1;
+}
+
+.footer {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-3);
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 700px) {
+  .cards { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <h1>Hire to Retire</h1>
+  <p class="subtitle">Interactive process maps and analysis covering the full employee lifecycle at Contentful -- from headcount creation through compensation, audits, variable pay, and payroll processing.</p>
+  <div class="meta">
+    <div class="meta-item"><div class="meta-dot" style="background:var(--green)"></div> Initiative: Zero Friction Lifecycle</div>
+    <div class="meta-item"><div class="meta-dot" style="background:var(--amber)"></div> Status: In Discovery</div>
+    <div class="meta-item"><div class="meta-dot" style="background:var(--accent)"></div> Last Updated: Mar 2026</div>
+  </div>
+
+  <div class="cards">
+    <a href="hire-to-retire-process.html" class="card">
+      <div class="card-icon" style="background:#ecfdf5;color:var(--green);">&#9776;</div>
+      <div class="card-label" style="color:var(--green);">Recommended starting point</div>
+      <h2>Detailed Process Maps</h2>
+      <p>Five separate swimlane diagrams organized in tabs. Click any step to expand details, HR controls, and flags. Filter by system or flags.</p>
+      <div class="card-cta">Open Detailed Maps &rarr;</div>
+    </a>
+
+    <a href="hire-to-retire-full-map.html" class="card">
+      <div class="card-icon" style="background:#eef2ff;color:var(--indigo);">&#9638;</div>
+      <div class="card-label" style="color:var(--indigo);">Executive overview</div>
+      <h2>Full Process Map</h2>
+      <p>All five process areas on a single scrollable page with aggregate statistics, connection diagram, and collapsible sections.</p>
+      <div class="card-cta">Open Full Map &rarr;</div>
+    </a>
+
+    <a href="hire-to-retire-flags.html" class="card">
+      <div class="card-icon" style="background:var(--bg);color:var(--red);">&#9873;</div>
+      <div class="card-label" style="color:var(--red);">Pain points &amp; issues</div>
+      <h2>Workshop &amp; Review Flags</h2>
+      <p>All 32 flags grouped by process area and swim lane. Includes top themes: Slack as workflow, manual system sync, onboarding timing, EMEA burden, edge case gaps, and payroll manual burden.</p>
+      <div class="card-cta">View All Flags &rarr;</div>
+    </a>
+  </div>
+
+  <div class="footer">
+    Generated from DISCO initiative discovery documents. Sources: CKO Workshop (Feb 12, 2026), Hire to Paycheck Process Map (Jun 2024), Recruiting Notes, Payroll Review Meeting (Mar 4, 2026).
+  </div>
+</div>
+
+</body>
+</html>
