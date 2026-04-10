@@ -18,8 +18,21 @@
     --border-bright: #AEC1CC;
     --text: #111B2B;
     --text-dim: #5A657C;
-    --accent: #036FE3;
-    --accent-dim: rgba(3, 111, 227, 0.07);
+    --text-muted: #67728A;
+
+    /* Section accents -- Forma 36 */
+    --blue: #036FE3;
+    --blue-dim: #E8F5FF;
+    --green: #006D23;
+    --green-dim: #EAF9E8;
+    --orange: #CC4500;
+    --orange-dim: #FFF2E4;
+    --purple: #6C3ECF;
+    --purple-dim: #F7F2FF;
+    --red: #BD002A;
+    --red-dim: #FFF2F2;
+    --teal: #0059C8;
+    --teal-dim: #E8F5FF;
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -29,8 +42,20 @@
       --border-bright: rgba(174, 193, 204, 0.25);
       --text: #E7EBEE;
       --text-dim: #8994A8;
-      --accent: #40A0FF;
-      --accent-dim: rgba(64, 160, 255, 0.12);
+      --text-muted: #67728A;
+
+      --blue: #40A0FF;
+      --blue-dim: rgba(64, 160, 255, 0.1);
+      --green: #9ED696;
+      --green-dim: rgba(158, 214, 150, 0.08);
+      --orange: #FDB882;
+      --orange-dim: rgba(253, 184, 130, 0.08);
+      --purple: #D1BBFF;
+      --purple-dim: rgba(209, 187, 255, 0.08);
+      --red: #FFB1B2;
+      --red-dim: rgba(255, 177, 178, 0.08);
+      --teal: #98CBFF;
+      --teal-dim: rgba(152, 203, 255, 0.08);
     }
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -55,17 +80,16 @@
     margin-bottom: 36px;
   }
   .project {
-    margin-bottom: 28px;
+    margin-bottom: 32px;
   }
   .project-name {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--text-dim);
-    margin-bottom: 10px;
-    padding-left: 2px;
+    font-family: var(--font-body);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    margin-bottom: 12px;
+    padding-left: 14px;
+    border-left: 3px solid var(--text-muted);
   }
   .diagram-list {
     list-style: none;
@@ -84,9 +108,9 @@
     font-size: 14px;
     font-weight: 500;
     transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    border-left: 3px solid var(--border);
   }
   .diagram-list a:hover {
-    border-color: var(--accent);
     transform: translateY(-1px);
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
   }
@@ -97,6 +121,32 @@
     line-height: 1.4;
     font-weight: 400;
   }
+
+  /* Per-section colors */
+  .project--blue .project-name { color: var(--blue); border-left-color: var(--blue); }
+  .project--blue .diagram-list a { border-left-color: var(--blue-dim); }
+  .project--blue .diagram-list a:hover { border-left-color: var(--blue); border-color: var(--blue); }
+
+  .project--green .project-name { color: var(--green); border-left-color: var(--green); }
+  .project--green .diagram-list a { border-left-color: var(--green-dim); }
+  .project--green .diagram-list a:hover { border-left-color: var(--green); border-color: var(--green); }
+
+  .project--orange .project-name { color: var(--orange); border-left-color: var(--orange); }
+  .project--orange .diagram-list a { border-left-color: var(--orange-dim); }
+  .project--orange .diagram-list a:hover { border-left-color: var(--orange); border-color: var(--orange); }
+
+  .project--purple .project-name { color: var(--purple); border-left-color: var(--purple); }
+  .project--purple .diagram-list a { border-left-color: var(--purple-dim); }
+  .project--purple .diagram-list a:hover { border-left-color: var(--purple); border-color: var(--purple); }
+
+  .project--red .project-name { color: var(--red); border-left-color: var(--red); }
+  .project--red .diagram-list a { border-left-color: var(--red-dim); }
+  .project--red .diagram-list a:hover { border-left-color: var(--red); border-color: var(--red); }
+
+  .project--teal .project-name { color: var(--teal); border-left-color: var(--teal); }
+  .project--teal .diagram-list a { border-left-color: var(--teal-dim); }
+  .project--teal .diagram-list a:hover { border-left-color: var(--teal); border-color: var(--teal); }
+
   @media (max-width: 600px) {
     body { padding: 20px; }
     h1 { font-size: 24px; }
@@ -108,7 +158,7 @@
   <h1>IS AI Diagrams</h1>
   <p class="subtitle">interactive architecture and strategy diagrams</p>
 
-  <div class="project">
+  <div class="project project--blue">
     <div class="project-name">Hire to Retire</div>
     <ul class="diagram-list">
       <li><a href="hire-to-retire/full-map.html">
@@ -130,7 +180,7 @@
     </ul>
   </div>
 
-  <div class="project">
+  <div class="project project--green">
     <div class="project-name">Procurement</div>
     <ul class="diagram-list">
       <li><a href="procurement/process-map.html">
@@ -144,7 +194,7 @@
     </ul>
   </div>
 
-  <div class="project">
+  <div class="project project--orange">
     <div class="project-name">Deal Desk</div>
     <ul class="diagram-list">
       <li><a href="deal-desk/process-map.html">
@@ -162,7 +212,7 @@
     </ul>
   </div>
 
-  <div class="project">
+  <div class="project project--purple">
     <div class="project-name">Strategic Account Planning</div>
     <ul class="diagram-list">
       <li><a href="strategic-account-planning/process-map.html">
@@ -176,7 +226,7 @@
     </ul>
   </div>
 
-  <div class="project">
+  <div class="project project--teal">
     <div class="project-name">AI Platform</div>
     <ul class="diagram-list">
       <li><a href="ai-platform/decision-tree.html">
@@ -186,7 +236,7 @@
     </ul>
   </div>
 
-  <div class="project">
+  <div class="project project--red">
     <div class="project-name">AESOP</div>
     <ul class="diagram-list">
       <li><a href="aesop/hydra-process-map.html">
