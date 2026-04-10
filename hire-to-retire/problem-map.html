@@ -1416,35 +1416,44 @@
 
 <script>
 (function() {
-  // Stage detail panel logic
-  const stages = document.querySelectorAll('.stage[data-stage]');
-  const detailsWrap = document.getElementById('stage-details');
-  let activeStages = new Set();
+  // Stage detail panel logic -- show one at a time
+  var stages = document.querySelectorAll('.stage[data-stage]');
+  var detailsWrap = document.getElementById('stage-details');
+  var allPanels = document.querySelectorAll('.stage-detail');
+  var activeStage = null;
+
+  function clearStages() {
+    stages.forEach(function(s) {
+      s.classList.remove('active');
+      s.querySelector('.expand-text').textContent = 'View details';
+    });
+    allPanels.forEach(function(p) { p.classList.remove('visible'); });
+  }
+
+  function showStage(target) {
+    clearStages();
+    var stage = document.querySelector('.stage[data-stage="' + target + '"]');
+    var panel = document.getElementById('detail-' + target);
+    stage.classList.add('active');
+    stage.querySelector('.expand-text').textContent = 'Hide details';
+    panel.classList.add('visible');
+    detailsWrap.classList.add('open');
+    activeStage = target;
+  }
+
+  function hideStages() {
+    clearStages();
+    detailsWrap.classList.remove('open');
+    activeStage = null;
+  }
 
   stages.forEach(function(stage) {
     stage.addEventListener('click', function() {
       var target = stage.dataset.stage;
-      var panel = document.getElementById('detail-' + target);
-
-      if (activeStages.has(target)) {
-        // Close this stage
-        activeStages.delete(target);
-        stage.classList.remove('active');
-        stage.querySelector('.expand-text').textContent = 'View details';
-        panel.classList.remove('visible');
+      if (activeStage === target) {
+        hideStages();
       } else {
-        // Open this stage
-        activeStages.add(target);
-        stage.classList.add('active');
-        stage.querySelector('.expand-text').textContent = 'Hide details';
-        panel.classList.add('visible');
-      }
-
-      // Toggle wrap visibility
-      if (activeStages.size > 0) {
-        detailsWrap.classList.add('open');
-      } else {
-        detailsWrap.classList.remove('open');
+        showStage(target);
       }
     });
   });
@@ -1467,27 +1476,18 @@
   toggleAllBtn.addEventListener('click', function() {
     allExpanded = !allExpanded;
 
-    // Stages
-    stages.forEach(function(stage) {
-      var target = stage.dataset.stage;
-      var panel = document.getElementById('detail-' + target);
-      if (allExpanded) {
-        activeStages.add(target);
+    // Stages -- show all when expanding, hide all when collapsing
+    if (allExpanded) {
+      clearStages();
+      stages.forEach(function(stage) {
         stage.classList.add('active');
         stage.querySelector('.expand-text').textContent = 'Hide details';
-        panel.classList.add('visible');
-      } else {
-        activeStages.delete(target);
-        stage.classList.remove('active');
-        stage.querySelector('.expand-text').textContent = 'View details';
-        panel.classList.remove('visible');
-      }
-    });
-
-    if (allExpanded) {
+      });
+      allPanels.forEach(function(p) { p.classList.add('visible'); });
       detailsWrap.classList.add('open');
+      activeStage = 'all';
     } else {
-      detailsWrap.classList.remove('open');
+      hideStages();
     }
 
     // Sections
