@@ -9,56 +9,57 @@
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
+    /* Contentful Forma 36 palette */
     --font-body: 'Source Serif 4', Georgia, serif;
     --font-mono: 'DM Mono', 'SF Mono', Consolas, monospace;
-    --bg: #faf9f7;
+    --bg: #F7F9FA;
     --surface: #ffffff;
-    --surface2: #f4f2ef;
-    --surface-elevated: #fffdfb;
-    --border: rgba(0, 0, 0, 0.07);
-    --border-bright: rgba(0, 0, 0, 0.14);
-    --text: #1c1917;
-    --text-dim: #78716c;
-    --hire: #0369a1;
-    --hire-dim: rgba(3, 105, 161, 0.07);
-    --perform: #b45309;
-    --perform-dim: rgba(180, 83, 9, 0.07);
-    --exit: #9f1239;
-    --exit-dim: rgba(159, 18, 57, 0.07);
-    --cost: #dc2626;
-    --cost-dim: rgba(220, 38, 38, 0.06);
-    --ai: #059669;
-    --ai-dim: rgba(5, 150, 105, 0.07);
-    --connect: #6d28d9;
-    --connect-dim: rgba(109, 40, 217, 0.06);
-    --portfolio: #0f766e;
-    --portfolio-dim: rgba(15, 118, 110, 0.07);
+    --surface2: #E7EBEE;
+    --surface-elevated: #ffffff;
+    --border: #CFD9E0;
+    --border-bright: #AEC1CC;
+    --text: #111B2B;
+    --text-dim: #5A657C;
+    --hire: #036FE3;
+    --hire-dim: rgba(3, 111, 227, 0.07);
+    --perform: #CC4500;
+    --perform-dim: rgba(204, 69, 0, 0.07);
+    --exit: #BD002A;
+    --exit-dim: rgba(189, 0, 42, 0.06);
+    --cost: #DA294A;
+    --cost-dim: rgba(218, 41, 74, 0.06);
+    --ai: #006D23;
+    --ai-dim: rgba(0, 109, 35, 0.07);
+    --connect: #6C3ECF;
+    --connect-dim: rgba(108, 62, 207, 0.06);
+    --portfolio: #0041AB;
+    --portfolio-dim: rgba(0, 65, 171, 0.07);
   }
 
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #171412;
-      --surface: #201c19;
-      --surface2: #2a2521;
-      --surface-elevated: #302a25;
-      --border: rgba(255, 255, 255, 0.06);
-      --border-bright: rgba(255, 255, 255, 0.12);
-      --text: #ede5dd;
-      --text-dim: #a69889;
-      --hire: #38bdf8;
-      --hire-dim: rgba(56, 189, 248, 0.1);
-      --perform: #fbbf24;
-      --perform-dim: rgba(251, 191, 36, 0.1);
-      --exit: #fda4af;
-      --exit-dim: rgba(253, 164, 175, 0.1);
-      --cost: #fca5a5;
-      --cost-dim: rgba(252, 165, 165, 0.08);
-      --ai: #6ee7b7;
-      --ai-dim: rgba(110, 231, 183, 0.1);
-      --connect: #c4b5fd;
-      --connect-dim: rgba(196, 181, 253, 0.08);
-      --portfolio: #5eead4;
-      --portfolio-dim: rgba(94, 234, 212, 0.1);
+      --bg: #0C141C;
+      --surface: #1B273A;
+      --surface2: #263348;
+      --surface-elevated: #2a3a52;
+      --border: rgba(174, 193, 204, 0.15);
+      --border-bright: rgba(174, 193, 204, 0.25);
+      --text: #E7EBEE;
+      --text-dim: #8994A8;
+      --hire: #40A0FF;
+      --hire-dim: rgba(64, 160, 255, 0.1);
+      --perform: #FDB882;
+      --perform-dim: rgba(253, 184, 130, 0.1);
+      --exit: #FFB1B2;
+      --exit-dim: rgba(255, 177, 178, 0.08);
+      --cost: #FF707D;
+      --cost-dim: rgba(255, 112, 125, 0.08);
+      --ai: #9ED696;
+      --ai-dim: rgba(158, 214, 150, 0.1);
+      --connect: #D1BBFF;
+      --connect-dim: rgba(209, 187, 255, 0.08);
+      --portfolio: #98CBFF;
+      --portfolio-dim: rgba(152, 203, 255, 0.1);
     }
   }
 
@@ -67,9 +68,9 @@
   body {
     background: var(--bg);
     background-image:
-      radial-gradient(ellipse at 15% 10%, var(--hire-dim) 0%, transparent 40%),
-      radial-gradient(ellipse at 50% 50%, var(--perform-dim) 0%, transparent 35%),
-      radial-gradient(ellipse at 85% 90%, var(--exit-dim) 0%, transparent 40%);
+      radial-gradient(ellipse at 15% 10%, rgba(3, 111, 227, 0.04) 0%, transparent 40%),
+      radial-gradient(ellipse at 50% 50%, rgba(204, 69, 0, 0.03) 0%, transparent 35%),
+      radial-gradient(ellipse at 85% 90%, rgba(189, 0, 42, 0.04) 0%, transparent 40%);
     color: var(--text);
     font-family: var(--font-body);
     padding: 48px 40px;
