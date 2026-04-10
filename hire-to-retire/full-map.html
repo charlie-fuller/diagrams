@@ -959,7 +959,7 @@ function renderSections() {
 
     // Banner
     var banner = document.createElement('div');
-    banner.className = 'section-banner';
+    banner.className = 'section-banner collapsed';
     banner.onclick = function() {
       banner.classList.toggle('collapsed');
     };
@@ -1081,7 +1081,7 @@ function applyFilter(filter) {
   });
 }
 
-var allCollapsed = false;
+var allCollapsed = true;
 function toggleAllSections() {
   allCollapsed = !allCollapsed;
   document.querySelectorAll('.section-banner').forEach(function(b) {
