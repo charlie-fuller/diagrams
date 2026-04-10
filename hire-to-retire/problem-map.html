@@ -11,7 +11,6 @@
   :root {
     --font-body: 'Source Serif 4', Georgia, serif;
     --font-mono: 'DM Mono', 'SF Mono', Consolas, monospace;
-
     --bg: #faf9f7;
     --surface: #ffffff;
     --surface2: #f4f2ef;
@@ -20,7 +19,6 @@
     --border-bright: rgba(0, 0, 0, 0.14);
     --text: #1c1917;
     --text-dim: #78716c;
-
     --hire: #0369a1;
     --hire-dim: rgba(3, 105, 161, 0.07);
     --perform: #b45309;
@@ -33,6 +31,8 @@
     --ai-dim: rgba(5, 150, 105, 0.07);
     --connect: #6d28d9;
     --connect-dim: rgba(109, 40, 217, 0.06);
+    --portfolio: #0f766e;
+    --portfolio-dim: rgba(15, 118, 110, 0.07);
   }
 
   @media (prefers-color-scheme: dark) {
@@ -45,7 +45,6 @@
       --border-bright: rgba(255, 255, 255, 0.12);
       --text: #ede5dd;
       --text-dim: #a69889;
-
       --hire: #38bdf8;
       --hire-dim: rgba(56, 189, 248, 0.1);
       --perform: #fbbf24;
@@ -58,6 +57,8 @@
       --ai-dim: rgba(110, 231, 183, 0.1);
       --connect: #c4b5fd;
       --connect-dim: rgba(196, 181, 253, 0.08);
+      --portfolio: #5eead4;
+      --portfolio-dim: rgba(94, 234, 212, 0.1);
     }
   }
 
@@ -117,9 +118,42 @@
     line-height: 1.6;
     color: var(--text-dim);
     max-width: 780px;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
   }
   .thesis strong { color: var(--text); }
+
+  /* ---- CONTROLS ---- */
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .controls button {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: var(--surface);
+    border: 1px solid var(--border-bright);
+    border-radius: 6px;
+    padding: 6px 14px;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .controls button:hover {
+    background: var(--surface-elevated);
+    color: var(--text);
+    border-color: var(--text-dim);
+  }
+  .controls-hint {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    opacity: 0.6;
+  }
 
   /* ---- KPI ROW ---- */
   .kpi-row {
@@ -163,7 +197,7 @@
     grid-template-columns: 1fr auto 1fr auto 1fr;
     gap: 0;
     align-items: start;
-    margin-bottom: 40px;
+    margin-bottom: 0;
   }
 
   .stage {
@@ -172,18 +206,26 @@
     border-radius: 12px;
     padding: 24px;
     position: relative;
-    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    user-select: none;
   }
   .stage:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 16px rgba(0,0,0,0.08);
   }
+  .stage.active {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  }
+  .stage--hire.active { border-color: var(--hire); }
+  .stage--perform.active { border-color: var(--perform); }
+  .stage--exit.active { border-color: var(--exit); }
 
   .stage-header {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 16px;
+    margin-bottom: 10px;
   }
   .stage-num {
     font-family: var(--font-mono);
@@ -203,9 +245,44 @@
     font-family: var(--font-mono);
     font-size: 11px;
     color: var(--text-dim);
-    margin-bottom: 14px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid var(--border);
+    margin-bottom: 10px;
+  }
+  .stage-summary {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+  .stage-summary strong { color: var(--text); }
+
+  .stage-expand {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    transition: color 0.2s;
+  }
+  .stage:hover .stage-expand { color: var(--text); }
+  .stage-expand .chevron {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg);
+    transition: transform 0.3s;
+    position: relative;
+    top: -2px;
+  }
+  .stage.active .stage-expand .chevron {
+    transform: rotate(-135deg);
+    top: 2px;
   }
 
   .stage--hire { border-top: 3px solid var(--hire); }
@@ -219,59 +296,6 @@
   .stage--exit { border-top: 3px solid var(--exit); }
   .stage--exit .stage-num { background: var(--exit-dim); color: var(--exit); }
   .stage--exit .stage-title { color: var(--exit); }
-
-  .detail-block { margin-bottom: 16px; }
-  .detail-block:last-child { margin-bottom: 0; }
-  .detail-label {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-dim);
-    margin-bottom: 6px;
-  }
-  .detail-list {
-    list-style: none;
-    font-size: 13px;
-    line-height: 1.7;
-  }
-  .detail-list li {
-    padding-left: 14px;
-    position: relative;
-  }
-  .detail-list li::before {
-    content: '\203A';
-    color: var(--text-dim);
-    font-weight: 600;
-    position: absolute;
-    left: 0;
-  }
-
-  .gap-tag {
-    display: inline-block;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    font-weight: 500;
-    padding: 2px 8px;
-    border-radius: 4px;
-    background: var(--cost-dim);
-    color: var(--cost);
-    margin-top: 4px;
-  }
-
-  .sys-tag {
-    display: inline-block;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    font-weight: 500;
-    padding: 2px 8px;
-    border-radius: 4px;
-    background: var(--border);
-    color: var(--text-dim);
-    margin-right: 4px;
-    margin-bottom: 4px;
-  }
 
   /* ---- COST FLOW ARROW ---- */
   .cost-arrow {
@@ -303,12 +327,238 @@
     text-align: center;
   }
 
+  /* ---- STAGE DETAIL PANEL ---- */
+  .stage-details-wrap {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s ease;
+    margin-bottom: 40px;
+  }
+  .stage-details-wrap.open {
+    grid-template-rows: 1fr;
+  }
+  .stage-details-inner {
+    overflow: hidden;
+  }
+
+  .stage-detail {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-top: 16px;
+    position: relative;
+  }
+  .stage-detail.visible { display: block; }
+
+  .stage-detail--hire { border-left: 4px solid var(--hire); }
+  .stage-detail--perform { border-left: 4px solid var(--perform); }
+  .stage-detail--exit { border-left: 4px solid var(--exit); }
+
+  .sd-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sd-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+  .sd-sources {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .sd-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 32px;
+  }
+
+  .detail-block { margin-bottom: 0; }
+  .detail-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+  .detail-list {
+    list-style: none;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .detail-list li {
+    padding-left: 14px;
+    position: relative;
+  }
+  .detail-list li::before {
+    content: '\203A';
+    color: var(--text-dim);
+    font-weight: 600;
+    position: absolute;
+    left: 0;
+  }
+  .detail-list li strong { color: var(--text); }
+
+  .detail-text {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text-dim);
+  }
+  .detail-text strong { color: var(--text); }
+
+  .gap-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--cost-dim);
+    color: var(--cost);
+    margin-top: 6px;
+  }
+  .ok-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--ai-dim);
+    color: var(--ai);
+    margin-top: 6px;
+  }
+  .blocked-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--perform-dim);
+    color: var(--perform);
+    margin-top: 6px;
+  }
+
+  .sys-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--border);
+    color: var(--text-dim);
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+
+  .sd-quote {
+    font-size: 13px;
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--text-dim);
+    border-left: 2px solid var(--border-bright);
+    padding-left: 14px;
+    margin-top: 16px;
+  }
+  .sd-quote-attr {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* ---- COLLAPSIBLE SECTIONS ---- */
+  .section-heading {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+    padding: 12px 0;
+    transition: color 0.2s;
+  }
+  .section-heading:hover { color: var(--text); }
+  .section-heading::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .section-heading .chevron {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg);
+    transition: transform 0.3s;
+    position: relative;
+    top: -1px;
+  }
+  .section-heading.open .chevron {
+    transform: rotate(-135deg);
+    top: 2px;
+  }
+
+  .section-content {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.35s ease;
+    margin-bottom: 8px;
+  }
+  .section-content.open {
+    grid-template-rows: 1fr;
+    margin-bottom: 32px;
+  }
+  .section-content > .section-inner {
+    overflow: hidden;
+  }
+
+  .section-heading-static {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-heading-static::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
   /* ---- CONNECTIONS ---- */
   .connections {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
-    margin-bottom: 40px;
+    padding-top: 12px;
   }
   .conn-card {
     background: var(--surface);
@@ -334,7 +584,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 16px;
-    margin-bottom: 40px;
+    padding-top: 12px;
   }
   .ai-card {
     background: var(--surface);
@@ -351,17 +601,23 @@
     left: 0;
     right: 0;
     height: 3px;
-    background: var(--ai);
   }
+  .ai-card--hire::before { background: var(--hire); }
+  .ai-card--perform::before { background: var(--perform); }
+  .ai-card--exit::before { background: var(--exit); }
+
   .ai-card-phase {
     font-family: var(--font-mono);
     font-size: 10px;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: var(--ai);
     margin-bottom: 8px;
   }
+  .ai-card--hire .ai-card-phase { color: var(--hire); }
+  .ai-card--perform .ai-card-phase { color: var(--perform); }
+  .ai-card--exit .ai-card-phase { color: var(--exit); }
+
   .ai-card-title {
     font-weight: 700;
     font-size: 15px;
@@ -389,8 +645,128 @@
     border-radius: 4px;
     margin-top: 6px;
   }
-  .ai-card-status--exists { background: var(--ai-dim); color: var(--ai); }
+  .ai-card-status--active { background: var(--ai-dim); color: var(--ai); }
   .ai-card-status--gap { background: var(--cost-dim); color: var(--cost); }
+  .ai-card-status--blocked { background: var(--perform-dim); color: var(--perform); }
+  .ai-card-status--exists { background: var(--border); color: var(--text-dim); }
+
+  /* ---- TIMELINE ---- */
+  .timeline {
+    padding-top: 12px;
+    position: relative;
+  }
+  .tl-group {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 0 20px;
+    position: relative;
+    padding-bottom: 4px;
+  }
+  .tl-group::before {
+    content: '';
+    position: absolute;
+    left: 110px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--border-bright);
+  }
+  .tl-group:last-child::before { display: none; }
+
+  .tl-date {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-dim);
+    text-align: right;
+    padding-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .tl-date--now { color: var(--ai); font-weight: 700; }
+  .tl-date--blocked { color: var(--cost); }
+
+  .tl-items {
+    padding-bottom: 20px;
+  }
+  .tl-item {
+    font-size: 13px;
+    line-height: 1.6;
+    padding: 3px 0 3px 18px;
+    position: relative;
+  }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 11px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-dim);
+  }
+  .tl-item--hire::before { background: var(--hire); }
+  .tl-item--perform::before { background: var(--perform); }
+  .tl-item--exit::before { background: var(--exit); }
+  .tl-item--cross::before { background: var(--connect); }
+  .tl-item strong { color: var(--text); }
+
+  /* ---- PORTFOLIO CONTEXT ---- */
+  .portfolio-block {
+    background: color-mix(in srgb, var(--surface) 92%, var(--portfolio) 8%);
+    border: 1px solid color-mix(in srgb, var(--border) 50%, var(--portfolio) 50%);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-top: 12px;
+  }
+  .portfolio-block p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+  .portfolio-block p:last-child { margin-bottom: 0; }
+  .portfolio-block strong { color: var(--text); }
+  .portfolio-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--portfolio);
+    margin-bottom: 8px;
+  }
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .tier-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .tier-card-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--portfolio);
+    margin-bottom: 6px;
+  }
+  .tier-card-title {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+  .tier-card-desc {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-dim);
+  }
 
   /* ---- UNLOCK ---- */
   .unlock {
@@ -399,6 +775,7 @@
     border-radius: 12px;
     padding: 28px 32px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    margin-top: 40px;
   }
   .unlock-label {
     font-family: var(--font-mono);
@@ -424,25 +801,7 @@
   .unlock p:last-child { margin-bottom: 0; }
   .unlock strong { color: var(--text); }
 
-  .section-heading {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--text-dim);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .section-heading::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-
+  /* ---- RESPONSIVE ---- */
   @media (max-width: 900px) {
     body { padding: 24px 16px; }
     .lifecycle { grid-template-columns: 1fr; gap: 16px; }
@@ -459,6 +818,10 @@
     .kpi-row { grid-template-columns: 1fr 1fr; }
     .connections { grid-template-columns: 1fr; }
     .ai-row { grid-template-columns: 1fr; }
+    .sd-grid { grid-template-columns: 1fr; }
+    .tl-group { grid-template-columns: 80px 1fr; }
+    .tl-group::before { left: 90px; }
+    .portfolio-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -466,267 +829,684 @@
 
 <div class="wrap">
 
+  <!-- HEADER -->
   <h1 class="anim" style="--i:0">Hire to Exit</h1>
-  <p class="subtitle anim" style="--i:1">People lifecycle problem map -- April 2026</p>
+  <p class="subtitle anim" style="--i:1">People lifecycle problem map -- April 2026 | Expanded from 5 discovery sessions</p>
   <p class="thesis anim" style="--i:2">
     Three teams are working on <strong>different segments of the same cost problem</strong> without a shared view.
-    Bad hires (Chad) that can't be course-corrected (Stacey) become expensive exits (Abby).
-    Each team's AI initiative is more valuable when framed as part of the lifecycle, not standalone.
+    Bad hires (Chad/Bella) that can't be course-corrected (Stacey/Hannah) become expensive exits (Abby/Ashley).
+    Each team's AI initiative is more valuable when framed as part of the lifecycle -- and this is the
+    strongest portfolio-level story for Carla's ~$1M AI investment question.
   </p>
+
+  <!-- CONTROLS -->
+  <div class="controls anim" style="--i:3">
+    <button type="button" id="toggle-all">Expand all sections</button>
+    <span class="controls-hint">Click any card or heading to drill in</span>
+  </div>
 
   <!-- KPIs -->
   <div class="kpi-row">
-    <div class="kpi anim-scale" style="--i:3">
+    <div class="kpi anim-scale" style="--i:4">
       <div class="kpi-val" style="color:var(--exit)">~100</div>
       <div class="kpi-label">Separations / yr</div>
       <div class="kpi-note">Across US, EMEA, Australia</div>
     </div>
-    <div class="kpi anim-scale" style="--i:4">
+    <div class="kpi anim-scale" style="--i:5">
       <div class="kpi-val" style="color:var(--perform)">0</div>
       <div class="kpi-label">Progressive discipline framework</div>
       <div class="kpi-note">No structure to course-correct</div>
     </div>
-    <div class="kpi anim-scale" style="--i:5">
+    <div class="kpi anim-scale" style="--i:6">
       <div class="kpi-val" style="color:var(--hire)">?</div>
       <div class="kpi-label">Quality of hire score</div>
       <div class="kpi-note">Not measured at Contentful</div>
     </div>
-    <div class="kpi anim-scale" style="--i:6">
-      <div class="kpi-val" style="color:var(--cost)">$$$</div>
-      <div class="kpi-label">MTA / severance spend</div>
-      <div class="kpi-note">Elevated due to upstream gaps</div>
+    <div class="kpi anim-scale" style="--i:7">
+      <div class="kpi-val" style="color:var(--cost)">7</div>
+      <div class="kpi-label">Recruiting KPIs tracked</div>
+      <div class="kpi-note">Speed measured, quality is not</div>
     </div>
   </div>
 
   <!-- LIFECYCLE -->
-  <div class="section-heading anim" style="--i:7">Employee Lifecycle</div>
+  <div class="section-heading-static anim" style="--i:8">Employee Lifecycle</div>
 
   <div class="lifecycle">
 
     <!-- HIRE -->
-    <div class="stage stage--hire anim" style="--i:8">
+    <div class="stage stage--hire anim" style="--i:9" data-stage="hire">
       <div class="stage-header">
         <span class="stage-num">Stage 1</span>
         <span class="stage-title">Hire</span>
       </div>
-      <div class="stage-owner">Chad -- Head of Talent Acquisition</div>
-
-      <div class="detail-block">
-        <div class="detail-label">What's measured</div>
-        <ul class="detail-list">
-          <li><strong>Time to fill</strong> (role open to seat filled) -- daily via Tenfold</li>
-          <li><strong>Time to hire</strong> (candidate enters funnel to offer signed) -- daily</li>
-        </ul>
+      <div class="stage-owner">Chad (Head of TA) + Bella (Recruiting & Analytics)</div>
+      <div class="stage-summary">
+        <strong>7 KPIs tracked</strong> but all measure speed and efficiency.
+        Quality of hire -- the metric that makes faster hiring safe -- is <strong>not measured</strong>.
       </div>
-
-      <div class="detail-block">
-        <div class="detail-label">What's missing</div>
-        <ul class="detail-list">
-          <li><strong>Quality of hire</strong> -- not measured at Contentful</li>
-          <li>Equation exists in concept: time in seat + performance rating + manager feedback</li>
-          <li>Data lives in CultureAmp but no calculation exists</li>
-        </ul>
-        <div class="gap-tag">Critical gap -- Goodhart's Law risk</div>
-      </div>
-
-      <div class="detail-block">
-        <div class="detail-label">Systems</div>
-        <div>
-          <span class="sys-tag">CultureAmp</span>
-          <span class="sys-tag">Tenfold</span>
-        </div>
+      <div class="stage-expand">
+        <span class="chevron"></span>
+        <span class="expand-text">View details</span>
       </div>
     </div>
 
     <!-- ARROW 1 -->
-    <div class="cost-arrow anim" style="--i:9">
+    <div class="cost-arrow anim" style="--i:10">
       <svg viewBox="0 0 48 48"><path d="M12 24 L36 24 M30 18 L36 24 L30 30"/></svg>
       <div class="cost-arrow-label">Bad hires<br>pass through</div>
     </div>
 
     <!-- PERFORM -->
-    <div class="stage stage--perform anim" style="--i:10">
+    <div class="stage stage--perform anim" style="--i:11" data-stage="perform">
       <div class="stage-header">
         <span class="stage-num">Stage 2</span>
         <span class="stage-title">Perform</span>
       </div>
-      <div class="stage-owner">Stacey -- People, Value, and Performance (PvP)</div>
-
-      <div class="detail-block">
-        <div class="detail-label">What's broken</div>
-        <ul class="detail-list">
-          <li><strong>No progressive performance management</strong> framework</li>
-          <li>Managers lack tools for performance conversations</li>
-          <li>No early intervention mechanism</li>
-          <li>Employee engagement scores used as proxy but no action loop</li>
-        </ul>
-        <div class="gap-tag">Systemic gap -- no course correction</div>
+      <div class="stage-owner">Stacey (PvP) + Hannah (L&D) + Aurelia (People Ops)</div>
+      <div class="stage-summary">
+        <strong>No progressive discipline framework.</strong>
+        MTA spend is the proxy metric for systemic failure. Blocked until June offsite.
       </div>
-
-      <div class="detail-block">
-        <div class="detail-label">In flight</div>
-        <ul class="detail-list">
-          <li>Manager 360s launching</li>
-          <li>Planning offsite in June will update priorities</li>
-          <li>Heavy overlap with Hannah's L&D work</li>
-        </ul>
-      </div>
-
-      <div class="detail-block">
-        <div class="detail-label">Key metric</div>
-        <ul class="detail-list">
-          <li><strong>MTA / separation spend</strong> -- a proxy for systemic failure here</li>
-        </ul>
+      <div class="stage-expand">
+        <span class="chevron"></span>
+        <span class="expand-text">View details</span>
       </div>
     </div>
 
     <!-- ARROW 2 -->
-    <div class="cost-arrow anim" style="--i:11">
+    <div class="cost-arrow anim" style="--i:12">
       <svg viewBox="0 0 48 48"><path d="M12 24 L36 24 M30 18 L36 24 L30 30"/></svg>
       <div class="cost-arrow-label">Unmanaged<br>out via MTA</div>
     </div>
 
     <!-- EXIT -->
-    <div class="stage stage--exit anim" style="--i:12">
+    <div class="stage stage--exit anim" style="--i:13" data-stage="exit">
       <div class="stage-header">
         <span class="stage-num">Stage 3</span>
         <span class="stage-title">Exit</span>
       </div>
-      <div class="stage-owner">Abby -- Employment & Corporate Legal</div>
-
-      <div class="detail-block">
-        <div class="detail-label">Workload</div>
-        <ul class="detail-list">
-          <li>~100 separation agreements / year</li>
-          <li>Three jurisdictions: US, EMEA, Australia</li>
-          <li>EMEA has meaningfully higher complexity (different templates, severance rules by country + tenure)</li>
-          <li>Manual, consuming significant legal talent</li>
-        </ul>
+      <div class="stage-owner">Abby (Employment Legal) + Ashley Adams (Legal Ops)</div>
+      <div class="stage-summary">
+        <strong>~100 separation agreements/yr.</strong>
+        Separation agent in discovery. Only 2 surviving KPIs -- lifecycle framing fills the metric gap.
       </div>
-
-      <div class="detail-block">
-        <div class="detail-label">Constraints</div>
-        <ul class="detail-list">
-          <li><strong>Strict access wall</strong> -- must be isolated from commercial legal</li>
-          <li>Prior art: Ashley/Tricia explored Glean-Jira integration</li>
-          <li>Tyler/Krissy built MTA request agent from Jira data</li>
-        </ul>
-      </div>
-
-      <div class="detail-block">
-        <div class="detail-label">Systems</div>
-        <div>
-          <span class="sys-tag">Jira</span>
-          <span class="sys-tag">LinkSquares</span>
-        </div>
+      <div class="stage-expand">
+        <span class="chevron"></span>
+        <span class="expand-text">View details</span>
       </div>
     </div>
 
+  </div>
+
+  <!-- STAGE DETAIL PANELS -->
+  <div class="stage-details-wrap" id="stage-details">
+    <div class="stage-details-inner">
+
+      <!-- HIRE DETAIL -->
+      <div class="stage-detail stage-detail--hire" id="detail-hire">
+        <div class="sd-header">
+          <div class="sd-title" style="color:var(--hire)">Hire -- Full Detail</div>
+          <div class="sd-sources">Sources: Chad 4/7, Bella 4/6</div>
+        </div>
+        <div class="sd-grid">
+          <div class="detail-block">
+            <div class="detail-label">What's measured (7 KPIs)</div>
+            <ul class="detail-list">
+              <li><strong>Time to fill</strong> -- role open to seat filled, daily via Tenfold</li>
+              <li><strong>Time to hire</strong> -- candidate enters funnel to offer signed, daily</li>
+              <li><strong>Sourcing channel efficiency</strong> -- 36+ pipelines beyond LinkedIn</li>
+              <li><strong>Time to first qualified candidate</strong></li>
+              <li><strong>Diversity of hire</strong> -- hires only, not candidates (legal constraint)</li>
+              <li><strong>Cost per hire</strong> -- not yet tracked, launching soon</li>
+              <li><strong>Hiring manager NPS</strong> -- relaunching June in simplified format</li>
+            </ul>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">What's missing</div>
+            <ul class="detail-list">
+              <li><strong>Quality of hire</strong> -- not measured at Contentful</li>
+              <li>Equation exists in concept: time in seat + performance rating + manager feedback</li>
+              <li>Data lives in CultureAmp but no calculation built</li>
+              <li>No forcing function -- could drift indefinitely</li>
+            </ul>
+            <div class="gap-tag">Goodhart's Law risk -- faster hiring without quality measurement</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">Bella's dual role</div>
+            <ul class="detail-list">
+              <li>Recruiting execution + <strong>People Analytics lead</strong> (board-level reporting)</li>
+              <li>Historical KPI data back to <strong>2019</strong> -- baseline for AI impact measurement</li>
+              <li>Owns analytics across entire People org (Jonathan, Lee, Richard, Stacy sections)</li>
+              <li>Explicit goal: <strong>eliminate recruiting coordinator role</strong> through AI automation</li>
+              <li>Hands-on technical: has information systems background, understands APIs, built multiple ChatGPT agents</li>
+            </ul>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">Systems</div>
+            <div>
+              <span class="sys-tag">CultureAmp</span>
+              <span class="sys-tag">Tenfold</span>
+              <span class="sys-tag">Greenhouse</span>
+              <span class="sys-tag">Juicebox (new)</span>
+            </div>
+            <div class="detail-label" style="margin-top:16px">AI already in flight</div>
+            <ul class="detail-list">
+              <li><strong>JD Generator</strong> -- validated as first AI initiative, targets time-to-fill</li>
+              <li>Bella's ChatGPT agents: stack ranking, automated scheduling, social media</li>
+              <li>Juicebox: passive candidate outreach with engagement analytics</li>
+            </ul>
+            <div class="ok-tag">JD generator validated -- first initiative</div>
+          </div>
+        </div>
+        <div class="sd-quote">
+          <span class="sd-quote-attr">Chad:</span> "Help construct a people function that utilizes AI to manage the tactical work or transactional work that we spend a lot of time on, providing space for us to spend more time on the work that matters most."
+        </div>
+      </div>
+
+      <!-- PERFORM DETAIL -->
+      <div class="stage-detail stage-detail--perform" id="detail-perform">
+        <div class="sd-header">
+          <div class="sd-title" style="color:var(--perform)">Perform -- Full Detail</div>
+          <div class="sd-sources">Sources: Stacey 4/9, Hannah (claude-mem)</div>
+        </div>
+        <div class="sd-grid">
+          <div class="detail-block">
+            <div class="detail-label">What's broken</div>
+            <ul class="detail-list">
+              <li><strong>No progressive performance management</strong> framework exists</li>
+              <li>No early intervention mechanism for struggling employees</li>
+              <li>Managers lack tools for performance conversations</li>
+              <li>Employee engagement scores used as proxy but no action loop</li>
+              <li>Manager effectiveness = "most room for opportunity" (Stacey)</li>
+            </ul>
+            <div class="gap-tag">Systemic gap -- no course correction before MTA</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">In flight</div>
+            <ul class="detail-list">
+              <li>Manager 360s launching</li>
+              <li>Functional solutions exist: AE growth framework tied to MedPIC</li>
+              <li><strong>June offsite</strong> will update priorities and framework</li>
+              <li>Chris consciously restraining from solutioning -- discovery protected</li>
+            </ul>
+            <div class="blocked-tag">Blocked -- June offsite is the real planning moment</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">Hannah / L&D overlap</div>
+            <ul class="detail-list">
+              <li>PvP and L&D initiatives are <strong>"very similar"</strong> (Stacey's words)</li>
+              <li>Hannah's vision: "automate entire tactical layer" so People team can serve as strategic partners</li>
+              <li>Aurelia runs People Ops globally -- repetitive, cyclical, predictable processes</li>
+              <li>Nelson already built quarterly check-in agent for talent management</li>
+              <li>People Ops positioned as <strong>highest automation ROI</strong> in org</li>
+            </ul>
+            <div class="gap-tag">Solution architecture must account for overlap or risk duplication</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">Key metric</div>
+            <ul class="detail-list">
+              <li><strong>MTA / separation spend</strong> -- the proxy for systemic failure</li>
+              <li>No dedicated performance management system today</li>
+            </ul>
+            <div class="detail-label" style="margin-top:16px">Systems</div>
+            <div>
+              <span class="sys-tag">CultureAmp (engagement)</span>
+            </div>
+          </div>
+        </div>
+        <div class="sd-quote">
+          <span class="sd-quote-attr">Stacey:</span> "It's just basically how much money we're spending on exiting people from the business because we don't do proper performance management."
+        </div>
+      </div>
+
+      <!-- EXIT DETAIL -->
+      <div class="stage-detail stage-detail--exit" id="detail-exit">
+        <div class="sd-header">
+          <div class="sd-title" style="color:var(--exit)">Exit -- Full Detail</div>
+          <div class="sd-sources">Sources: Abby 4/3</div>
+        </div>
+        <div class="sd-grid">
+          <div class="detail-block">
+            <div class="detail-label">Workload</div>
+            <ul class="detail-list">
+              <li>~100 separation agreements / year</li>
+              <li>Three jurisdictions: US, EMEA, Australia</li>
+              <li>EMEA has <strong>meaningfully higher complexity</strong> -- different templates, severance rules by country + tenure (logic branching, not just localization)</li>
+              <li>Manual, consuming significant legal talent</li>
+            </ul>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">Metric poverty</div>
+            <ul class="detail-list">
+              <li><strong>Outstanding litigation</strong> -- top KPI (only one with teeth)</li>
+              <li>Legal ticket turnaround -- healthy, not a focus</li>
+              <li>5 candidate KPIs eliminated (matter resolution time, CSAT, legal cost as % of revenue, regulatory response time, annual state filings)</li>
+              <li>Legal spend tracking is <strong>informal</strong> -- Ashley Adams flags verbally, no dashboard</li>
+            </ul>
+            <div class="gap-tag">Without lifecycle framing, this function is metric-invisible</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">Constraints</div>
+            <ul class="detail-list">
+              <li><strong>Strict access wall</strong> -- must be isolated from commercial legal (compliance requirement, not preference)</li>
+              <li>Severance calculator must flag policy-limit violations and auto-reject out-of-bounds proposals</li>
+            </ul>
+            <div class="detail-label" style="margin-top:16px">Key contacts</div>
+            <ul class="detail-list">
+              <li>Vera Eberhard (Berlin) -- EMEA templates and jurisdictional logic</li>
+              <li>Sam Haygreen -- US/AU separation process</li>
+              <li>Ashley Adams -- Legal Ops, existing Glean-Jira exploration</li>
+            </ul>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">Prior art</div>
+            <ul class="detail-list">
+              <li>Ashley/Tricia explored <strong>Glean connected to Jira</strong> for separation agreements</li>
+              <li>Tyler/Krissy built <strong>MTA request agent</strong> from Jira data</li>
+              <li>Annual state filings identified as quick-win fallback</li>
+            </ul>
+            <div class="detail-label" style="margin-top:16px">Systems</div>
+            <div>
+              <span class="sys-tag">Jira</span>
+              <span class="sys-tag">LinkSquares</span>
+            </div>
+            <div style="margin-top:10px">
+              <div class="ok-tag">Separation agent PRD in discovery</div>
+            </div>
+          </div>
+        </div>
+        <div class="sd-quote">
+          <span class="sd-quote-attr">Abby:</span> "Usually you hear about it when things aren't working well. But right now, I haven't... you kind of hear when people are not satisfied with the turnaround time."
+          <br><span style="font-style:normal;font-size:12px;color:var(--text-dim)">-- Reveals measurement is entirely complaint-driven, not data-driven.</span>
+        </div>
+      </div>
+
+    </div>
   </div>
 
   <!-- CROSS-CUTTING CONNECTIONS -->
-  <div class="section-heading anim" style="--i:13">Cross-cutting connections</div>
+  <div class="section-heading anim" style="--i:14" data-section="connections">
+    <span class="chevron"></span>
+    Cross-cutting connections (6)
+  </div>
+  <div class="section-content" data-section-content="connections">
+    <div class="section-inner">
+      <div class="connections">
 
-  <div class="connections">
-    <div class="conn-card anim" style="--i:14">
-      <div class="conn-title">MTA = Separation Agreement</div>
-      <div class="conn-desc">
-        Stacey calls them <strong>Mutual Termination Agreements</strong>.
-        Abby calls them <strong>separation agreements</strong>.
-        Same process, same cost, different vocabulary. Any AI work on ER case management or spend analytics needs to treat these as unified.
-      </div>
-    </div>
+        <div class="conn-card">
+          <div class="conn-title">MTA = Separation Agreement</div>
+          <div class="conn-desc">
+            Stacey calls them <strong>Mutual Termination Agreements</strong>.
+            Abby calls them <strong>separation agreements</strong>.
+            Same process, same cost, different vocabulary. Any AI work on ER case management or spend analytics needs to treat these as unified.
+          </div>
+        </div>
 
-    <div class="conn-card anim" style="--i:15">
-      <div class="conn-title">Quality of Hire drives MTA volume</div>
-      <div class="conn-desc">
-        Chad: quality of hire is unmeasured.
-        Stacey: no way to course-correct poor performers.
-        Abby: processes ~100 exits/year.
-        <strong>The volume Abby handles is a downstream consequence of gaps Chad and Stacey own.</strong>
-      </div>
-    </div>
+        <div class="conn-card">
+          <div class="conn-title">Quality of Hire drives MTA volume</div>
+          <div class="conn-desc">
+            Chad: quality of hire is unmeasured. Stacey: no way to course-correct. Abby: processes ~100 exits/year.
+            <strong>The volume Abby handles is a downstream consequence of gaps Chad and Stacey own.</strong>
+          </div>
+        </div>
 
-    <div class="conn-card anim" style="--i:16">
-      <div class="conn-title">PvP and L&D overlap</div>
-      <div class="conn-desc">
-        Stacey's PvP initiatives are "very similar" to Hannah's L&D work.
-        Manager enablement spans both teams.
-        <strong>Solution architecture must account for this overlap or risk duplication.</strong>
-      </div>
-    </div>
+        <div class="conn-card">
+          <div class="conn-title">PvP and L&D overlap</div>
+          <div class="conn-desc">
+            Stacey's PvP initiatives are "very similar" to Hannah's L&D work. Aurelia's People Ops is "repetitive, cyclical, predictable" -- the highest automation ROI.
+            <strong>Three teams (PvP, L&D, People Ops) must be coordinated or risk duplication.</strong>
+          </div>
+        </div>
 
-    <div class="conn-card anim" style="--i:17">
-      <div class="conn-title">Cost flows downhill</div>
-      <div class="conn-desc">
-        Each bad hire costs: <strong>recruiter time + ramp time</strong> (Chad),
-        <strong>manager time + HR cycles + lost productivity</strong> (Stacey),
-        <strong>legal time + severance package + external counsel</strong> (Abby).
-        The total cost is invisible because no one tracks the full lifecycle.
+        <div class="conn-card">
+          <div class="conn-title">Cost flows downhill</div>
+          <div class="conn-desc">
+            Each bad hire costs: <strong>recruiter time + ramp time</strong> (Chad/Bella),
+            <strong>manager time + HR cycles + lost productivity</strong> (Stacey),
+            <strong>legal time + severance package + external counsel</strong> (Abby).
+            The total cost is invisible because no one tracks the full lifecycle.
+          </div>
+        </div>
+
+        <div class="conn-card">
+          <div class="conn-title">Bella is the data backbone</div>
+          <div class="conn-desc">
+            Bella owns People Analytics across the <strong>entire People org</strong> -- board decks, KPIs back to 2019, dashboards across all sub-functions (recruiting, L&D, total rewards, attrition). She is the single most important data access point for connecting all three lifecycle stages.
+          </div>
+        </div>
+
+        <div class="conn-card">
+          <div class="conn-title">Zero Friction Lifecycle gap</div>
+          <div class="conn-desc">
+            Danny/Mikki's Tier 1 initiative (3/6/9-month CKO cadence) <strong>only covers the front end</strong>: headcount to onboarding. This problem map covers the full lifecycle.
+            <strong>Perform and Exit have no Tier 1 coverage.</strong>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
 
-  <!-- AI OPPORTUNITIES -->
-  <div class="section-heading anim" style="--i:18">AI opportunity at each stage</div>
+  <!-- AI INITIATIVES -->
+  <div class="section-heading anim" style="--i:15" data-section="ai">
+    <span class="chevron"></span>
+    AI initiatives -- concrete status (6)
+  </div>
+  <div class="section-content" data-section-content="ai">
+    <div class="section-inner">
+      <div class="ai-row">
 
-  <div class="ai-row">
-    <div class="ai-card anim" style="--i:19">
-      <div class="ai-card-phase">Prevent</div>
-      <div class="ai-card-title">Quality of Hire Scoring</div>
-      <div class="ai-card-desc">
-        Automated real-time quality score from CultureAmp inputs: tenure, performance rating, manager feedback.
-        Creates the missing signal that makes "faster hiring" safe.
+        <div class="ai-card ai-card--hire">
+          <div class="ai-card-phase">Hire -- Accelerate</div>
+          <div class="ai-card-title">JD Generator</div>
+          <div class="ai-card-desc">
+            Validated as the right first AI initiative. Targets time-to-fill (#1 KPI). Chain: better JDs, faster qualified applicants, reduced time to first qualified candidate, reduced time to fill.
+          </div>
+          <div class="ai-card-owner">Owner: Bella + Charlie</div>
+          <div class="ai-card-status ai-card-status--active">Validated -- first initiative</div>
+        </div>
+
+        <div class="ai-card ai-card--hire">
+          <div class="ai-card-phase">Hire -- Prevent</div>
+          <div class="ai-card-title">Quality of Hire Scoring</div>
+          <div class="ai-card-desc">
+            Automated real-time score from CultureAmp: tenure, performance rating, manager feedback. The metric that makes faster hiring safe. Equation undefined. No timeline.
+          </div>
+          <div class="ai-card-owner">Owner: Chad + Charlie</div>
+          <div class="ai-card-status ai-card-status--gap">Not started -- equation undefined, no forcing function</div>
+        </div>
+
+        <div class="ai-card ai-card--perform">
+          <div class="ai-card-phase">Perform -- Catch early</div>
+          <div class="ai-card-title">Manager Enablement Tools</div>
+          <div class="ai-card-desc">
+            AI-assisted coaching, nudges, performance conversation tooling. Intercepts the problem before it becomes an MTA. Must wait for June offsite to clarify framework.
+          </div>
+          <div class="ai-card-owner">Owner: Stacey + Charlie</div>
+          <div class="ai-card-status ai-card-status--blocked">Blocked -- June offsite defines framework</div>
+        </div>
+
+        <div class="ai-card ai-card--exit">
+          <div class="ai-card-phase">Exit -- Reduce cost</div>
+          <div class="ai-card-title">Separation Agent + Severance Calculator</div>
+          <div class="ai-card-desc">
+            Integrated tool: severance calculator embedded in agreement generation, policy-limit flagging, auto-rejection of out-of-bounds. US + EMEA + AU. Access-walled from commercial legal.
+          </div>
+          <div class="ai-card-owner">Owner: Abby + Charlie | Vera (EMEA), Sam (US/AU), Ashley (Ops)</div>
+          <div class="ai-card-status ai-card-status--active">PRD in discovery</div>
+        </div>
+
+        <div class="ai-card ai-card--exit">
+          <div class="ai-card-phase">Exit -- Existing</div>
+          <div class="ai-card-title">MTA Request Agent</div>
+          <div class="ai-card-desc">
+            Built by Tyler/Krissy from Jira data. Already exists. Represents organizational energy and prior art for separation workflow automation.
+          </div>
+          <div class="ai-card-owner">Owner: Tyler / Krissy</div>
+          <div class="ai-card-status ai-card-status--exists">Already built</div>
+        </div>
+
+        <div class="ai-card ai-card--exit">
+          <div class="ai-card-phase">Exit -- Quick win</div>
+          <div class="ai-card-title">Annual State Filings</div>
+          <div class="ai-card-desc">
+            Single-page filings, same information every year, same states. Auto-population candidate. Low stakes, high repeatability. Deferred behind separation agent.
+          </div>
+          <div class="ai-card-owner">Owner: Abby + Charlie</div>
+          <div class="ai-card-status ai-card-status--exists">Deferred -- fallback if separation agent needs runway</div>
+        </div>
+
       </div>
-      <div class="ai-card-owner">Owner: Chad + Charlie</div>
-      <div class="ai-card-status ai-card-status--gap">Not started -- equation undefined</div>
     </div>
+  </div>
 
-    <div class="ai-card anim" style="--i:20">
-      <div class="ai-card-phase">Catch early</div>
-      <div class="ai-card-title">Manager Enablement Tools</div>
-      <div class="ai-card-desc">
-        AI-assisted coaching, nudges, and performance conversation tooling.
-        Intercepts the problem before it becomes an MTA.
-        Must wait for June offsite to clarify framework.
+  <!-- TIMELINE -->
+  <div class="section-heading anim" style="--i:16" data-section="timeline">
+    <span class="chevron"></span>
+    Timeline and sequencing
+  </div>
+  <div class="section-content" data-section-content="timeline">
+    <div class="section-inner">
+      <div class="timeline">
+
+        <div class="tl-group">
+          <div class="tl-date tl-date--now">Now</div>
+          <div class="tl-items">
+            <div class="tl-item tl-item--exit"><strong>Separation agent PRD</strong> in discovery -- Exit stage moving fastest</div>
+            <div class="tl-item tl-item--hire"><strong>JD generator</strong> validated as first Hire initiative</div>
+            <div class="tl-item tl-item--hire"><strong>Cost per hire</strong> tracking launching soon -- baseline opportunity</div>
+          </div>
+        </div>
+
+        <div class="tl-group">
+          <div class="tl-date">Apr 15</div>
+          <div class="tl-items">
+            <div class="tl-item tl-item--cross"><strong>PRD Workshop</strong> (full team) -- requirements thinking, feeds all three stages</div>
+          </div>
+        </div>
+
+        <div class="tl-group">
+          <div class="tl-date">Apr 20</div>
+          <div class="tl-items">
+            <div class="tl-item tl-item--exit"><strong>Tyler returns</strong> for Glean deep-dive -- separation agent could leverage his expertise</div>
+          </div>
+        </div>
+
+        <div class="tl-group">
+          <div class="tl-date">June</div>
+          <div class="tl-items">
+            <div class="tl-item tl-item--perform"><strong>Stacey's PvP offsite</strong> -- Perform framework gets defined (currently blocked)</div>
+            <div class="tl-item tl-item--hire"><strong>Hiring manager NPS</strong> relaunches -- coordination opportunity with Stacey's offsite</div>
+          </div>
+        </div>
+
+        <div class="tl-group">
+          <div class="tl-date tl-date--blocked">TBD</div>
+          <div class="tl-items">
+            <div class="tl-item tl-item--hire"><strong>Quality of hire equation</strong> -- no deadline, no forcing function. <strong>Critical gap that could drift indefinitely.</strong></div>
+          </div>
+        </div>
+
+        <div class="tl-group">
+          <div class="tl-date">Ongoing</div>
+          <div class="tl-items">
+            <div class="tl-item tl-item--cross"><strong>Zero Friction Lifecycle</strong> -- 3/6/9 month CKO cadence (front-end only: headcount to onboarding)</div>
+          </div>
+        </div>
+
       </div>
-      <div class="ai-card-owner">Owner: Stacey + Charlie</div>
-      <div class="ai-card-status ai-card-status--gap">Blocked on framework -- June offsite</div>
+
+      <div style="margin-top:20px;padding:16px 20px;background:var(--cost-dim);border-radius:8px;border:1px solid var(--border);">
+        <div class="detail-label" style="color:var(--cost);margin-bottom:8px">Sequencing tension</div>
+        <div class="detail-text">
+          The Exit stage (Abby's separation agent) is <strong>moving now</strong> while the Perform stage (Stacey's framework) is <strong>blocked until June</strong>.
+          The stage that generates MTA volume won't have a framework until after the stage that handles the output is already being automated.
+          This isn't necessarily wrong -- reducing Exit cost has standalone value -- but the "prevent upstream" narrative is aspirational, not yet operational.
+        </div>
+      </div>
     </div>
+  </div>
 
-    <div class="ai-card anim" style="--i:21">
-      <div class="ai-card-phase">Reduce cost</div>
-      <div class="ai-card-title">Separation Agreement Automation</div>
-      <div class="ai-card-desc">
-        Integrated tool: severance calculator embedded in agreement generation, with policy-limit flagging and auto-rejection of out-of-bounds proposals. US + EMEA + AU.
+  <!-- PORTFOLIO CONTEXT -->
+  <div class="section-heading anim" style="--i:17" data-section="portfolio">
+    <span class="chevron"></span>
+    Portfolio context -- Carla's question
+  </div>
+  <div class="section-content" data-section-content="portfolio">
+    <div class="section-inner">
+      <div class="portfolio-block">
+        <div class="portfolio-label">~$1M / year AI Solutions Partner cohort</div>
+        <p>
+          Carla asked directly (4/9): <strong>"We're spending a million dollars a year... how we get visibility, how we actually think about where this gets in a year or two, and how we sort of maximize that."</strong>
+          No consolidated ROI view exists. Executive-defined success metrics don't exist for any AI Solutions Partner. Mikki flagged this as an open question in real time.
+        </p>
+
+        <div class="portfolio-grid">
+          <div class="tier-card">
+            <div class="tier-card-label">Tier 1</div>
+            <div class="tier-card-title">Value streams</div>
+            <div class="tier-card-desc">Cross-departmental initiatives like Hire to Retire, wall-to-wall sales, customer adoption. <strong>This lifecycle map is the strongest Tier 1 story available.</strong></div>
+          </div>
+          <div class="tier-card">
+            <div class="tier-card-label">Tier 2</div>
+            <div class="tier-card-title">Domain partners</div>
+            <div class="tier-card-desc">Charlie, Zuhoor, Veronica, Aben. Charlie's model is most mature and structured -- being shown to cohort as candidate standard.</div>
+          </div>
+          <div class="tier-card">
+            <div class="tier-card-label">Tier 3</div>
+            <div class="tier-card-title">IC agents</div>
+            <div class="tier-card-desc">Individual contributors building their own agents. Nelson's quarterly check-in agent, Bella's ChatGPT agents are examples.</div>
+          </div>
+        </div>
+
+        <p style="margin-top:16px">
+          <strong>Why this map matters for Carla:</strong> It connects three Tier 2 engagements (Chad/Bella, Stacey, Abby) into a single investment case. Fewer bad hires means fewer performance cycles means fewer separation agreements. The compounding story is what makes this portfolio-level, not three separate projects.
+        </p>
       </div>
-      <div class="ai-card-owner">Owner: Abby + Charlie | Partners: Vera (EMEA), Sam (US/AU), Ashley (Ops)</div>
-      <div class="ai-card-status ai-card-status--exists">In discovery -- PRD exists</div>
+
+      <div style="margin-top:16px;padding:16px 20px;background:var(--surface);border-radius:8px;border:1px solid var(--border);">
+        <div class="detail-label" style="color:var(--perform);margin-bottom:8px">Vision tension to surface</div>
+        <div class="detail-text">
+          Three different visions for the same transformation: <strong>Bella</strong> wants to eliminate the recruiting coordinator role ("we're trying to eliminate it").
+          <strong>Chad</strong> wants to free humans for relational work. <strong>Hannah</strong> says "AI allows us to be more human."
+          Bella is talking headcount reduction; Chad and Hannah are talking role elevation. The portfolio narrative needs to reconcile or acknowledge this.
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- THE UNLOCK -->
-  <div class="unlock anim" style="--i:22">
+  <div class="unlock anim" style="--i:18">
     <div class="unlock-label">The unlock</div>
     <h2>Show the full lifecycle cost to Carla</h2>
     <p>
       Each team's AI initiative has a standalone ROI story. But the <strong>compounding story</strong> is what
-      makes this a portfolio-level investment case, not three separate projects: fewer bad hires means fewer
-      performance management cycles means fewer separation agreements.
+      makes this a portfolio-level investment case: fewer bad hires means fewer
+      performance management cycles means fewer separation agreements. This is the answer to Carla's ~$1M question.
     </p>
     <p>
-      <strong>Immediate action:</strong> Map MTA spend data (Stacey/Abby) to quality-of-hire signals (Chad).
+      <strong>Immediate actions:</strong>
+    </p>
+    <p>
+      1. <strong>Map MTA spend data</strong> (Stacey/Abby) to quality-of-hire signals (Chad).
       If even 20% of separations trace to identifiable hiring quality gaps, the full-lifecycle framing
-      justifies investment at all three stages simultaneously -- and gives Carla the cross-functional
-      ROI narrative she's asking for.
+      justifies investment at all three stages simultaneously.
     </p>
     <p>
-      <strong>This document is the starting artifact.</strong> Share with Chris, then with Stacey/Chad/Abby individually
-      to validate the connections before presenting as a unified initiative.
+      2. <strong>Use Bella's historical data</strong> (2019-present) as the baseline before AI initiatives scale.
+      Cost per hire launching soon; capture it before the JD generator changes the numbers.
+    </p>
+    <p>
+      3. <strong>Coordinate the June window:</strong> Bella's hiring manager NPS relaunch and Stacey's PvP offsite
+      happen in the same month. Use that convergence to align the Hire and Perform stages.
+    </p>
+    <p>
+      4. <strong>Create a forcing function</strong> for Chad's quality-of-hire equation. It has no deadline and
+      no owner pushing it forward. Without it, the prevention story remains theoretical.
+    </p>
+    <p>
+      <strong>Next steps with this document:</strong> Share with Chris to validate connections. Then use as the
+      backbone of Carla's portfolio-level ROI narrative -- connecting each team's AI initiative into a single
+      investment case across the full employee lifecycle.
     </p>
   </div>
 
 </div>
+
+<script>
+(function() {
+  // Stage detail panel logic
+  const stages = document.querySelectorAll('.stage[data-stage]');
+  const detailsWrap = document.getElementById('stage-details');
+  let activeStages = new Set();
+
+  stages.forEach(function(stage) {
+    stage.addEventListener('click', function() {
+      var target = stage.dataset.stage;
+      var panel = document.getElementById('detail-' + target);
+
+      if (activeStages.has(target)) {
+        // Close this stage
+        activeStages.delete(target);
+        stage.classList.remove('active');
+        stage.querySelector('.expand-text').textContent = 'View details';
+        panel.classList.remove('visible');
+      } else {
+        // Open this stage
+        activeStages.add(target);
+        stage.classList.add('active');
+        stage.querySelector('.expand-text').textContent = 'Hide details';
+        panel.classList.add('visible');
+      }
+
+      // Toggle wrap visibility
+      if (activeStages.size > 0) {
+        detailsWrap.classList.add('open');
+      } else {
+        detailsWrap.classList.remove('open');
+      }
+    });
+  });
+
+  // Section toggle logic
+  var sectionHeadings = document.querySelectorAll('.section-heading[data-section]');
+  sectionHeadings.forEach(function(heading) {
+    heading.addEventListener('click', function() {
+      var section = heading.dataset.section;
+      var content = document.querySelector('[data-section-content="' + section + '"]');
+      heading.classList.toggle('open');
+      content.classList.toggle('open');
+    });
+  });
+
+  // Expand/collapse all
+  var toggleAllBtn = document.getElementById('toggle-all');
+  var allExpanded = false;
+
+  toggleAllBtn.addEventListener('click', function() {
+    allExpanded = !allExpanded;
+
+    // Stages
+    stages.forEach(function(stage) {
+      var target = stage.dataset.stage;
+      var panel = document.getElementById('detail-' + target);
+      if (allExpanded) {
+        activeStages.add(target);
+        stage.classList.add('active');
+        stage.querySelector('.expand-text').textContent = 'Hide details';
+        panel.classList.add('visible');
+      } else {
+        activeStages.delete(target);
+        stage.classList.remove('active');
+        stage.querySelector('.expand-text').textContent = 'View details';
+        panel.classList.remove('visible');
+      }
+    });
+
+    if (allExpanded) {
+      detailsWrap.classList.add('open');
+    } else {
+      detailsWrap.classList.remove('open');
+    }
+
+    // Sections
+    sectionHeadings.forEach(function(heading) {
+      var section = heading.dataset.section;
+      var content = document.querySelector('[data-section-content="' + section + '"]');
+      if (allExpanded) {
+        heading.classList.add('open');
+        content.classList.add('open');
+      } else {
+        heading.classList.remove('open');
+        content.classList.remove('open');
+      }
+    });
+
+    toggleAllBtn.textContent = allExpanded ? 'Collapse all sections' : 'Expand all sections';
+  });
+})();
+</script>
 
 </body>
 </html>
