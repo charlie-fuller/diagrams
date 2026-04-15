@@ -275,6 +275,7 @@
                 <option value="Legal">Legal</option>
                 <option value="People">People</option>
                 <option value="IS (Meta)">IS</option>
+                <option value="exclude-is">All (excl. IS)</option>
             </select>
         </div>
         <div class="filter-group">
@@ -365,7 +366,8 @@
             const search = document.getElementById('filter-search').value.toLowerCase();
 
             return allRecords.filter(r => {
-                if (dept && r.department !== dept) return false;
+                if (dept === 'exclude-is') { if (r.department === 'IS (Meta)') return false; }
+                else if (dept && r.department !== dept) return false;
                 if (smt && r.smt !== smt) return false;
                 if (status && r.status !== status) return false;
                 if (search) {
