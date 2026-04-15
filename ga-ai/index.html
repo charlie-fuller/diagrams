@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G&A AI Initiative Dashboard</title>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface-hover: #222635;
+            --border: #2a2e3a;
+            --text: #e4e6eb;
+            --text-muted: #8b8f9a;
+            --accent: #6366f1;
+            --accent-light: #818cf8;
+            --green: #22c55e;
+            --yellow: #eab308;
+            --orange: #f97316;
+            --red: #ef4444;
+            --blue: #3b82f6;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        /* --- NAV --- */
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding: 16px 32px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+        }
+        nav h1 { font-size: 18px; font-weight: 600; white-space: nowrap; }
+        .nav-tabs { display: flex; gap: 4px; }
+        .nav-tab {
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-muted);
+            border: none;
+            background: none;
+            transition: all 0.15s;
+        }
+        .nav-tab:hover { color: var(--text); background: var(--surface-hover); }
+        .nav-tab.active { color: var(--text); background: var(--accent); }
+
+        /* --- FILTERS --- */
+        .filters {
+            display: flex;
+            gap: 12px;
+            padding: 16px 32px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .filter-group { display: flex; align-items: center; gap: 6px; }
+        .filter-group label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        select, input[type="text"] {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+            font-size: 13px;
+            outline: none;
+        }
+        select:focus, input:focus { border-color: var(--accent); }
+        .stats {
+            margin-left: auto;
+            display: flex;
+            gap: 16px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .stats strong { color: var(--text); }
+
+        /* --- TABLE VIEW --- */
+        .view { display: none; }
+        .view.active { display: block; }
+
+        .table-container { padding: 0 32px 32px; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 2px solid var(--border);
+            color: var(--text-muted);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+        }
+        th:hover { color: var(--text); }
+        th.sorted-asc::after { content: ' ^'; }
+        th.sorted-desc::after { content: ' v'; }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tr:hover td { background: var(--surface-hover); }
+
+        .score-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 13px;
+            min-width: 40px;
+            text-align: center;
+        }
+        .score-high { background: rgba(34,197,94,0.15); color: var(--green); }
+        .score-med { background: rgba(234,179,8,0.15); color: var(--yellow); }
+        .score-low { background: rgba(139,143,154,0.15); color: var(--text-muted); }
+        .score-zero { background: rgba(139,143,154,0.08); color: #555; }
+
+        .status-pill {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .status-backlog { background: rgba(139,143,154,0.15); color: var(--text-muted); }
+        .status-on-deck { background: rgba(59,130,246,0.15); color: var(--blue); }
+        .status-in-progress { background: rgba(234,179,8,0.15); color: var(--yellow); }
+        .status-in-beta { background: rgba(99,102,241,0.15); color: var(--accent-light); }
+        .status-done { background: rgba(34,197,94,0.15); color: var(--green); }
+
+        .dept-tag {
+            font-size: 11px;
+            padding: 1px 6px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+        .dept-finance { background: rgba(59,130,246,0.15); color: var(--blue); }
+        .dept-legal { background: rgba(168,85,247,0.15); color: #a855f7; }
+        .dept-people { background: rgba(34,197,94,0.15); color: var(--green); }
+        .dept-is { background: rgba(249,115,22,0.15); color: var(--orange); }
+
+        .notes-cell {
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+        .notes-cell:hover {
+            white-space: normal;
+            overflow: visible;
+        }
+
+        /* --- KANBAN VIEW --- */
+        .kanban-container {
+            display: flex;
+            gap: 16px;
+            padding: 16px 32px 32px;
+            overflow-x: auto;
+            min-height: calc(100vh - 140px);
+            align-items: flex-start;
+        }
+        .kanban-column {
+            min-width: 280px;
+            max-width: 320px;
+            flex: 1;
+            background: var(--surface);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        .kanban-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .kanban-header h3 { font-size: 13px; font-weight: 600; }
+        .kanban-count {
+            background: var(--border);
+            padding: 1px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        .kanban-cards { padding: 8px; display: flex; flex-direction: column; gap: 8px; }
+        .kanban-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 12px;
+            cursor: default;
+            transition: border-color 0.15s;
+        }
+        .kanban-card:hover { border-color: var(--accent); }
+        .kanban-card-title { font-size: 13px; font-weight: 500; margin-bottom: 6px; }
+        .kanban-card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        .kanban-card-smt { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+        .kanban-card-kpi { font-size: 11px; color: #666; margin-bottom: 8px; font-style: italic; }
+
+        /* --- EMPTY STATE --- */
+        .empty-state {
+            text-align: center;
+            padding: 80px 32px;
+            color: var(--text-muted);
+        }
+        .empty-state h2 { font-size: 18px; margin-bottom: 8px; color: var(--text); }
+
+        /* --- LOADING --- */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: var(--text-muted);
+        }
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* --- ERROR BANNER --- */
+        .error-banner {
+            background: rgba(239,68,68,0.1);
+            border: 1px solid rgba(239,68,68,0.3);
+            color: var(--red);
+            padding: 12px 32px;
+            font-size: 13px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <h1>G&A AI Initiatives</h1>
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-view="table">Dashboard</button>
+            <button class="nav-tab" data-view="kanban">Kanban</button>
+        </div>
+    </nav>
+
+    <div class="error-banner" id="error-banner"></div>
+
+    <div class="filters">
+        <div class="filter-group">
+            <label>Dept</label>
+            <select id="filter-dept">
+                <option value="">All</option>
+                <option value="Finance">Finance</option>
+                <option value="Legal">Legal</option>
+                <option value="People">People</option>
+                <option value="IS (Meta)">IS</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>SMT</label>
+            <select id="filter-smt"><option value="">All</option></select>
+        </div>
+        <div class="filter-group">
+            <label>Status</label>
+            <select id="filter-status">
+                <option value="">All</option>
+                <option value="Backlog">Backlog</option>
+                <option value="On Deck">On Deck</option>
+                <option value="In Progress">In Progress</option>
+                <option value="In Beta">In Beta</option>
+                <option value="Done">Done</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>Search</label>
+            <input type="text" id="filter-search" placeholder="initiative, KPI, notes..." style="width:200px">
+        </div>
+        <div class="stats" id="stats"></div>
+    </div>
+
+    <!-- TABLE VIEW -->
+    <div class="view active" id="view-table">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th data-sort="department">Dept</th>
+                        <th data-sort="smt">SMT</th>
+                        <th data-sort="kpi">KPI</th>
+                        <th data-sort="initiative">Initiative</th>
+                        <th data-sort="impact" style="text-align:center">Impact</th>
+                        <th data-sort="effort" style="text-align:center">Effort</th>
+                        <th data-sort="strategic" style="text-align:center">Strategic</th>
+                        <th data-sort="score" style="text-align:center">Score</th>
+                        <th data-sort="status">Status</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- KANBAN VIEW -->
+    <div class="view" id="view-kanban">
+        <div class="kanban-container" id="kanban-container"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://ga-ai-dashboard.fly.dev';
+        const API = `${API_BASE}/api/collections/initiatives/records`;
+
+        let allRecords = [];
+        let sortField = 'score';
+        let sortDir = 'desc';
+
+        // --- DATA ---
+        async function fetchRecords() {
+            try {
+                let page = 1;
+                let records = [];
+                while (true) {
+                    const resp = await fetch(`${API}?perPage=200&page=${page}&sort=-score`);
+                    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                    const data = await resp.json();
+                    records = records.concat(data.items);
+                    if (records.length >= data.totalItems) break;
+                    page++;
+                }
+                allRecords = records;
+                populateSMTFilter();
+                render();
+            } catch (err) {
+                const banner = document.getElementById('error-banner');
+                banner.textContent = `Failed to load data from ${API_BASE}: ${err.message}. Check that the PocketBase server is running.`;
+                banner.style.display = 'block';
+            }
+        }
+
+        function getFiltered() {
+            const dept = document.getElementById('filter-dept').value;
+            const smt = document.getElementById('filter-smt').value;
+            const status = document.getElementById('filter-status').value;
+            const search = document.getElementById('filter-search').value.toLowerCase();
+
+            return allRecords.filter(r => {
+                if (dept && r.department !== dept) return false;
+                if (smt && r.smt !== smt) return false;
+                if (status && r.status !== status) return false;
+                if (search) {
+                    const haystack = `${r.initiative} ${r.kpi} ${r.notes} ${r.smt} ${r.source_meeting}`.toLowerCase();
+                    if (!haystack.includes(search)) return false;
+                }
+                return true;
+            });
+        }
+
+        function getSorted(records) {
+            return [...records].sort((a, b) => {
+                let va = a[sortField] ?? '';
+                let vb = b[sortField] ?? '';
+                if (typeof va === 'number' && typeof vb === 'number') {
+                    return sortDir === 'asc' ? va - vb : vb - va;
+                }
+                va = String(va).toLowerCase();
+                vb = String(vb).toLowerCase();
+                if (va < vb) return sortDir === 'asc' ? -1 : 1;
+                if (va > vb) return sortDir === 'asc' ? 1 : -1;
+                return 0;
+            });
+        }
+
+        // --- RENDER ---
+        function render() {
+            const filtered = getFiltered();
+            renderTable(getSorted(filtered));
+            renderKanban(filtered);
+            renderStats(filtered);
+        }
+
+        function renderTable(records) {
+            const tbody = document.getElementById('table-body');
+            if (!records.length) {
+                tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;padding:40px;color:var(--text-muted)">No initiatives match filters</td></tr>';
+                return;
+            }
+            tbody.innerHTML = records.map(r => `
+                <tr>
+                    <td><span class="dept-tag dept-${deptClass(r.department)}">${r.department}</span></td>
+                    <td style="white-space:nowrap">${r.smt}</td>
+                    <td class="notes-cell">${r.kpi || '--'}</td>
+                    <td>${r.initiative || '<span style="color:#555">--</span>'}</td>
+                    <td style="text-align:center">${r.impact || '--'}</td>
+                    <td style="text-align:center">${r.effort || '--'}</td>
+                    <td style="text-align:center">${r.strategic || '--'}</td>
+                    <td style="text-align:center"><span class="score-badge ${scoreClass(r.score)}">${r.score || '--'}</span></td>
+                    <td><span class="status-pill ${statusClass(r.status)}">${r.status || '--'}</span></td>
+                    <td class="notes-cell">${r.notes || ''}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderKanban(records) {
+            const container = document.getElementById('kanban-container');
+            const columns = ['Backlog', 'On Deck', 'In Progress', 'In Beta', 'Done'];
+            container.innerHTML = columns.map(col => {
+                const items = records.filter(r => r.status === col).sort((a, b) => (b.score || 0) - (a.score || 0));
+                return `
+                    <div class="kanban-column">
+                        <div class="kanban-header">
+                            <h3>${col}</h3>
+                            <span class="kanban-count">${items.length}</span>
+                        </div>
+                        <div class="kanban-cards">
+                            ${items.map(r => `
+                                <div class="kanban-card">
+                                    <div class="kanban-card-title">${r.initiative || r.kpi || '(untitled)'}</div>
+                                    <div class="kanban-card-smt"><span class="dept-tag dept-${deptClass(r.department)}">${r.department}</span> ${r.smt}</div>
+                                    ${r.kpi ? `<div class="kanban-card-kpi">${r.kpi}</div>` : ''}
+                                    <div class="kanban-card-meta">
+                                        <span>I:${r.impact || '-'} E:${r.effort || '-'} S:${r.strategic || '-'}</span>
+                                        <span class="score-badge ${scoreClass(r.score)}">${r.score || '--'}</span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                            ${items.length === 0 ? '<div style="padding:20px;text-align:center;color:#555;font-size:12px">No items</div>' : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderStats(records) {
+            const scored = records.filter(r => r.score > 0);
+            const avgScore = scored.length ? (scored.reduce((s, r) => s + r.score, 0) / scored.length).toFixed(1) : '--';
+            const topInit = scored.length ? scored.sort((a, b) => b.score - a.score)[0] : null;
+            document.getElementById('stats').innerHTML = `
+                <span>Showing <strong>${records.length}</strong> of ${allRecords.length}</span>
+                <span>Scored: <strong>${scored.length}</strong></span>
+                <span>Avg: <strong>${avgScore}</strong></span>
+                ${topInit ? `<span>Top: <strong>${topInit.score}</strong> (${topInit.initiative?.substring(0, 30)}...)</span>` : ''}
+            `;
+        }
+
+        // --- HELPERS ---
+        function deptClass(dept) {
+            if (!dept) return '';
+            if (dept.includes('Finance')) return 'finance';
+            if (dept.includes('Legal')) return 'legal';
+            if (dept.includes('People')) return 'people';
+            if (dept.includes('IS')) return 'is';
+            return '';
+        }
+
+        function scoreClass(score) {
+            if (!score || score === 0) return 'score-zero';
+            if (score >= 10) return 'score-high';
+            if (score >= 7) return 'score-med';
+            return 'score-low';
+        }
+
+        function statusClass(status) {
+            if (!status) return '';
+            return 'status-' + status.toLowerCase().replace(/\s+/g, '-');
+        }
+
+        function populateSMTFilter() {
+            const smts = [...new Set(allRecords.map(r => r.smt).filter(Boolean))].sort();
+            const select = document.getElementById('filter-smt');
+            select.innerHTML = '<option value="">All</option>' + smts.map(s => `<option value="${s}">${s}</option>`).join('');
+        }
+
+        // --- EVENTS ---
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(`view-${tab.dataset.view}`).classList.add('active');
+            });
+        });
+
+        document.querySelectorAll('th[data-sort]').forEach(th => {
+            th.addEventListener('click', () => {
+                const field = th.dataset.sort;
+                if (sortField === field) {
+                    sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+                } else {
+                    sortField = field;
+                    sortDir = field === 'score' || field === 'impact' || field === 'effort' || field === 'strategic' ? 'desc' : 'asc';
+                }
+                document.querySelectorAll('th').forEach(t => t.classList.remove('sorted-asc', 'sorted-desc'));
+                th.classList.add(sortDir === 'asc' ? 'sorted-asc' : 'sorted-desc');
+                render();
+            });
+        });
+
+        ['filter-dept', 'filter-smt', 'filter-status'].forEach(id => {
+            document.getElementById(id).addEventListener('change', render);
+        });
+        document.getElementById('filter-search').addEventListener('input', render);
+
+        // --- INIT ---
+        fetchRecords();
+    </script>
+</body>
+</html>
