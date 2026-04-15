@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ITFA Vendor Research Agent -- Glean Agent Flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+    --bg: #f5f7fa;
+    --surface: #ffffff;
+    --surface2: #eef1f6;
+    --border: rgba(0, 0, 0, 0.08);
+    --border-bright: rgba(0, 0, 0, 0.15);
+    --text: #1e293b;
+    --text-dim: #64748b;
+
+    --trigger: #6366f1;
+    --trigger-dim: rgba(99, 102, 241, 0.08);
+    --retrieve: #0891b2;
+    --retrieve-dim: rgba(8, 145, 178, 0.08);
+    --research: #d97706;
+    --research-dim: rgba(217, 119, 6, 0.08);
+    --generate: #7c3aed;
+    --generate-dim: rgba(124, 58, 237, 0.08);
+    --output: #059669;
+    --output-dim: rgba(5, 150, 105, 0.08);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface2: #283548;
+      --border: rgba(255, 255, 255, 0.06);
+      --border-bright: rgba(255, 255, 255, 0.12);
+      --text: #e2e8f0;
+      --text-dim: #94a3b8;
+
+      --trigger: #818cf8;
+      --trigger-dim: rgba(129, 140, 248, 0.14);
+      --retrieve: #22d3ee;
+      --retrieve-dim: rgba(34, 211, 238, 0.12);
+      --research: #fbbf24;
+      --research-dim: rgba(251, 191, 36, 0.12);
+      --generate: #c4b5fd;
+      --generate-dim: rgba(196, 181, 253, 0.12);
+      --output: #34d399;
+      --output-dim: rgba(52, 211, 153, 0.12);
+    }
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    color: var(--text);
+    font-family: var(--font-body);
+    padding: 40px;
+    min-height: 100vh;
+    padding-top: 24px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .animate {
+    animation: fadeUp 0.4s ease-out both;
+    animation-delay: calc(var(--i, 0) * 0.06s);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  .container { max-width: 900px; margin: 0 auto; }
+
+  header { margin-bottom: 32px; }
+  header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  header .sub {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+  header .desc {
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-top: 10px;
+    line-height: 1.6;
+    max-width: 700px;
+  }
+
+  /* -- Legend -- */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  /* -- Phases -- */
+  .phase { margin-bottom: 28px; }
+  .phase-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    padding-left: 4px;
+  }
+
+  /* -- Step Cards -- */
+  .step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+    border-left: 4px solid var(--border);
+    position: relative;
+  }
+  .step:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+  }
+  .step.open { border-color: var(--border-bright); }
+  .step-header { display: flex; align-items: center; gap: 12px; }
+  .step-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    min-width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+  .step-title { font-size: 14px; font-weight: 600; flex: 1; }
+  .step-tool {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--surface2);
+    flex-shrink: 0;
+  }
+  .step-chevron {
+    font-size: 12px;
+    color: var(--text-dim);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .step.open .step-chevron { transform: rotate(90deg); }
+
+  .step-detail {
+    display: none;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text-dim);
+  }
+  .step.open .step-detail { display: block; }
+  .step-detail strong { color: var(--text); font-weight: 600; }
+  .step-detail ul { margin: 6px 0 6px 18px; list-style: disc; }
+  .step-detail li { margin-bottom: 3px; }
+
+  .badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-right: 4px;
+  }
+
+  .connector { display: flex; justify-content: center; padding: 2px 0; }
+  .connector svg { display: block; }
+
+  /* -- Form fields -- */
+  .fields-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+  .field-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .field-chip .type {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  /* -- Coverage table -- */
+  .coverage-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 8px;
+  }
+  .coverage-table th {
+    text-align: left;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-bottom: 2px solid var(--border-bright);
+    color: var(--text);
+    font-size: 12px;
+  }
+  .coverage-table td {
+    padding: 7px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-dim);
+    vertical-align: top;
+  }
+  .coverage-table tr:last-child td { border-bottom: none; }
+  .cov-yes {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--output);
+    font-weight: 500;
+  }
+  .cov-partial {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--research);
+    font-weight: 500;
+  }
+  .cov-no {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+
+  /* -- Color classes -- */
+  .c-trigger  { border-left-color: var(--trigger); }
+  .c-trigger:hover, .c-trigger.open { border-left-color: var(--trigger); border-color: var(--trigger); }
+  .c-trigger .step-num { background: var(--trigger-dim); color: var(--trigger); }
+
+  .c-retrieve { border-left-color: var(--retrieve); }
+  .c-retrieve:hover, .c-retrieve.open { border-left-color: var(--retrieve); border-color: var(--retrieve); }
+  .c-retrieve .step-num { background: var(--retrieve-dim); color: var(--retrieve); }
+
+  .c-research { border-left-color: var(--research); }
+  .c-research:hover, .c-research.open { border-left-color: var(--research); border-color: var(--research); }
+  .c-research .step-num { background: var(--research-dim); color: var(--research); }
+
+  .c-generate { border-left-color: var(--generate); }
+  .c-generate:hover, .c-generate.open { border-left-color: var(--generate); border-color: var(--generate); }
+  .c-generate .step-num { background: var(--generate-dim); color: var(--generate); }
+
+  .c-output { border-left-color: var(--output); }
+  .c-output:hover, .c-output.open { border-left-color: var(--output); border-color: var(--output); }
+  .c-output .step-num { background: var(--output-dim); color: var(--output); }
+
+  .phase-trigger .phase-label { color: var(--trigger); }
+  .phase-retrieve .phase-label { color: var(--retrieve); }
+  .phase-research .phase-label { color: var(--research); }
+  .phase-generate .phase-label { color: var(--generate); }
+  .phase-output .phase-label { color: var(--output); }
+
+  .mem-badge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    background: var(--output-dim);
+    color: var(--output);
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-left: 4px;
+  }
+  .no-mem-badge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    background: var(--research-dim);
+    color: var(--research);
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-left: 4px;
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 16px; }
+    header h1 { font-size: 22px; }
+    .step-tool { display: none; }
+    .fields-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="animate" style="--i:0">
+    <h1>ITFA Vendor Research Agent -- Glean Agent Flow</h1>
+    <div class="sub">v4 / 6 steps / research + template generation + Google Doc output</div>
+    <div class="desc">
+      Researches vendor documentation (DPA, trust center, security pages, sub-processors, privacy policy)
+      and creates a pre-populated ITFA Schedule 1 Google Doc for the requester.
+      Answers 9 of 14 questions automatically, flags 5 for human input.
+      Operated by Legal/IT/People review team, not the requester.
+    </div>
+  </header>
+
+  <div class="legend animate" style="--i:1">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--trigger)"></div> Trigger</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--retrieve)"></div> Document Retrieval</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--research)"></div> Web Research</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--generate)"></div> Template Generation</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--output)"></div> Output</div>
+  </div>
+
+  <!-- Input Form Fields -->
+  <div class="phase phase-trigger animate" style="--i:2">
+    <div class="phase-label">Input Form (4 fields)</div>
+    <div class="fields-grid">
+      <div class="field-chip">Link to Vendor Website <div class="type">TEXT -- e.g. https://cursor.com</div></div>
+      <div class="field-chip">Name of Covered Tool <div class="type">TEXT -- e.g. Cursor, Notion</div></div>
+      <div class="field-chip">Department <div class="type">TEXT -- submitting department</div></div>
+      <div class="field-chip">Contact Name <div class="type">TEXT -- responsible contact</div></div>
+    </div>
+  </div>
+
+  <div class="connector animate" style="--i:3">
+    <svg width="2" height="16"><line x1="1" y1="0" x2="1" y2="16" stroke="var(--text-dim)" stroke-width="1.5" stroke-dasharray="4 3"/></svg>
+  </div>
+
+  <!-- Phase: Context Loading -->
+  <div class="phase phase-retrieve">
+    <div class="phase-label animate" style="--i:4">Phase 1 -- Context Loading (sequential)</div>
+
+    <div class="step c-retrieve animate" style="--i:5" onclick="this.classList.toggle('open')">
+      <div class="step-header">
+        <div class="step-num">1</div>
+        <div class="step-title">Read ITFA Guidance</div>
+        <div class="step-tool">Read document</div>
+        <div class="step-chevron">&#9654;</div>
+      </div>
+      <div class="step-detail">
+        <strong>Goal:</strong> Load the ITFA Schedule 1 Guidance for Requestors from Confluence.<br>
+        <strong>Source:</strong> Confluence wiki page (fixed URL)<br>
+        <strong>Purpose:</strong> Provides the full 14-question questionnaire structure, definitions ("Monitoring," "Employee Personal Data"), and per-question responsibility assignments (Legal, IT, People, Requester).<br>
+        <span class="mem-badge">memory: ALL_DEPENDENCIES</span>
+      </div>
+    </div>
+
+    <div class="connector"><svg width="2" height="10"><line x1="1" y1="0" x2="1" y2="10" stroke="var(--retrieve)" stroke-width="1.5" stroke-dasharray="4 3"/></svg></div>
+
+    <div class="step c-retrieve animate" style="--i:6" onclick="this.classList.toggle('open')">
+      <div class="step-header">
+        <div class="step-num">2</div>
+        <div class="step-title">Golden Example -- Cursor Completed Form</div>
+        <div class="step-tool">Read document</div>
+        <div class="step-chevron">&#9654;</div>
+      </div>
+      <div class="step-detail">
+        <strong>Goal:</strong> Load a completed ITFA questionnaire (Cursor) as a quality and tone anchor.<br>
+        <strong>Source:</strong> Internal document (URL configured post-import)<br>
+        <strong>Purpose:</strong> Shows the expected depth, citation style ("Per the [Vendor] DPA at Annex X..."), confidence levels, and formatting for each answer. The agent matches this pattern throughout.<br>
+        <span class="mem-badge">memory: ALL_DEPENDENCIES</span>
+      </div>
+    </div>
+
+    <div class="connector"><svg width="2" height="10"><line x1="1" y1="0" x2="1" y2="10" stroke="var(--retrieve)" stroke-width="1.5" stroke-dasharray="4 3"/></svg></div>
+
+    <div class="step c-retrieve animate" style="--i:7" onclick="this.classList.toggle('open')">
+      <div class="step-header">
+        <div class="step-num">3</div>
+        <div class="step-title">Questionnaire Search Parameters</div>
+        <div class="step-tool">Read document</div>
+        <div class="step-chevron">&#9654;</div>
+      </div>
+      <div class="step-detail">
+        <strong>Goal:</strong> Load the search parameters document that guides what information to find for each question.<br>
+        <strong>Source:</strong> Google Docs (fixed URL)<br>
+        <strong>Purpose:</strong> Maps each ITFA question to specific vendor documentation types and search terms. Tells the research step exactly what to look for (DPA sections, trust center certifications, sub-processor lists, etc.).<br>
+        <span class="mem-badge">memory: ALL_DEPENDENCIES</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector animate" style="--i:8">
+    <svg width="2" height="20"><line x1="1" y1="0" x2="1" y2="20" stroke="var(--text-dim)" stroke-width="1.5" stroke-dasharray="4 3"/></svg>
+  </div>
+
+  <!-- Phase: Web Research -->
+  <div class="phase phase-research">
+    <div class="phase-label animate" style="--i:9">Phase 2 -- Vendor Web Research</div>
+
+    <div class="step c-research animate" style="--i:10" onclick="this.classList.toggle('open')">
+      <div class="step-header">
+        <div class="step-num">4</div>
+        <div class="step-title">Vendor Web Research</div>
+        <div class="step-tool">Web search</div>
+        <div class="step-chevron">&#9654;</div>
+      </div>
+      <div class="step-detail">
+        <strong>Goal:</strong> Research the vendor's public documentation across 5 search domains.<br><br>
+        <strong>Search areas:</strong>
+        <ul>
+          <li><strong>Trust Center / Security</strong> -- SOC 2, ISO 27001, encryption, access controls, SSO, monitoring</li>
+          <li><strong>DPA (Data Processing Agreement)</strong> -- personal data categories, purposes, TOMs, SCCs, deletion, hosting regions</li>
+          <li><strong>Sub-Processors</strong> -- names, countries, services provided</li>
+          <li><strong>Privacy Policy</strong> -- data types collected, IP/location data, retention periods</li>
+          <li><strong>Deletion / Retention</strong> -- timelines, schedules, termination data handling</li>
+        </ul>
+        <strong>Terminology awareness:</strong> DPA = Data Processing Agreement = Data Processing Addendum = Data Protection Agreement. TOMs = Technical and Organizational Measures. SCCs = Standard Contractual Clauses.<br><br>
+        <strong>Output per area:</strong> URL found (or NOT FOUND), relevant excerpts with direct quotes.<br>
+        <strong>Status:</strong> COMPLETE | PARTIAL | MINIMAL<br>
+        <span class="no-mem-badge">memory: NO_MEMORY</span> (stateless -- no prior context carried)
+      </div>
+    </div>
+  </div>
+
+  <div class="connector animate" style="--i:11">
+    <svg width="2" height="20"><line x1="1" y1="0" x2="1" y2="20" stroke="var(--text-dim)" stroke-width="1.5" stroke-dasharray="4 3"/></svg>
+  </div>
+
+  <!-- Phase: Template Generation -->
+  <div class="phase phase-generate">
+    <div class="phase-label animate" style="--i:12">Phase 3 -- Template Generation</div>
+
+    <div class="step c-generate animate" style="--i:13" onclick="this.classList.toggle('open')">
+      <div class="step-header">
+        <div class="step-num">5</div>
+        <div class="step-title">Format as ITFA Schedule 1 Questionnaire</div>
+        <div class="step-tool">Respond</div>
+        <div class="step-chevron">&#9654;</div>
+      </div>
+      <div class="step-detail">
+        <strong>Goal:</strong> Produce a complete ITFA Schedule 1 questionnaire document using research findings, guidance, and golden example as quality anchor.<br><br>
+        <strong>14-question coverage:</strong>
+        <div style="margin-top: 8px; overflow-x: auto;">
+          <table class="coverage-table">
+            <thead>
+              <tr><th>Q#</th><th>Question</th><th>Source</th><th>Coverage</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>General description of the tool</td><td>Web research</td><td><span class="cov-yes">Agent</span></td></tr>
+              <tr><td>2</td><td>Has Legal conducted a risk assessment?</td><td>Legal/Privacy</td><td><span class="cov-no">Requester</span></td></tr>
+              <tr><td>3</td><td>Safeguards / risk-mitigating measures (TOMs)</td><td>DPA, Trust Center</td><td><span class="cov-yes">Agent</span></td></tr>
+              <tr><td>4</td><td>Primary purpose of the tool</td><td>Requester</td><td><span class="cov-no">Requester</span></td></tr>
+              <tr><td>5</td><td>Categories of Employee Personal Data</td><td>DPA Annex 1</td><td><span class="cov-yes">Agent</span></td></tr>
+              <tr><td>6</td><td>Used for monitoring location/movements?</td><td>Vendor docs</td><td><span class="cov-yes">Agent</span></td></tr>
+              <tr><td>7</td><td>Used for performance management?</td><td>Vendor docs</td><td><span class="cov-partial">Partial</span></td></tr>
+              <tr><td>8</td><td>Can create reports with Employee Personal Data?</td><td>Vendor docs</td><td><span class="cov-partial">Partial</span></td></tr>
+              <tr><td>9</td><td>Roles/titles with access</td><td>IT / Requester</td><td><span class="cov-no">Requester</span></td></tr>
+              <tr><td>10</td><td>Requested implementation timeline</td><td>Requester</td><td><span class="cov-no">Requester</span></td></tr>
+              <tr><td>11</td><td>Where is Employee Personal Data stored?</td><td>DPA, Sub-processors</td><td><span class="cov-yes">Agent</span></td></tr>
+              <tr><td>12</td><td>Has Contentful executed a DPA / TIA?</td><td>Legal</td><td><span class="cov-partial">Partial</span></td></tr>
+              <tr><td>13</td><td>Known deletion periods</td><td>DPA, Privacy Policy</td><td><span class="cov-yes">Agent</span></td></tr>
+              <tr><td>14</td><td>Training measures planned</td><td>Requester</td><td><span class="cov-no">Requester</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <br>
+        <strong>Formatting rules:</strong>
+        <ul>
+          <li>Agent-answered questions include source URLs and confidence levels (High/Medium/Low)</li>
+          <li>Citation style matches golden example: "Per the [Vendor] DPA (at Annex X)..."</li>
+          <li>Human-required questions output "[Requester to complete]"</li>
+          <li>Includes Permissions table skeleton and Works Council signature block</li>
+          <li>Art. 9 GDPR special categories flagged with alert if detected</li>
+        </ul>
+        <span class="mem-badge">memory: ALL_DEPENDENCIES</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector animate" style="--i:14">
+    <svg width="2" height="20"><line x1="1" y1="0" x2="1" y2="20" stroke="var(--text-dim)" stroke-width="1.5" stroke-dasharray="4 3"/></svg>
+  </div>
+
+  <!-- Phase: Output -->
+  <div class="phase phase-output">
+    <div class="phase-label animate" style="--i:15">Phase 4 -- Output</div>
+
+    <div class="step c-output animate" style="--i:16" onclick="this.classList.toggle('open')">
+      <div class="step-header">
+        <div class="step-num">6</div>
+        <div class="step-title">Create ITFA Questionnaire Google Doc</div>
+        <div class="step-tool">Create a Google Doc</div>
+        <div class="step-chevron">&#9654;</div>
+      </div>
+      <div class="step-detail">
+        <strong>Goal:</strong> Create a Google Doc containing the pre-populated ITFA Schedule 1 questionnaire.<br>
+        <strong>Title:</strong> <code>Schedule 1 - [Tool Name] - ITFA Covered Tool Questionnaire</code><br>
+        <strong>Content:</strong> Full formatted output from Step 5, transferred exactly as produced. No modifications.<br>
+        <strong>Note:</strong> Requires manual configuration of "Create a Google Doc" action in Glean UI after import.<br>
+        <strong>Fallback:</strong> If markdown tables don't convert, try HTML table syntax; if that fails, use structured headers/paragraphs.
+      </div>
+    </div>
+  </div>
+
+  <!-- Design Notes -->
+  <div class="phase animate" style="--i:17; margin-top: 36px;">
+    <div class="phase-label" style="color: var(--text-dim);">Design Notes</div>
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 22px; font-size: 13px; line-height: 1.7; color: var(--text-dim);">
+      <ul style="margin-left: 16px;">
+        <li><strong style="color:var(--text)">ITFA context</strong> -- The IT Framework Agreement (ITFA) with the German Works Council requires detailed documentation for every new software tool procurement. This agent automates the research portion of that process.</li>
+        <li><strong style="color:var(--text)">Operator model</strong> -- Run by Legal/IT/People review team (6-8 people), not by the requester. Keeps the user base small and feedback loops tight.</li>
+        <li><strong style="color:var(--text)">Coverage: 9 of 14</strong> -- Agent fully answers 6 questions, partially answers 3, and flags 5 for human input. "Better than what the requester typically provides" is the success bar.</li>
+        <li><strong style="color:var(--text)">Stateless research</strong> -- Step 4 (web research) runs with NO_MEMORY to keep the context window clean for broad search. Steps 1-3 and 5-6 use ALL_DEPENDENCIES.</li>
+        <li><strong style="color:var(--text)">Confidence levels</strong> -- Every agent-answered question includes High/Medium/Low confidence so reviewers know where to focus attention.</li>
+        <li><strong style="color:var(--text)">Omnia integration path</strong> -- V1 outputs a Google Doc. Post-V1, the agent could trigger automatically from Omnia procurement workflows and populate form fields directly via API.</li>
+        <li><strong style="color:var(--text)">Owner:</strong> Matthew (Legal) / Charlie Fuller (builder). Tested against Cursor as the golden example vendor.</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('animate'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.animate').forEach(el => observer.observe(el));
+});
+</script>
+</body>
+</html>

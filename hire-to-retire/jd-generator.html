@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JD Generator -- Glean Agent Flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+    --bg: #f5f7fa;
+    --surface: #ffffff;
+    --surface2: #eef1f6;
+    --border: rgba(0, 0, 0, 0.08);
+    --border-bright: rgba(0, 0, 0, 0.15);
+    --text: #1e293b;
+    --text-dim: #64748b;
+
+    --trigger: #6366f1;
+    --trigger-dim: rgba(99, 102, 241, 0.08);
+    --retrieve: #0891b2;
+    --retrieve-dim: rgba(8, 145, 178, 0.08);
+    --generate: #7c3aed;
+    --generate-dim: rgba(124, 58, 237, 0.08);
+    --review: #d97706;
+    --review-dim: rgba(217, 119, 6, 0.08);
+    --approve: #059669;
+    --approve-dim: rgba(5, 150, 105, 0.08);
+    --output: #be185d;
+    --output-dim: rgba(190, 24, 93, 0.08);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface2: #283548;
+      --border: rgba(255, 255, 255, 0.06);
+      --border-bright: rgba(255, 255, 255, 0.12);
+      --text: #e2e8f0;
+      --text-dim: #94a3b8;
+
+      --trigger: #818cf8;
+      --trigger-dim: rgba(129, 140, 248, 0.14);
+      --retrieve: #22d3ee;
+      --retrieve-dim: rgba(34, 211, 238, 0.12);
+      --generate: #c4b5fd;
+      --generate-dim: rgba(196, 181, 253, 0.12);
+      --review: #fbbf24;
+      --review-dim: rgba(251, 191, 36, 0.12);
+      --approve: #34d399;
+      --approve-dim: rgba(52, 211, 153, 0.12);
+      --output: #f472b6;
+      --output-dim: rgba(244, 114, 182, 0.12);
+    }
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    color: var(--text);
+    font-family: var(--font-body);
+    padding: 40px;
+    min-height: 100vh;
+    padding-top: 24px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .animate {
+    animation: fadeUp 0.4s ease-out both;
+    animation-delay: calc(var(--i, 0) * 0.06s);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  .container { max-width: 900px; margin: 0 auto; }
+
+  header {
+    margin-bottom: 32px;
+  }
+  header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  header .sub {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+  header .desc {
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-top: 10px;
+    line-height: 1.6;
+    max-width: 700px;
+  }
+
+  /* -- Legend -- */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  /* -- Phases -- */
+  .phase {
+    margin-bottom: 28px;
+  }
+  .phase-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    padding-left: 4px;
+  }
+
+  /* -- Step Cards -- */
+  .step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+    border-left: 4px solid var(--border);
+    position: relative;
+  }
+  .step:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+  }
+  .step.open {
+    border-color: var(--border-bright);
+  }
+  .step-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .step-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    min-width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+  .step-title {
+    font-size: 14px;
+    font-weight: 600;
+    flex: 1;
+  }
+  .step-tool {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--surface2);
+    flex-shrink: 0;
+  }
+  .step-chevron {
+    font-size: 12px;
+    color: var(--text-dim);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .step.open .step-chevron { transform: rotate(90deg); }
+
+  .step-detail {
+    display: none;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text-dim);
+  }
+  .step.open .step-detail { display: block; }
+
+  .step-detail strong { color: var(--text); font-weight: 600; }
+  .step-detail ul {
+    margin: 6px 0 6px 18px;
+    list-style: disc;
+  }
+  .step-detail li { margin-bottom: 3px; }
+
+  .badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-right: 4px;
+  }
+
+  /* -- Connector lines -- */
+  .connector {
+    display: flex;
+    justify-content: center;
+    padding: 2px 0;
+  }
+  .connector svg { display: block; }
+
+  /* -- Form fields summary -- */
+  .fields-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+  .field-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .field-chip .type {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  /* -- Color classes -- */
+  .c-trigger  { border-left-color: var(--trigger); }
+  .c-trigger:hover, .c-trigger.open { border-left-color: var(--trigger); border-color: var(--trigger); }
+  .c-trigger .step-num { background: var(--trigger-dim); color: var(--trigger); }
+
+  .c-retrieve { border-left-color: var(--retrieve); }
+  .c-retrieve:hover, .c-retrieve.open { border-left-color: var(--retrieve); border-color: var(--retrieve); }
+  .c-retrieve .step-num { background: var(--retrieve-dim); color: var(--retrieve); }
+
+  .c-generate { border-left-color: var(--generate); }
+  .c-generate:hover, .c-generate.open { border-left-color: var(--generate); border-color: var(--generate); }
+  .c-generate .step-num { background: var(--generate-dim); color: var(--generate); }
+
+  .c-review   { border-left-color: var(--review); }
+  .c-review:hover, .c-review.open { border-left-color: var(--review); border-color: var(--review); }
+  .c-review .step-num { background: var(--review-dim); color: var(--review); }
+
+  .c-approve  { border-left-color: var(--approve); }
+  .c-approve:hover, .c-approve.open { border-left-color: var(--approve); border-color: var(--approve); }
+  .c-approve .step-num { background: var(--approve-dim); color: var(--approve); }
+
+  .c-output   { border-left-color: var(--output); }
+  .c-output:hover, .c-output.open { border-left-color: var(--output); border-color: var(--output); }
+  .c-output .step-num { background: var(--output-dim); color: var(--output); }
+
+  .phase-trigger .phase-label { color: var(--trigger); }
+  .phase-retrieve .phase-label { color: var(--retrieve); }
+  .phase-generate .phase-label { color: var(--generate); }
+  .phase-review .phase-label { color: var(--review); }
+  .phase-output .phase-label { color: var(--output); }
+
+  /* -- Model badge -- */
+  .model-badge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    background: var(--generate-dim);
+    color: var(--generate);
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-left: 6px;
+  }
+
+  /* -- Memory badge -- */
+  .mem-badge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    background: var(--approve-dim);
+    color: var(--approve);
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-left: 4px;
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 16px; }
+    header h1 { font-size: 22px; }
+    .step-tool { display: none; }
+    .fields-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="animate" style="--i:0">
+    <h1>JD Generator -- Glean Agent Flow</h1>
+    <div class="sub">v32 / 11 steps / sequential retrieval + HITL approval</div>
+    <div class="desc">
+      Generates brand-compliant Contentful job descriptions from a structured form.
+      Loads 6 reference documents sequentially, generates with Claude Sonnet,
+      presents for hiring manager review, and creates a Google Doc on approval.
+    </div>
+  </header>
+
+  <div class="legend animate" style="--i:1">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--trigger)"></div> Trigger</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--retrieve)"></div> Document Retrieval</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--generate)"></div> Generation</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--review)"></div> Review / HITL</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--output)"></div> Output</div>
+  </div>
+
+  <!-- Input Form Fields -->
+  <div class="phase phase-trigger animate" style="--i:2">
+    <div class="phase-label">Input Form (8 fields)</div>
+    <div class="fields-grid">
+      <div class="field-chip">Job Title <div class="type">TEXT -- required</div></div>
+      <div class="field-chip">Department <div class="type">SELECT -- 15 options</div></div>
+      <div class="field-chip">Level <div class="type">SELECT -- L1-L10, M variants</div></div>
+      <div class="field-chip">Location <div class="type">SELECT -- 9 offices/remote</div></div>
+      <div class="field-chip">Additional Locations <div class="type">TEXT -- optional</div></div>
+      <div class="field-chip">Travel Requirement <div class="type">SELECT -- optional</div></div>
+      <div class="field-chip">Office Environment <div class="type">TEXT -- optional</div></div>
+      <div class="field-chip">Additional Context <div class="type">TEXT -- optional</div></div>
+    </div>
+  </div>
+
+  <div class="connector animate" style="--i:3">
+    <svg width="2" height="16"><line x1="1" y1="0" x2="1" y2="16" stroke="var(--text-dim)" stroke-width="1.5" stroke-dasharray="4 3"/></svg>
+  </div>
+
+  <!-- Phase: Document Retrieval -->
+  <div class="phase phase-retrieve">
+    <div class="phase-label animate" style="--i:4">Phase 1 -- Document Retrieval (sequential chain)</div>
+
+    <div class="step c-retrieve animate" style="--i:5" onclick="this.classList.toggle('open')">
+      <div class="step-header">
+        <div class="step-num">1</div>
+        <div class="step-title">Search Reference JDs</div>
+        <div class="step-tool">Company search</div>
+        <div class="step-chevron">&#9654;</div>
+      </div>
+      <div class="step-detail">
+        <strong>Goal:</strong> Find published Contentful JDs matching the requested title and location from the golden examples folder.<br>
+        <strong>Source:</strong> Google Drive folder (golden examples only)<br>
+        <strong>Returns:</strong> Up to 2 full documents, or <code>NO_REFERENCE_JDS_FOUND</code> if none match.<br>
+        <span class="mem-badge">memory: ALL_DEPENDENCIES</span>
+      </div>
+    </div>
+
+    <div class="connector"><svg width="2" height="10"><line x1="1" y1="0" x2="1" y2="10" stroke="var(--retrieve)" stroke-width="1.5" stroke-dasharray="4 3"/></svg></div>
+
+    <div class="step c-retrieve animate" style="--i:6" onclick="this.classList.toggle('open')">
+      <div class="step-header">
+        <div class="step-num">2</div>
+        <div class="step-title">Load Hiring Package Template</div>
+        <div class="step-tool">Read document</div>
+        <div class="step-chevron">&#9654;</div>
+      </div>
+      <div class="step-detail">
+        <strong>Goal:</strong> Load the official Hiring Package Template as the structural reference for output format.<br>
+        <strong>Source:</strong> Google Docs (fixed URL)<br>
+        <strong>Returns:</strong> Full document content, no summarization.
+      </div>
+    </div>
+
+    <div class="connector"><svg width="2" height="10"><line x1="1" y1="0" x2="1" y2="10" stroke="var(--retrieve)" stroke-width="1.5" stroke-dasharray="4 3"/></svg></div>
+
+    <div class="step c-retrieve animate" style="--i:7" onclick="this.classList.toggle('open')">
+      <div class="step-header">
+        <div class="step-num">3</div>
+        <div class="step-title">Load JD Templates</div>
+        <div class="step-tool">Read document</div>
+        <div class="step-chevron">&#9654;</div>
+      </div>
+      <div class="step-detail">
+        <strong>Goal:</strong> Load the JD Templates document defining section names, ordering, and structure.<br>
+        <strong>Source:</strong> Google Docs (fixed URL)<br>
+        <strong>Returns:</strong> Full document content, no summarization.
+      </div>
+    </div>
+
+    <div class="connector"><svg width="2" height="10"><line x1="1" y1="0" x2="1" y2="10" stroke="var(--retrieve)" stroke-width="1.5" stroke-dasharray="4 3"/></svg></div>
+
+    <div class="step c-retrieve animate" style="--i:8" onclick="this.classList.toggle('open')">
+      <div class="step-header">
+        <div class="step-num">4</div>
+        <div class="step-title">Load Core Values</div>
+        <div class="step-tool">Read document</div>
+        <div class="step-chevron">&#9654;</div>
+      </div>
+      <div class="step-detail">
+        <strong>Goal:</strong> Load Contentful Core Values to inform JD language and tone.<br>
+        <strong>Source:</strong> Google Docs (fixed URL)<br>
+        <strong>Returns:</strong> Full document content. Values are woven naturally into JD language, never listed as a section.
+      </div>
+    </div>
+
+    <div class="connector"><svg width="2" height="10"><line x1="1" y1="0" x2="1" y2="10" stroke="var(--retrieve)" stroke-width="1.5" stroke-dasharray="4 3"/></svg></div>
+
+    <div class="step c-retrieve animate" style="--i:9" onclick="this.classList.toggle('open')">
+      <div class="step-header">
+        <div class="step-num">5</div>
+        <div class="step-title">Load Leveling Guide</div>
+        <div class="step-tool">Read document</div>
+        <div class="step-chevron">&#9654;</div>
+      </div>
+      <div class="step-detail">
+        <strong>Goal:</strong> Load the Contentful Leveling Guide (L1-L10) for career level expectations and competency dimensions.<br>
+        <strong>Source:</strong> Google Docs (fixed URL)<br>
+        <strong>Use:</strong> Calibrate JD language to correct level. Resolve level codes to canonical labels at runtime (no frozen mappings).
+      </div>
+    </div>
+
+    <div class="connector"><svg width="2" height="10"><line x1="1" y1="0" x2="1" y2="10" stroke="var(--retrieve)" stroke-width="1.5" stroke-dasharray="4 3"/></svg></div>
+
+    <div class="step c-retrieve animate" style="--i:10" onclick="this.classList.toggle('open')">
+      <div class="step-header">
+        <div class="step-num">6</div>
+        <div class="step-title">Load Brand Identity</div>
+        <div class="step-tool">Read document</div>
+        <div class="step-chevron">&#9654;</div>
+      </div>
+      <div class="step-detail">
+        <strong>Goal:</strong> Load Contentful Brand Identity for voice, tone, and writing guidelines.<br>
+        <strong>Source:</strong> Google Docs (fixed URL)<br>
+        <strong>Returns:</strong> Full document content. Enforced during generation.
+      </div>
+    </div>
+  </div>
+
+  <div class="connector animate" style="--i:11">
+    <svg width="2" height="20"><line x1="1" y1="0" x2="1" y2="20" stroke="var(--text-dim)" stroke-width="1.5" stroke-dasharray="4 3"/></svg>
+  </div>
+
+  <!-- Phase: Generation -->
+  <div class="phase phase-generate">
+    <div class="phase-label animate" style="--i:12">Phase 2 -- Generation</div>
+
+    <div class="step c-generate animate" style="--i:13" onclick="this.classList.toggle('open')">
+      <div class="step-header">
+        <div class="step-num">7</div>
+        <div class="step-title">Generate Complete JD</div>
+        <div class="step-tool">Think</div>
+        <span class="model-badge">Claude Sonnet</span>
+        <div class="step-chevron">&#9654;</div>
+      </div>
+      <div class="step-detail">
+        <strong>Goal:</strong> Generate a publication-ready Contentful job description from all retrieved context and form inputs.<br><br>
+        <strong>Three-part process:</strong>
+        <ul>
+          <li><strong>Part 1 -- Input Normalization:</strong> Resolve form inputs to canonical values. Level code resolved against Leveling Guide at runtime (not hardcoded). Detect IC vs People Leader track.</li>
+          <li><strong>Part 2 -- Reference JD Handling:</strong> Use golden examples as tone/style anchors. Adapt and elevate, never copy verbatim. If level mismatch, weight Leveling Guide more heavily.</li>
+          <li><strong>Part 3 -- Generate Sections:</strong>
+            <ul>
+              <li><strong>About the Opportunity</strong> -- max 150 words, direct voice, core values woven in, (f/m/d) for EU/UK</li>
+              <li><strong>What to expect?</strong> -- max 6 bullets, action verbs, 2-3 bold phrases per bullet, LinkedIn keywords embedded</li>
+              <li><strong>What you need to be successful?</strong> -- max 6 required + 3 bonus, level-aligned, bold phrases, LinkedIn keywords</li>
+            </ul>
+          </li>
+        </ul>
+        <strong>Hard rules:</strong> No em-dashes. No level codes in output. No benefits/compliance boilerplate. No fabricated team details.<br>
+        <span class="mem-badge">memory: ALL_DEPENDENCIES</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector animate" style="--i:14">
+    <svg width="2" height="20"><line x1="1" y1="0" x2="1" y2="20" stroke="var(--text-dim)" stroke-width="1.5" stroke-dasharray="4 3"/></svg>
+  </div>
+
+  <!-- Phase: Review -->
+  <div class="phase phase-review">
+    <div class="phase-label animate" style="--i:15">Phase 3 -- Review and Approval (HITL)</div>
+
+    <div class="step c-review animate" style="--i:16" onclick="this.classList.toggle('open')">
+      <div class="step-header">
+        <div class="step-num">8</div>
+        <div class="step-title">Present JD for Review</div>
+        <div class="step-tool">Respond</div>
+        <span class="model-badge">Claude Sonnet</span>
+        <div class="step-chevron">&#9654;</div>
+      </div>
+      <div class="step-detail">
+        <strong>Goal:</strong> Show the complete generated JD to the hiring manager before creating a Google Doc.<br>
+        <strong>Includes:</strong> Full JD text as-is (no summarization, no header block), plus the line "This draft was generated with AI assistance and requires human review before publishing."<br>
+        <strong>Asks:</strong> "Would you like to make any changes, or shall I create a Google Doc?"<br>
+        <strong>Excludes:</strong> No compliance checklist, no action items, no source citations, no references to other agents.
+      </div>
+    </div>
+
+    <div class="connector"><svg width="2" height="10"><line x1="1" y1="0" x2="1" y2="10" stroke="var(--review)" stroke-width="1.5" stroke-dasharray="4 3"/></svg></div>
+
+    <div class="step c-approve animate" style="--i:17" onclick="this.classList.toggle('open')">
+      <div class="step-header">
+        <div class="step-num">9</div>
+        <div class="step-title">Await User Approval</div>
+        <div class="step-tool">Wait for User Input</div>
+        <div class="step-chevron">&#9654;</div>
+      </div>
+      <div class="step-detail">
+        <strong>Goal:</strong> Pause the workflow until the hiring manager explicitly approves or requests changes.<br>
+        <strong>Options:</strong>
+        <ul>
+          <li><strong>Approve</strong> -- proceed to Google Doc creation</li>
+          <li><strong>Request Changes</strong> -- capture feedback for a revised generation</li>
+        </ul>
+        <strong>Note:</strong> Requires manual configuration of "Wait for User Input" action in Glean UI after import.
+      </div>
+    </div>
+  </div>
+
+  <div class="connector animate" style="--i:18">
+    <svg width="2" height="20"><line x1="1" y1="0" x2="1" y2="20" stroke="var(--text-dim)" stroke-width="1.5" stroke-dasharray="4 3"/></svg>
+  </div>
+
+  <!-- Phase: Output -->
+  <div class="phase phase-output">
+    <div class="phase-label animate" style="--i:19">Phase 4 -- Output</div>
+
+    <div class="step c-output animate" style="--i:20" onclick="this.classList.toggle('open')">
+      <div class="step-header">
+        <div class="step-num">10</div>
+        <div class="step-title">Create Google Doc</div>
+        <div class="step-tool">Create a Google Doc</div>
+        <div class="step-chevron">&#9654;</div>
+      </div>
+      <div class="step-detail">
+        <strong>Goal:</strong> Create a Google Doc containing the approved JD in the designated Drive folder.<br>
+        <strong>Filename:</strong> <code>JD-[Title]-[Department]-[Level]-Draft</code><br>
+        <strong>Folder:</strong> Dedicated JD output folder in Google Drive<br>
+        <strong>Content:</strong> Complete JD text exactly as generated. No reformatting.<br>
+        <strong>Note:</strong> Requires manual configuration of "Create a Google Doc" action in Glean UI after import.
+      </div>
+    </div>
+
+    <div class="connector"><svg width="2" height="10"><line x1="1" y1="0" x2="1" y2="10" stroke="var(--output)" stroke-width="1.5" stroke-dasharray="4 3"/></svg></div>
+
+    <div class="step c-output animate" style="--i:21" onclick="this.classList.toggle('open')">
+      <div class="step-header">
+        <div class="step-num">11</div>
+        <div class="step-title">Deliver Google Doc</div>
+        <div class="step-tool">Respond</div>
+        <div class="step-chevron">&#9654;</div>
+      </div>
+      <div class="step-detail">
+        <strong>Goal:</strong> Confirm creation and provide the Google Doc link.<br>
+        <strong>Output:</strong> 2-3 lines max. Doc URL + "Share with your recruiter for final review before posting to Greenhouse."<br>
+        <strong>Excludes:</strong> No JD content repeated, no checklists, no next steps, no references to other agents.
+      </div>
+    </div>
+  </div>
+
+  <!-- Design Notes -->
+  <div class="phase animate" style="--i:22; margin-top: 36px;">
+    <div class="phase-label" style="color: var(--text-dim);">Design Notes</div>
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 22px; font-size: 13px; line-height: 1.7; color: var(--text-dim);">
+      <ul style="margin-left: 16px;">
+        <li><strong style="color:var(--text)">Sequential retrieval</strong> -- Steps 1-6 run in strict sequence (each depends on the previous) to ensure reliable context loading in Glean's memory window.</li>
+        <li><strong style="color:var(--text)">Runtime document reads</strong> -- All reference documents are read at runtime via live URLs. No frozen content baked into instructions. Leveling Guide is the source of truth for level resolution.</li>
+        <li><strong style="color:var(--text)">Claude Sonnet</strong> -- Generation (Step 7) and review (Step 8) use Vertex AI Claude Sonnet for higher quality output.</li>
+        <li><strong style="color:var(--text)">Human in the loop</strong> -- No JD is published without hiring manager approval at Step 9. The agent generates only; recruiting reviews before posting to Greenhouse.</li>
+        <li><strong style="color:var(--text)">Brand enforcement</strong> -- Zero em-dashes, no level codes in visible text, bold formatting on key phrases, LinkedIn keywords embedded naturally.</li>
+        <li><strong style="color:var(--text)">Owner:</strong> Bella Thomas (Recruiting) / Charlie Fuller (builder). Target: 60% of net new roles.</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('animate'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.animate').forEach(el => observer.observe(el));
+});
+</script>
+</body>
+</html>
