@@ -237,7 +237,7 @@
 
   .card__label {
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 13px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1.5px;
@@ -465,21 +465,17 @@
     <h1 class="animate" style="--i:0">BuRDy: AI Agent Quality at Scale</h1>
     <p class="subtitle animate" style="--i:1">AI Strategy &middot; Build &rarr; Evaluate &rarr; Repair &rarr; Deploy &middot; April 2026</p>
 
-    <p class="lead animate" style="--i:2">
-      We built a <strong>repeatable process for developing, evaluating, and deploying AI agents</strong>. Agents are scored against business-defined rubrics, red-teamed across difficulty tiers, and improved through structured repair cycles until they hit a measurable quality bar. <strong>BuRDy (our BRD interview agent) is the example.</strong> The methodology is universal.
-    </p>
-
-    <div class="callout animate" style="--i:3" style="border-left-color: var(--blue);">
-      <strong>BuRDy is the first agent through this process.</strong>
-      <ul class="styled-list">
-        <li>The build-eval-repair loop, rubric framework, scenario testing, and post-deploy monitoring are all general-purpose</li>
-        <li>Deal Desk, Legal Separation, and every future agent follow the same path</li>
+    <div class="lead animate" style="--i:2">
+      <strong>We built a repeatable process for developing, evaluating, and deploying AI agents.</strong> <strong>BuRDy</strong> (our BRD interview agent) is the first one through it. The methodology is universal.
+      <ul class="styled-list" style="margin-top:14px;">
+        <li>Scored against business-defined rubrics, red-teamed across difficulty tiers, improved through structured repair cycles</li>
+        <li><strong>Deal Desk</strong>, <strong>Legal Separation</strong>, and every future agent follow the same path</li>
         <li>Early stages determine the right platform (Glean, custom build, third-party, or hybrid) before anything is built</li>
       </ul>
     </div>
 
     <!-- ===== 1. THE PROBLEM ===== -->
-    <div id="s1" class="sec-head animate" style="--i:3">1 -- The Problem We Solved</div>
+    <div id="s1" class="sec-head animate" style="--i:3">1 - The Problem We Solved</div>
     <p class="sec-sub animate" style="--i:4">Why BRD intake was broken, and what it costs</p>
 
     <div class="kpi-row">
@@ -508,8 +504,8 @@
     </div>
 
     <!-- ===== 2. WHAT BURDY IS ===== -->
-    <div id="s2" class="sec-head animate" style="--i:11">2 -- What BuRDy Is</div>
-    <p class="sec-sub animate" style="--i:12">Two interview agents (BRD + PRD) with automated formatting</p>
+    <div id="s2" class="sec-head animate" style="--i:11">2 - What BuRDy Is</div>
+    <p class="sec-sub animate" style="--i:12">Self-service BRD interview agent + automated formatting pipeline</p>
 
     <div class="mermaid-wrap animate" style="--i:13">
       <div class="zoom-controls">
@@ -554,13 +550,13 @@
           <li>PRDs are internal: how we scope and plan what to build</li>
           <li>6-stage requirements interview for AI Strategy and cross-functional teams</li>
           <li>Outputs a structured PRD + process map for validation</li>
-          <li>Feeds directly into Agent Factory for agent builds</li>
+          <li>Feeds directly into <strong>Agent Factory</strong> for agent builds</li>
         </ul>
       </div>
       <div class="card animate" style="--i:16">
         <div class="card__label" style="color: var(--green);">Google Apps Script</div>
         <ul class="styled-list" style="margin:0">
-          <li>Maps BuRDy output to the official IS BRD template</li>
+          <li>Maps <strong>BuRDy</strong> output to the official IS BRD template</li>
           <li>Cover page, 9 numbered sections, approvals tracker, Jira intake fields</li>
           <li>Flags gaps with [NEEDS REVIEW]</li>
         </ul>
@@ -568,13 +564,13 @@
     </div>
 
     <div class="callout animate" style="--i:17">
-      <strong>BRD vs. PRD:</strong> A BRD (Business Requirements Document) is what employees submit to IS when they need something built. A PRD (Product Requirements Document) is what our team uses internally to scope and design the solution. BuRDy captures the request. PuRDy captures the plan.
+      <strong>BRD vs. PRD:</strong> A BRD (Business Requirements Document) is what employees submit to IS when they need something built. A PRD (Product Requirements Document) is what our team uses internally to scope and design the solution. <strong>BuRDy</strong> captures the request. <strong>PuRDy</strong> captures the plan.
     </div>
 
     <p class="animate" style="--i:16"><strong>What changed:</strong> Employees have a conversation. The agent handles requirements thinking. IS gets complete, submission-ready documents.</p>
 
     <!-- ===== 3. THE LOOP ===== -->
-    <div id="s3" class="sec-head animate" style="--i:17">3 -- The Build-Eval-Repair Loop</div>
+    <div id="s3" class="sec-head animate" style="--i:17">3 - The Build-Eval-Repair Loop</div>
     <p class="sec-sub animate" style="--i:18">How we went from v1 to v9 (ready for test) through structured improvement cycles</p>
 
     <p class="animate" style="--i:19">Every agent goes through a <strong>rigorous, repeatable improvement cycle</strong>. Every change traces back to scored evidence.</p>
@@ -623,7 +619,7 @@
     </div>
 
     <!-- ===== 4. TOOLCHAIN ===== -->
-    <div id="s4" class="sec-head animate" style="--i:22">4 -- The Agentic Toolchain</div>
+    <div id="s4" class="sec-head animate" style="--i:22">4 - The Agentic Toolchain</div>
     <p class="sec-sub animate" style="--i:23">Four purpose-built tools working together</p>
 
     <div class="value-grid">
@@ -663,7 +659,7 @@
         <span class="tag tag--green">Format</span>
         <span class="tag tag--teal">Deliver</span>
         <ul class="styled-list" style="margin-top:8px">
-          <li>Parses BuRDy output into a Google Doc: cover page, 9 sections, Jira intake fields</li>
+          <li>Parses <strong>BuRDy</strong> output into a Google Doc: cover page, 9 sections, Jira intake fields</li>
           <li>Flags anything missing with [NEEDS REVIEW]</li>
           <li>Zero manual formatting</li>
         </ul>
@@ -671,7 +667,7 @@
     </div>
 
     <!-- ===== 5. HOW EVALS WORK ===== -->
-    <div id="s5" class="sec-head animate" style="--i:28">5 -- How Evaluations Work</div>
+    <div id="s5" class="sec-head animate" style="--i:28">5 - How Evaluations Work</div>
     <p class="sec-sub animate" style="--i:29">Scored against a measurable standard, every time</p>
 
     <h3 class="animate" style="--i:30">The Rubric: 5 Dimensions, 16 Criteria</h3>
@@ -765,7 +761,7 @@
     </div>
 
     <!-- ===== 6. SCORE PROGRESSION ===== -->
-    <div id="s6" class="sec-head animate" style="--i:42">6 -- Score Progression Across Versions</div>
+    <div id="s6" class="sec-head animate" style="--i:42">6 - Score Progression Across Versions</div>
     <p class="sec-sub animate" style="--i:43">Measurable improvement from v1 through v8+</p>
 
     <div class="chart-container animate" style="--i:44">
@@ -774,34 +770,34 @@
 
     <div class="timeline animate" style="--i:45">
       <div class="timeline-item">
-        <div class="timeline-item__version">v1 -- Initial Build</div>
-        <div class="timeline-item__title">Agent Factory generates first instructions</div>
+        <div class="timeline-item__version">v1 - Initial Build</div>
+        <div class="timeline-item__title"><strong>Agent Factory</strong> generates first instructions</div>
         <div class="timeline-item__detail">Avg ~4.5/10. Hallucinated routing details, no classification gate, missing metadata, no exec summary.</div>
       </div>
       <div class="timeline-item">
-        <div class="timeline-item__version">v2 -- First Repair Cycle</div>
+        <div class="timeline-item__version">v2 - First Repair Cycle</div>
         <div class="timeline-item__title">Eliminated hallucinations, added classification gate</div>
         <div class="timeline-item__detail">Fixed fabricated contacts and Slack channels. Added confirmation gate, metadata, exec summary. One-question-per-response rule.</div>
       </div>
       <div class="timeline-item">
-        <div class="timeline-item__version">v3 -- Template Alignment</div>
+        <div class="timeline-item__version">v3 - Template Alignment</div>
         <div class="timeline-item__title">Closed structural gaps against IS BRD template</div>
         <div class="timeline-item__detail">"Why Now" urgency question, constraints, Enablement section. Template coverage: ~60% to ~95%.</div>
       </div>
       <div class="timeline-item">
-        <div class="timeline-item__version">v4-v5 -- Coaching Precision</div>
+        <div class="timeline-item__version">v4-v5 - Coaching Precision</div>
         <div class="timeline-item__title">Targeted conversational discipline</div>
         <div class="timeline-item__detail">Solution-first redirect enforced. Multi-question batching eliminated. Red flag detection: 7.3 to 8.0.</div>
       </div>
       <div class="timeline-item">
-        <div class="timeline-item__version">v6-v8 -- Cross-Scenario Hardening</div>
+        <div class="timeline-item__version">v6-v8 - Cross-Scenario Hardening</div>
         <div class="timeline-item__title">Tested against Standard tier, tightened coaching moves</div>
         <div class="timeline-item__detail">Active listening callbacks, metadata pre-verification, ROI validation, named routing destinations. Scores stabilized at 8.0+ across all dimensions.</div>
       </div>
     </div>
 
     <!-- ===== 7. WHAT SCORES MEAN ===== -->
-    <div id="s7" class="sec-head animate" style="--i:46">7 -- What the Scores Mean for the Business</div>
+    <div id="s7" class="sec-head animate" style="--i:46">7 - What the Scores Mean for the Business</div>
     <p class="sec-sub animate" style="--i:47">We can prove it works</p>
 
     <div class="kpi-row">
@@ -852,7 +848,7 @@
     </div>
 
     <!-- ===== 8. POST-DEPLOY ===== -->
-    <div id="s8" class="sec-head animate" style="--i:58">8 -- Post-Deploy: Continuous Monitoring</div>
+    <div id="s8" class="sec-head animate" style="--i:58">8 - Post-Deploy: Continuous Monitoring</div>
     <p class="sec-sub animate" style="--i:59">The eval loop doesn't stop at launch</p>
 
     <p class="animate" style="--i:60">After launch, the same eval infrastructure becomes a <strong>continuous quality monitoring system</strong>.</p>
@@ -895,7 +891,7 @@
     </ul>
 
     <!-- ===== 9. WHY THIS MATTERS ===== -->
-    <div id="s9" class="sec-head animate" style="--i:63">9 -- Why This Matters</div>
+    <div id="s9" class="sec-head animate" style="--i:63">9 - Why This Matters</div>
     <p class="sec-sub animate" style="--i:64">The difference between AI that's deployed and AI that's governed</p>
 
     <div class="card card--hero animate" style="--i:65">
@@ -911,8 +907,8 @@
     </div>
 
     <!-- ===== 10. THE MODEL ===== -->
-    <div id="s10" class="sec-head animate" style="--i:66">10 -- The Model Going Forward</div>
-    <p class="sec-sub animate" style="--i:67">BuRDy is agent #1. This is how we build every AI deployment.</p>
+    <div id="s10" class="sec-head animate" style="--i:66">10 - The Model Going Forward</div>
+    <p class="sec-sub animate" style="--i:67"><strong>BuRDy</strong> is agent #1. This is how we build every AI deployment.</p>
 
     <p class="animate" style="--i:68"><strong>Platform-agnostic.</strong> The early stages determine the right platform before anything is built.</p>
 
@@ -953,7 +949,7 @@
     <div class="callout animate" style="--i:70">
       <strong>Agent Factory manages the quality process regardless of platform.</strong>
       <ul class="styled-list">
-        <li>Rubric, scenarios, evaluation, and repair all run through Agent Factory regardless of where the agent lives</li>
+        <li>Rubric, scenarios, evaluation, and repair all run through <strong>Agent Factory</strong> regardless of where the agent lives</li>
         <li>Glean path is fully developed today</li>
         <li>For use cases needing external APIs, database writes, or cross-system orchestration: only the build and deploy platform changes</li>
         <li>Quality system is the same</li>
@@ -971,7 +967,7 @@
     </ul>
 
     <div class="footer animate" style="--i:73">
-      AI Strategy &middot; Contentful &middot; April 2026 &middot; Built with Agent Factory, Glean, AESOP Evaluation Engine
+      AI Strategy &middot; Contentful &middot; April 2026 &middot; Built with <strong>Agent Factory</strong>, Glean, AESOP Evaluation Engine
     </div>
 
   </div><!-- /main -->
