@@ -466,8 +466,12 @@
     <p class="subtitle animate" style="--i:1">AI Strategy &middot; Build &rarr; Evaluate &rarr; Repair &rarr; Deploy &middot; April 2026</p>
 
     <p class="lead animate" style="--i:2">
-      We built a system where <strong>AI agents are not shipped based on "looks good"</strong> -- they are scored against business-defined rubrics, red-teamed across difficulty tiers, and improved through structured repair cycles until they meet a measurable quality bar. <strong>BuRDy is the first agent through this process.</strong> This is the model for every AI deployment going forward.
+      We built a <strong>repeatable process for developing, evaluating, and deploying AI agents</strong> -- for any team, any use case, on the right platform. Agents are scored against business-defined rubrics, red-teamed across difficulty tiers, and improved through structured repair cycles until they meet a measurable quality bar. <strong>This page uses BuRDy (our BRD interview agent) as the example</strong> to show how the process works end to end. The same methodology applies to every AI agent we build going forward.
     </p>
+
+    <div class="callout animate" style="--i:3" style="border-left-color: var(--blue);">
+      <strong>BuRDy is the example, not the point.</strong> Everything on this page -- the build-eval-repair loop, the rubric framework, the scenario testing, the post-deploy monitoring -- is a general-purpose AI development process. BuRDy happens to be the first agent through it. The Deal Desk agent, Legal Separation agent, and every future agent will follow the same path. The early stages of each engagement determine the right platform (Glean, custom build, third-party tool, or hybrid) before any agent is built.
+    </div>
 
     <!-- ===== 1. THE PROBLEM ===== -->
     <div id="s1" class="sec-head animate" style="--i:3">1 -- The Problem We Solved</div>
@@ -845,7 +849,7 @@
     <div id="s10" class="sec-head animate" style="--i:66">10 -- The Model Going Forward</div>
     <p class="sec-sub animate" style="--i:67">BuRDy is agent #1. This is how we build every AI deployment.</p>
 
-    <p class="animate" style="--i:68">The toolchain and methodology we built for BuRDy is <strong>not BuRDy-specific</strong>. It's a reusable framework for any AI agent deployment across G&A and beyond.</p>
+    <p class="animate" style="--i:68">This is <strong>not a Glean-specific process</strong>. It's a repeatable methodology for developing, evaluating, and deploying AI agents on whatever platform fits the use case. The early stages determine the right platform before anything is built.</p>
 
     <div class="mermaid-wrap animate" style="--i:69">
       <div class="zoom-controls">
@@ -855,27 +859,33 @@
       </div>
       <pre class="mermaid">
         graph TD
-          REQ["New agent request\nfrom any G&A team"] --> PRD["Requirements + rubric\ndefined with stakeholders"]
-          PRD --> BUILD["Agent Factory\nbuilds initial version"]
+          REQ["New agent request\nfrom any team"] --> DISC["Discovery + requirements\nwith stakeholders"]
+          DISC --> PLATFORM{"Platform\ndetermination"}
+          PLATFORM -->|"Conversational AI"| GLEAN["Glean"]
+          PLATFORM -->|"Custom logic needed"| CUSTOM["Custom build"]
+          PLATFORM -->|"Existing tool fit"| THIRD["Third-party tool"]
+          PLATFORM -->|"Mixed needs"| HYBRID["Hybrid approach"]
+          GLEAN --> RUBRIC["Define rubric\nwith business stakeholders"]
+          CUSTOM --> RUBRIC
+          THIRD --> RUBRIC
+          HYBRID --> RUBRIC
+          RUBRIC --> BUILD["Build initial version"]
           BUILD --> LOOP["Eval-Repair Loop\nuntil quality bar met"]
-          LOOP --> DEPLOY["Deploy to Glean\nwith monitoring"]
+          LOOP --> DEPLOY["Deploy with monitoring"]
           DEPLOY --> IMPROVE["Continuous improvement\nfrom real usage data"]
 
-          LOOP -.-> BURDY["BuRDy\nBRD interviews"]
-          LOOP -.-> DEAL["Deal Desk Agent\nQTC support"]
-          LOOP -.-> SEP["Legal Separation Agent\nAgreement generation"]
-          LOOP -.-> FUTURE["Future agents\nHR, Finance, Procurement..."]
-
           classDef process fill:#b4530922,stroke:#b45309,stroke-width:2px
-          classDef agent fill:#1d4ed822,stroke:#1d4ed8,stroke-width:1px,stroke-dasharray:5 5
+          classDef platform fill:#1d4ed822,stroke:#1d4ed8,stroke-width:2px
+          classDef decision fill:#7e22ce22,stroke:#7e22ce,stroke-width:2px
 
-          class REQ,PRD,BUILD,LOOP,DEPLOY,IMPROVE process
-          class BURDY,DEAL,SEP,FUTURE agent
+          class REQ,DISC,RUBRIC,BUILD,LOOP,DEPLOY,IMPROVE process
+          class GLEAN,CUSTOM,THIRD,HYBRID platform
+          class PLATFORM decision
       </pre>
     </div>
 
     <div class="callout animate" style="--i:70">
-      <strong>For every future deployment:</strong> Define what "good" looks like with the business stakeholders (rubric). Build with Agent Factory. Eval with tiered scenarios. Repair until the quality bar is met. Deploy with monitoring. Improve continuously. The same loop, the same rigor, the same auditability -- regardless of the domain.
+      <strong>For every future deployment:</strong> Start with discovery -- understand the problem, the users, and the constraints. Determine the right platform (not every agent belongs in Glean). Define what "good" looks like with business stakeholders. Build. Evaluate with real conversations. Repair until the quality bar is met. Deploy with monitoring. Improve continuously. The same loop, the same rigor, the same auditability -- regardless of the domain or platform.
     </div>
 
     <p class="animate" style="--i:71"><strong>Agents already in this pipeline:</strong></p>
