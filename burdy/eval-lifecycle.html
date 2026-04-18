@@ -867,24 +867,26 @@
           AF --> EVAL["Eval-Repair Loop\nuntil quality bar met"]
           EVAL --> DEPLOY_G["Deploy to Glean\nwith monitoring"]
           DEPLOY_G --> IMPROVE["Continuous improvement"]
-          OTHER_PATH --> GAP["Platform + tooling TBD\nCustom build, hybrid, or\nthird-party evaluation needed"]
-          GAP -.-> EVAL2["Same eval-repair\nmethodology applies"]
+          OTHER_PATH --> AF2["Agent Factory\nrubric, evals, repairs"]
+          AF2 --> BUILD2["Build + deploy on\nappropriate platform"]
+          BUILD2 --> EVAL2["Same eval-repair loop\nSame rigor, same scoring"]
+          EVAL2 --> DEPLOY2["Deploy with monitoring"]
+          DEPLOY2 --> IMPROVE2["Continuous improvement"]
 
           classDef process fill:#b4530922,stroke:#b45309,stroke-width:2px
           classDef glean fill:#15803d22,stroke:#15803d,stroke-width:2px
-          classDef gap fill:#b91c1c22,stroke:#b91c1c,stroke-width:2px,stroke-dasharray:5 5
+          classDef other fill:#1d4ed822,stroke:#1d4ed8,stroke-width:2px
           classDef decision fill:#7e22ce22,stroke:#7e22ce,stroke-width:2px
 
           class REQ,INTAKE process
           class PLATFORM decision
           class GLEAN_PATH,AF,EVAL,DEPLOY_G,IMPROVE glean
-          class OTHER_PATH,GAP gap
-          class EVAL2 process
+          class OTHER_PATH,RUBRIC2,BUILD2,EVAL2,DEPLOY2,IMPROVE2 other
       </pre>
     </div>
 
     <div class="callout animate" style="--i:70">
-      <strong>What's built today:</strong> The intake process and the Glean path are fully developed -- from discovery through Agent Factory build, eval-repair cycles, and monitored deployment. <strong>The gap:</strong> When a use case doesn't fit Glean's capabilities (needs external API calls, database writes, complex logic, or cross-system orchestration), the platform and tooling for that path are not yet defined. The eval-repair methodology still applies -- the build tooling is what changes. Defining that second path is a near-term priority.
+      <strong>Agent Factory manages the quality process regardless of platform.</strong> Rubric definition, scenario generation, evaluation, and repair cycles all run through Agent Factory whether the agent lives in Glean or somewhere else. The Glean path is fully developed today. For use cases that don't fit Glean (external APIs, database writes, complex logic, cross-system orchestration), the only things that change are the build and deployment platform. The quality system is the same.
     </div>
 
     <p class="animate" style="--i:71"><strong>Agents already in this pipeline:</strong></p>
