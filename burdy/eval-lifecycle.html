@@ -215,7 +215,7 @@
     margin-bottom: 8px;
   }
 
-  p { font-size: 14px; line-height: 1.7; color: var(--text-dim); margin-bottom: 14px; max-width: 720px; }
+  p { font-size: 16px; line-height: 1.7; color: var(--text-dim); margin-bottom: 14px; max-width: 720px; }
   p strong { color: var(--text); }
 
   /* ===== CARDS ===== */
@@ -338,8 +338,8 @@
   .mermaid-wrap.is-zoomed { cursor: grab; }
   .mermaid-wrap.is-panning { cursor: grabbing; user-select: none; }
 
-  .mermaid .nodeLabel { font-family: var(--font-body) !important; font-size: 14px !important; color: var(--text) !important; }
-  .mermaid .edgeLabel { font-family: var(--font-mono) !important; font-size: 11px !important; color: var(--text-dim) !important; background-color: var(--bg) !important; }
+  .mermaid .nodeLabel { font-family: var(--font-body) !important; font-size: 16px !important; color: var(--text) !important; }
+  .mermaid .edgeLabel { font-family: var(--font-mono) !important; font-size: 12px !important; color: var(--text-dim) !important; background-color: var(--bg) !important; }
   .mermaid .edgeLabel rect { fill: var(--bg) !important; }
   .mermaid .node rect, .mermaid .node circle, .mermaid .node polygon { stroke-width: 1.5px !important; }
   .mermaid .edge-pattern-solid { stroke-width: 1.5px !important; }
@@ -370,8 +370,8 @@
     font-family: var(--font-mono); font-size: 12px; font-weight: 600;
     color: var(--accent); margin-bottom: 2px;
   }
-  .timeline-item__title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-  .timeline-item__detail { font-size: 12px; color: var(--text-dim); line-height: 1.6; }
+  .timeline-item__title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+  .timeline-item__detail { font-size: 15px; color: var(--text-dim); line-height: 1.6; }
 
   /* ===== VALUE GRID ===== */
   .value-grid {
@@ -389,7 +389,7 @@
     border-left: 3px solid var(--accent);
     border-radius: 0 10px 10px 0;
     padding: 16px 20px;
-    font-size: 13px;
+    font-size: 16px;
     line-height: 1.6;
     color: var(--text-dim);
     margin: 20px 0;
@@ -405,7 +405,7 @@
   .styled-list li {
     padding-left: 16px;
     position: relative;
-    font-size: 13px;
+    font-size: 16px;
     line-height: 1.7;
     color: var(--text-dim);
     margin-bottom: 6px;
@@ -466,11 +466,16 @@
     <p class="subtitle animate" style="--i:1">AI Strategy &middot; Build &rarr; Evaluate &rarr; Repair &rarr; Deploy &middot; April 2026</p>
 
     <p class="lead animate" style="--i:2">
-      We built a <strong>repeatable process for developing, evaluating, and deploying AI agents</strong> -- for any team, any use case, on the right platform. Agents are scored against business-defined rubrics, red-teamed across difficulty tiers, and improved through structured repair cycles until they meet a measurable quality bar. <strong>This page uses BuRDy (our BRD interview agent) as the example</strong> to show how the process works end to end. The same methodology applies to every AI agent we build going forward.
+      We built a <strong>repeatable process for developing, evaluating, and deploying AI agents</strong>. Agents are scored against business-defined rubrics, red-teamed across difficulty tiers, and improved through structured repair cycles until they hit a measurable quality bar. <strong>BuRDy (our BRD interview agent) is the example.</strong> The methodology is universal.
     </p>
 
     <div class="callout animate" style="--i:3" style="border-left-color: var(--blue);">
-      <strong>BuRDy is the example, not the point.</strong> Everything on this page -- the build-eval-repair loop, the rubric framework, the scenario testing, the post-deploy monitoring -- is a general-purpose AI development process. BuRDy happens to be the first agent through it. The Deal Desk agent, Legal Separation agent, and every future agent will follow the same path. The early stages of each engagement determine the right platform (Glean, custom build, third-party tool, or hybrid) before any agent is built.
+      <strong>BuRDy is the first agent through this process.</strong>
+      <ul class="styled-list">
+        <li>The build-eval-repair loop, rubric framework, scenario testing, and post-deploy monitoring are all general-purpose</li>
+        <li>Deal Desk, Legal Separation, and every future agent follow the same path</li>
+        <li>Early stages determine the right platform (Glean, custom build, third-party, or hybrid) before anything is built</li>
+      </ul>
     </div>
 
     <!-- ===== 1. THE PROBLEM ===== -->
@@ -496,15 +501,15 @@
       </div>
     </div>
 
-    <p class="animate" style="--i:9"><strong>Employees face a blank 15-page template</strong> and either submit incomplete documents or don't submit at all. IS and AI Strategy then spend significant time on clarification calls. This bottleneck scales linearly with request volume -- every new project request costs the same manual effort to get right.</p>
+    <p class="animate" style="--i:9"><strong>Employees face a blank 15-page template</strong> and either submit incomplete documents or skip the process entirely. IS then spends significant time on clarification calls. Every new request costs the same manual effort.</p>
 
     <div class="callout animate" style="--i:10">
-      <strong>The deeper issue:</strong> Incomplete requirements don't just slow IS down -- they lead to misscoped projects, scope creep, and rework. The cost isn't measured in hours spent on intake; it's measured in projects that go wrong because they started with bad requirements.
+      <strong>The deeper issue:</strong> Incomplete requirements lead to misscoped projects, scope creep, and rework. The real cost shows up downstream: projects that go wrong because they started with bad requirements.
     </div>
 
     <!-- ===== 2. WHAT BURDY IS ===== -->
     <div id="s2" class="sec-head animate" style="--i:11">2 -- What BuRDy Is</div>
-    <p class="sec-sub animate" style="--i:12">A self-service BRD interview agent + automated formatting pipeline</p>
+    <p class="sec-sub animate" style="--i:12">Two interview agents (BRD + PRD) with automated formatting</p>
 
     <div class="mermaid-wrap animate" style="--i:13">
       <div class="zoom-controls">
@@ -513,14 +518,14 @@
         <button onclick="resetZoom(this)" title="Reset zoom">&#8634;</button>
       </div>
       <pre class="mermaid">
-        graph LR
+        graph TD
           A["Employee has a project idea"] --> B["Opens BuRDy in Glean"]
-          B --> C["Guided interview\n8 adaptive stages"]
-          C --> D["Agent classifies project type\nand adjusts depth"]
+          B --> C["Guided interview -- 8 adaptive stages"]
+          C --> D["Agent classifies project type and adjusts depth"]
           D --> E["Produces substance-focused BRD"]
           E --> F["Paste into Google Doc"]
-          F --> G["Apps Script formats to\nIS BRD template"]
-          G --> H["Submission-ready BRD\n+ Jira intake fields"]
+          F --> G["Apps Script formats to IS BRD template"]
+          G --> H["Submission-ready BRD + Jira intake fields"]
 
           classDef user fill:#b4530922,stroke:#b45309,stroke-width:2px
           classDef agent fill:#1d4ed822,stroke:#1d4ed8,stroke-width:2px
@@ -537,21 +542,42 @@
     <div class="value-grid">
       <div class="card animate" style="--i:14">
         <div class="card__label" style="color: var(--blue);">Glean Agent (BuRDy)</div>
-        <p style="margin:0"><strong>Self-service interview</strong> -- any employee, any time. Classifies the project into 7 types, then adapts interview depth per section. Simple automations get 5-6 questions. Complex platform builds get full coverage across 10 sections.</p>
+        <ul class="styled-list" style="margin:0">
+          <li>Any employee, any time</li>
+          <li>Classifies into 7 project types and adapts depth</li>
+          <li>Simple automations: 5-6 questions. Complex builds: full 10-section coverage</li>
+        </ul>
       </div>
       <div class="card animate" style="--i:15">
+        <div class="card__label" style="color: var(--purple);">Glean Agent (Discovery PuRDy)</div>
+        <ul class="styled-list" style="margin:0">
+          <li>PRDs are internal: how we scope and plan what to build</li>
+          <li>6-stage requirements interview for AI Strategy and cross-functional teams</li>
+          <li>Outputs a structured PRD + process map for validation</li>
+          <li>Feeds directly into Agent Factory for agent builds</li>
+        </ul>
+      </div>
+      <div class="card animate" style="--i:16">
         <div class="card__label" style="color: var(--green);">Google Apps Script</div>
-        <p style="margin:0"><strong>Automated formatting</strong> -- maps BuRDy output to Michael Stratton's official IS BRD template. Generates the cover page, all 9 numbered sections, reviews/approvals tracker, and pre-fills the Jira intake form. Flags gaps with [NEEDS REVIEW] markers.</p>
+        <ul class="styled-list" style="margin:0">
+          <li>Maps BuRDy output to the official IS BRD template</li>
+          <li>Cover page, 9 numbered sections, approvals tracker, Jira intake fields</li>
+          <li>Flags gaps with [NEEDS REVIEW]</li>
+        </ul>
       </div>
     </div>
 
-    <p class="animate" style="--i:16"><strong>What changed:</strong> Employees no longer face a blank template. They have a conversation. The agent does the requirements thinking. IS receives complete, structured, submission-ready documents.</p>
+    <div class="callout animate" style="--i:17">
+      <strong>BRD vs. PRD:</strong> A BRD (Business Requirements Document) is what employees submit to IS when they need something built. A PRD (Product Requirements Document) is what our team uses internally to scope and design the solution. BuRDy captures the request. PuRDy captures the plan.
+    </div>
+
+    <p class="animate" style="--i:16"><strong>What changed:</strong> Employees have a conversation. The agent handles requirements thinking. IS gets complete, submission-ready documents.</p>
 
     <!-- ===== 3. THE LOOP ===== -->
     <div id="s3" class="sec-head animate" style="--i:17">3 -- The Build-Eval-Repair Loop</div>
-    <p class="sec-sub animate" style="--i:18">How we went from v1 to production-ready through structured improvement cycles</p>
+    <p class="sec-sub animate" style="--i:18">How we went from v1 to v9 (ready for test) through structured improvement cycles</p>
 
-    <p class="animate" style="--i:19">We do not build an agent, look at the output, and say "that seems fine." <strong>We run it through a rigorous, repeatable improvement cycle</strong> where every change is driven by scored evidence, not intuition.</p>
+    <p class="animate" style="--i:19">Every agent goes through a <strong>rigorous, repeatable improvement cycle</strong>. Every change traces back to scored evidence.</p>
 
     <div class="mermaid-wrap animate" style="--i:20">
       <div class="zoom-controls">
@@ -585,7 +611,15 @@
     </div>
 
     <div class="callout animate" style="--i:21">
-      <strong>Each cycle is the same:</strong> Run evaluation scenarios against the current agent version. Score every dimension. Generate a weakness report with specific, prioritized findings. Run a repair session that produces targeted instruction changes. Deploy the new version. Repeat. No guesswork. No "let's just tweak this and see."
+      <strong>Each cycle is the same:</strong>
+      <ul class="styled-list">
+        <li>Run evaluation scenarios against the current agent version</li>
+        <li>Score every dimension</li>
+        <li>Generate a weakness report with specific, prioritized findings</li>
+        <li>Run a repair session that produces targeted instruction changes</li>
+        <li>Deploy the new version</li>
+        <li>Repeat</li>
+      </ul>
     </div>
 
     <!-- ===== 4. TOOLCHAIN ===== -->
@@ -597,106 +631,137 @@
         <div class="card__label" style="color: var(--accent);">Agent Factory</div>
         <span class="tag tag--accent">Build</span>
         <span class="tag tag--green">Repair</span>
-        <p style="margin:8px 0 0"><strong>Builds initial agent instructions</strong> from a PRD and knowledge base. Also runs repair sessions -- takes evaluation findings and produces targeted instruction changes with a detailed changelog. Built by AI Strategy.</p>
+        <ul class="styled-list" style="margin-top:8px">
+          <li><strong>Builds initial agent instructions</strong> from a PRD and knowledge base</li>
+          <li>Runs repair sessions: evaluation findings in, targeted instruction changes out</li>
+          <li>Detailed changelog for every repair</li>
+        </ul>
       </div>
       <div class="card animate" style="--i:25">
         <div class="card__label" style="color: var(--blue);">Evaluation Engine</div>
         <span class="tag tag--blue">Evaluate</span>
         <span class="tag tag--purple">Score</span>
-        <p style="margin:8px 0 0"><strong>Runs real, multi-turn conversations</strong> with the live Glean agent -- not simulations. A goal-driven persona (FP&A analyst, RevOps manager, etc.) interacts with the actual agent over 15-50 turns, mimicking real-life interviews with realistic pacing, pushback, and ambiguity. Each completed conversation is then scored against a 16-criteria rubric across 5 dimensions. Produces a suite report with weakness patterns.</p>
+        <ul class="styled-list" style="margin-top:8px">
+          <li><strong>Real, multi-turn conversations</strong> with the live Glean agent</li>
+          <li>Goal-driven personas interact over 15-50 turns with realistic pacing, pushback, and ambiguity</li>
+          <li>Each conversation scored against a 16-criteria rubric</li>
+          <li>Suite report surfaces weakness patterns</li>
+        </ul>
       </div>
       <div class="card animate" style="--i:26">
         <div class="card__label" style="color: var(--purple);">Rubric + Scenarios</div>
         <span class="tag tag--purple">Define</span>
         <span class="tag tag--red">Red Team</span>
-        <p style="margin:8px 0 0"><strong>Business-defined evaluation criteria</strong> anchored to real IS values: Does the BRD have enough substance for ELT to decide? Are stakeholders fully mapped? Are risks surfaced? Scenarios range from basic (simple automation) to challenging (adversarial, ambiguous). Scenarios can be <strong>auto-generated by the engine</strong> or <strong>custom-built by users</strong> to test specific use cases, edge cases, or adversarial conditions.</p>
+        <ul class="styled-list" style="margin-top:8px">
+          <li><strong>Business-defined criteria</strong> anchored to real IS values</li>
+          <li>Scenarios range from basic to adversarial</li>
+          <li><strong>Auto-generated</strong> by the engine or <strong>custom-built</strong> by users for specific edge cases</li>
+        </ul>
       </div>
       <div class="card animate" style="--i:27">
         <div class="card__label" style="color: var(--green);">Apps Script Pipeline</div>
         <span class="tag tag--green">Format</span>
         <span class="tag tag--teal">Deliver</span>
-        <p style="margin:8px 0 0"><strong>Automated downstream formatting.</strong> Parses BuRDy output, maps it to the official IS BRD template, generates a new Google Doc with cover page + 9 sections + Jira intake fields. Flags anything missing. Zero manual formatting effort.</p>
+        <ul class="styled-list" style="margin-top:8px">
+          <li>Parses BuRDy output into a Google Doc: cover page, 9 sections, Jira intake fields</li>
+          <li>Flags anything missing with [NEEDS REVIEW]</li>
+          <li>Zero manual formatting</li>
+        </ul>
       </div>
     </div>
 
     <!-- ===== 5. HOW EVALS WORK ===== -->
     <div id="s5" class="sec-head animate" style="--i:28">5 -- How Evaluations Work</div>
-    <p class="sec-sub animate" style="--i:29">Not "does this look good?" but "does this meet a measurable standard?"</p>
+    <p class="sec-sub animate" style="--i:29">Scored against a measurable standard, every time</p>
 
     <h3 class="animate" style="--i:30">The Rubric: 5 Dimensions, 16 Criteria</h3>
-    <p class="animate" style="--i:31">Every criterion has <strong>anchored scoring</strong> -- specific descriptions of what a 1, a 5, and a 10 look like. Scores are not vibes. They are measurements.</p>
+    <p class="animate" style="--i:31">Every criterion has <strong>anchored scoring</strong>: specific descriptions of what a 1, a 5, and a 10 look like.</p>
 
     <div class="value-grid">
       <div class="card animate" style="--i:32">
         <div class="card__label" style="color: var(--accent);">Goal Completion</div>
         <span class="tag tag--accent">25% weight</span>
         <ul class="styled-list">
-          <li><strong>BRD production</strong> -- does the artifact exist with all 4 minimum elements?</li>
-          <li><strong>Depth calibration</strong> -- lean BRD for simple projects, full for complex?</li>
-          <li><strong>Problem-first orientation</strong> -- describes a problem, not a solution?</li>
-          <li><strong>Open questions captured</strong> -- real gaps documented, not perfunctory?</li>
+          <li><strong>BRD production</strong>: does the artifact exist with all 4 minimum elements?</li>
+          <li><strong>Depth calibration</strong>: lean BRD for simple projects, full for complex?</li>
+          <li><strong>Problem-first orientation</strong>: describes a problem, not a solution?</li>
+          <li><strong>Open questions captured</strong>: real gaps documented, not perfunctory?</li>
         </ul>
       </div>
       <div class="card animate" style="--i:33">
         <div class="card__label" style="color: var(--blue);">Process Quality</div>
         <span class="tag tag--blue">20% weight</span>
         <ul class="styled-list">
-          <li><strong>Stage sequence adherence</strong> -- 8 stages in order, full depth on Stage 2?</li>
-          <li><strong>Classification accuracy</strong> -- correct project type, user confirmation?</li>
-          <li><strong>Depth matrix application</strong> -- right number of questions per section?</li>
-          <li><strong>Information state tracking</strong> -- knows what's missing, probes to fill gaps?</li>
+          <li><strong>Stage sequence adherence</strong>: 8 stages in order, full depth on Stage 2?</li>
+          <li><strong>Classification accuracy</strong>: correct project type, user confirmation?</li>
+          <li><strong>Depth matrix application</strong>: right number of questions per section?</li>
+          <li><strong>Information state tracking</strong>: knows what's missing, probes to fill gaps?</li>
         </ul>
       </div>
       <div class="card animate" style="--i:34">
         <div class="card__label" style="color: var(--teal);">Conversational Skill</div>
         <span class="tag tag--teal">10% weight</span>
         <ul class="styled-list">
-          <li><strong>Question pacing</strong> -- one question per response, natural rhythm?</li>
-          <li><strong>Active listening</strong> -- references prior answers before next probe?</li>
-          <li><strong>Coaching move deployment</strong> -- uses prescribed techniques?</li>
-          <li><strong>Summary quality</strong> -- accurate confirmation before generating BRD?</li>
+          <li><strong>Question pacing</strong>: one question per response, natural rhythm?</li>
+          <li><strong>Active listening</strong>: references prior answers before next probe?</li>
+          <li><strong>Coaching move deployment</strong>: uses prescribed techniques?</li>
+          <li><strong>Summary quality</strong>: accurate confirmation before generating BRD?</li>
         </ul>
       </div>
       <div class="card animate" style="--i:35">
         <div class="card__label" style="color: var(--red);">Red Flag Detection</div>
         <span class="tag tag--red">20% weight</span>
         <ul class="styled-list">
-          <li><strong>Gap and inconsistency surfacing</strong> -- catches contradictions, missing stakeholders?</li>
-          <li><strong>Scope and routing assessment</strong> -- identifies non-IS projects, routes appropriately?</li>
+          <li><strong>Gap and inconsistency surfacing</strong>: catches contradictions, missing stakeholders?</li>
+          <li><strong>Scope and routing assessment</strong>: identifies non-IS projects, routes appropriately?</li>
         </ul>
       </div>
       <div class="card animate" style="--i:36">
         <div class="card__label" style="color: var(--purple);">Output Quality</div>
         <span class="tag tag--purple">25% weight</span>
         <ul class="styled-list">
-          <li><strong>Content specificity</strong> -- names, numbers, systems from the conversation?</li>
-          <li><strong>Section structure</strong> -- matches expected BRD format?</li>
-          <li><strong>Downstream readiness</strong> -- IS team can act on this document?</li>
-          <li><strong>Synthesis quality</strong> -- overview captures the whole story?</li>
+          <li><strong>Content specificity</strong>: names, numbers, systems from the conversation?</li>
+          <li><strong>Section structure</strong>: matches expected BRD format?</li>
+          <li><strong>Downstream readiness</strong>: IS team can act on this document?</li>
+          <li><strong>Synthesis quality</strong>: overview captures the whole story?</li>
         </ul>
       </div>
     </div>
 
     <h3 class="animate" style="--i:37">Scenario Library: Tiered Difficulty, Real Conversations</h3>
-    <p class="animate" style="--i:38">We don't just test the happy path. Each scenario is a <strong>goal-driven persona that conducts a real, multi-turn conversation</strong> with the live agent -- 15 to 50 turns depending on complexity, mimicking how an actual employee would interact. Scenarios stress-test the agent across project types, user behaviors, and difficulty levels.</p>
+    <p class="animate" style="--i:38"><strong>Goal-driven personas conduct real, multi-turn conversations</strong> with the live agent (15-50 turns). Scenarios stress-test across project types, user behaviors, and difficulty levels.</p>
 
     <div class="value-grid">
       <div class="card animate" style="--i:39">
         <div class="card__label" style="color: var(--green);">Basic Tier</div>
-        <p style="margin:0"><strong>FP&A Analyst</strong> -- simple process automation. User comes prepared with specifics. Tests: depth calibration for lean BRDs, scope discipline, clean interview flow.</p>
+        <ul class="styled-list" style="margin:0">
+          <li>Simple process automation, prepared user</li>
+          <li>Tests depth calibration, scope discipline, clean flow</li>
+        </ul>
       </div>
       <div class="card animate" style="--i:40">
         <div class="card__label" style="color: var(--blue);">Standard Tier</div>
-        <p style="margin:0"><strong>RevOps Manager</strong> -- Salesforce-NetSuite integration. User leads with solution language, hasn't thought through all details. Tests: solution-first redirect, stakeholder probing, ROI quantification.</p>
+        <ul class="styled-list" style="margin:0">
+          <li>Salesforce-NetSuite integration, leads with solution language</li>
+          <li>Tests redirect, stakeholder probing, ROI quantification</li>
+        </ul>
       </div>
       <div class="card animate" style="--i:41">
         <div class="card__label" style="color: var(--red);">Challenging Tier</div>
-        <p style="margin:0"><strong>Adversarial and ambiguous inputs.</strong> Users who resist structure, give conflicting answers, or describe projects that aren't IS scope. Tests: red flag detection, routing, coaching under pressure.</p>
+        <ul class="styled-list" style="margin:0">
+          <li>Conflicting answers, scope confusion, resistance to structure</li>
+          <li>Tests red flag detection, routing, coaching under pressure</li>
+        </ul>
       </div>
     </div>
 
     <div class="callout animate" style="--i:42">
-      <strong>Scenario generation is flexible.</strong> The engine auto-generates scenario personas and conversation goals from the agent's PRD and rubric -- covering the standard difficulty spread automatically. Teams can also <strong>write custom scenarios</strong> to test specific edge cases, department-specific workflows, or adversarial conditions they've seen in the real world. Both feed into the same scoring pipeline.
+      <strong>Scenario generation is flexible.</strong>
+      <ul class="styled-list">
+        <li>Engine auto-generates personas and goals from the agent's PRD and rubric</li>
+        <li>Teams can <strong>write custom scenarios</strong> for specific edge cases or adversarial conditions</li>
+        <li>Both feed the same scoring pipeline</li>
+      </ul>
     </div>
 
     <!-- ===== 6. SCORE PROGRESSION ===== -->
@@ -711,33 +776,33 @@
       <div class="timeline-item">
         <div class="timeline-item__version">v1 -- Initial Build</div>
         <div class="timeline-item__title">Agent Factory generates first instructions</div>
-        <div class="timeline-item__detail">Weighted average: ~4.5/10. Hallucinated routing details, no classification confirmation, missing metadata section, no executive summary. Functional but not IS-ready.</div>
+        <div class="timeline-item__detail">Avg ~4.5/10. Hallucinated routing details, no classification gate, missing metadata, no exec summary.</div>
       </div>
       <div class="timeline-item">
         <div class="timeline-item__version">v2 -- First Repair Cycle</div>
         <div class="timeline-item__title">Eliminated hallucinations, added classification gate</div>
-        <div class="timeline-item__detail">Fixed fabricated contact names and Slack channels. Added confirmation gate before proceeding. Added metadata and exec summary sections. One-question-per-response rule added.</div>
+        <div class="timeline-item__detail">Fixed fabricated contacts and Slack channels. Added confirmation gate, metadata, exec summary. One-question-per-response rule.</div>
       </div>
       <div class="timeline-item">
         <div class="timeline-item__version">v3 -- Template Alignment</div>
         <div class="timeline-item__title">Closed structural gaps against IS BRD template</div>
-        <div class="timeline-item__detail">Added "Why Now" urgency question, constraints capture, Enablement section. Agent now covers ~95% of Stratton's template requirements. Output went from ~60% to ~95% template coverage.</div>
+        <div class="timeline-item__detail">"Why Now" urgency question, constraints, Enablement section. Template coverage: ~60% to ~95%.</div>
       </div>
       <div class="timeline-item">
         <div class="timeline-item__version">v4-v5 -- Coaching Precision</div>
         <div class="timeline-item__title">Targeted conversational discipline</div>
-        <div class="timeline-item__detail">Solution-first redirect enforcement. Multi-question batching eliminated. End-user perspective probing added. Red flag detection improved from 7.3 to 8.0.</div>
+        <div class="timeline-item__detail">Solution-first redirect enforced. Multi-question batching eliminated. Red flag detection: 7.3 to 8.0.</div>
       </div>
       <div class="timeline-item">
         <div class="timeline-item__version">v6-v8 -- Cross-Scenario Hardening</div>
         <div class="timeline-item__title">Tested against Standard tier, tightened coaching moves</div>
-        <div class="timeline-item__detail">Vacation test coaching move mandated. Active listening callbacks required. Metadata pre-verification step. ROI arithmetic validation. Named routing destinations instead of generic advice. Scores stabilized at 8.0+ across all dimensions.</div>
+        <div class="timeline-item__detail">Active listening callbacks, metadata pre-verification, ROI validation, named routing destinations. Scores stabilized at 8.0+ across all dimensions.</div>
       </div>
     </div>
 
     <!-- ===== 7. WHAT SCORES MEAN ===== -->
     <div id="s7" class="sec-head animate" style="--i:46">7 -- What the Scores Mean for the Business</div>
-    <p class="sec-sub animate" style="--i:47">From "we hope this works" to "we can prove it works"</p>
+    <p class="sec-sub animate" style="--i:47">We can prove it works</p>
 
     <div class="kpi-row">
       <div class="kpi-card animate-scale" style="--i:48">
@@ -762,27 +827,27 @@
     <div class="value-grid">
       <div class="card animate" style="--i:52">
         <div class="card__label" style="color: var(--green);">Quality</div>
-        <p style="margin:0">BRDs contain <strong>specific names, numbers, systems, and timelines</strong> drawn from the conversation -- not generic summaries. Content specificity scored 8.7/10 in the latest evaluation.</p>
+        <p style="margin:0"><strong>Specific names, numbers, systems, and timelines</strong> from the conversation. Content specificity: 8.7/10.</p>
       </div>
       <div class="card animate" style="--i:53">
         <div class="card__label" style="color: var(--blue);">Consistency</div>
-        <p style="margin:0">Every BRD follows the same structure regardless of who the user is. The agent applies the <strong>same depth matrix, same coaching moves, same quality gates</strong> every time. No variability from analyst to analyst.</p>
+        <p style="margin:0"><strong>Same depth matrix, same coaching moves, same quality gates</strong> every time. No variability from analyst to analyst.</p>
       </div>
       <div class="card animate" style="--i:54">
         <div class="card__label" style="color: var(--purple);">Predictability</div>
-        <p style="margin:0">Scores are stable across different scenario types. The agent doesn't perform well on easy inputs and poorly on hard ones. <strong>Standard-tier scenarios score within 0.5 points of basic-tier</strong> -- the quality holds under pressure.</p>
+        <p style="margin:0"><strong>Standard-tier scenarios score within 0.5 points of basic-tier.</strong> Quality holds under pressure.</p>
       </div>
       <div class="card animate" style="--i:55">
         <div class="card__label" style="color: var(--accent);">Auditability</div>
-        <p style="margin:0">Every version has a <strong>scored evaluation, a weakness report, and a repair changelog</strong>. We can trace any instruction change back to the specific finding that drove it. Full paper trail from v1 to production.</p>
+        <p style="margin:0"><strong>Scored evaluation, weakness report, and repair changelog</strong> for every version. Every instruction change traces to a specific finding.</p>
       </div>
       <div class="card animate" style="--i:56">
         <div class="card__label" style="color: var(--teal);">Governance</div>
-        <p style="margin:0">The rubric is <strong>defined by people, based on real business values</strong>. What does IS actually need in a BRD? What does ELT use to make decisions? Those answers became the scoring criteria. The AI doesn't grade itself.</p>
+        <p style="margin:0">Rubric is <strong>defined by people, based on real business values</strong>. What does IS need in a BRD? What does ELT use to decide? Those answers are the scoring criteria.</p>
       </div>
       <div class="card animate" style="--i:57">
         <div class="card__label" style="color: var(--red);">Explainability</div>
-        <p style="margin:0">When someone asks "how do we know this agent is good?" -- we don't say "it seems to work." We show <strong>16 scored criteria, anchored definitions, scenario transcripts, and improvement trajectory</strong>. The evidence speaks.</p>
+        <p style="margin:0">"How do we know this agent is good?" We show <strong>16 scored criteria, anchored definitions, scenario transcripts, and improvement trajectory</strong>.</p>
       </div>
     </div>
 
@@ -790,7 +855,7 @@
     <div id="s8" class="sec-head animate" style="--i:58">8 -- Post-Deploy: Continuous Monitoring</div>
     <p class="sec-sub animate" style="--i:59">The eval loop doesn't stop at launch</p>
 
-    <p class="animate" style="--i:60">Once BuRDy is live with real users, the same evaluation infrastructure becomes a <strong>continuous quality monitoring system</strong>.</p>
+    <p class="animate" style="--i:60">After launch, the same eval infrastructure becomes a <strong>continuous quality monitoring system</strong>.</p>
 
     <div class="mermaid-wrap animate" style="--i:61">
       <div class="zoom-controls">
@@ -823,10 +888,10 @@
     </div>
 
     <ul class="styled-list animate" style="--i:62">
-      <li><strong>Prompt drift detection</strong> -- scores trending down across conversations signal the agent's behavior is drifting from its instructions. Catch it before users notice.</li>
-      <li><strong>Meta-analysis across conversations</strong> -- are certain project types consistently scoring lower? Are users in certain departments struggling? Pattern recognition at scale.</li>
-      <li><strong>Continuous improvement cycles</strong> -- the same Build-Eval-Repair loop runs on production data, not just test scenarios. The agent gets better from real usage, not just our imagination of usage.</li>
-      <li><strong>Quality reporting for leadership</strong> -- IS leadership gets visibility into agent quality metrics over time. Not "it's working" -- but "here are the scores, here are the trends, here's what we fixed this month."</li>
+      <li><strong>Prompt drift detection</strong>: scores trending down signal drift. Catch it before users notice.</li>
+      <li><strong>Meta-analysis</strong>: which project types score lower? Which departments struggle? Pattern recognition at scale.</li>
+      <li><strong>Continuous improvement</strong>: the same Build-Eval-Repair loop runs on production data.</li>
+      <li><strong>Quality reporting</strong>: IS leadership sees scores, trends, and fixes each month.</li>
     </ul>
 
     <!-- ===== 9. WHY THIS MATTERS ===== -->
@@ -834,14 +899,14 @@
     <p class="sec-sub animate" style="--i:64">The difference between AI that's deployed and AI that's governed</p>
 
     <div class="card card--hero animate" style="--i:65">
-      <h3 style="margin-top:0;">We are not just shipping AI tools. We are building a quality system.</h3>
-      <p style="margin-bottom:0;">Anyone can put an agent in Glean and call it done. What we've built is different:</p>
+      <h3 style="margin-top:0;">We are building a quality system for AI.</h3>
+      <p style="margin-bottom:0;">Here is what that looks like in practice:</p>
       <ul class="styled-list">
-        <li><strong>Rubrics defined by people, not AI</strong> -- the business decides what "good" means. Criteria are anchored to what IS actually needs to approve and scope a project.</li>
-        <li><strong>Scenarios that stress-test, not just validate</strong> -- we don't test with ideal inputs. We test with solution-first language, missing sponsors, vague quantification, adversarial behavior.</li>
-        <li><strong>Evidence-based improvement, not intuition</strong> -- every change to the agent traces back to a scored finding. We can show exactly why v7 is better than v6.</li>
-        <li><strong>Continuous monitoring, not "launch and forget"</strong> -- the same eval infrastructure that built the agent continues to monitor it in production.</li>
-        <li><strong>Full audit trail</strong> -- version history, evaluation reports, repair changelogs, score progression. Complete traceability from first draft to production.</li>
+        <li><strong>Rubrics defined by people</strong>: the business decides what "good" means</li>
+        <li><strong>Scenarios that stress-test</strong>: adversarial inputs, missing sponsors, vague quantification</li>
+        <li><strong>Evidence-based improvement</strong>: every change traces to a scored finding</li>
+        <li><strong>Continuous monitoring</strong>: eval infrastructure keeps running after launch</li>
+        <li><strong>Full audit trail</strong>: version history, reports, changelogs, score progression</li>
       </ul>
     </div>
 
@@ -849,7 +914,7 @@
     <div id="s10" class="sec-head animate" style="--i:66">10 -- The Model Going Forward</div>
     <p class="sec-sub animate" style="--i:67">BuRDy is agent #1. This is how we build every AI deployment.</p>
 
-    <p class="animate" style="--i:68">This is <strong>not a Glean-specific process</strong>. It's a repeatable methodology for developing, evaluating, and deploying AI agents on whatever platform fits the use case. The early stages determine the right platform before anything is built.</p>
+    <p class="animate" style="--i:68"><strong>Platform-agnostic.</strong> The early stages determine the right platform before anything is built.</p>
 
     <div class="mermaid-wrap animate" style="--i:69">
       <div class="zoom-controls">
@@ -867,7 +932,7 @@
           AF --> EVAL["Eval-Repair Loop\nuntil quality bar met"]
           EVAL --> DEPLOY_G["Deploy to Glean\nwith monitoring"]
           DEPLOY_G --> IMPROVE["Continuous improvement"]
-          OTHER_PATH --> AF2["Agent Factory\nrubric, evals, repairs"]
+          OTHER_PATH --> AF2["Agent Factory\nbuilds instructions + app"]
           AF2 --> BUILD2["Build + deploy on\nappropriate platform"]
           BUILD2 --> EVAL2["Same eval-repair loop\nSame rigor, same scoring"]
           EVAL2 --> DEPLOY2["Deploy with monitoring"]
@@ -886,17 +951,23 @@
     </div>
 
     <div class="callout animate" style="--i:70">
-      <strong>Agent Factory manages the quality process regardless of platform.</strong> Rubric definition, scenario generation, evaluation, and repair cycles all run through Agent Factory whether the agent lives in Glean or somewhere else. The Glean path is fully developed today. For use cases that don't fit Glean (external APIs, database writes, complex logic, cross-system orchestration), the only things that change are the build and deployment platform. The quality system is the same.
+      <strong>Agent Factory manages the quality process regardless of platform.</strong>
+      <ul class="styled-list">
+        <li>Rubric, scenarios, evaluation, and repair all run through Agent Factory regardless of where the agent lives</li>
+        <li>Glean path is fully developed today</li>
+        <li>For use cases needing external APIs, database writes, or cross-system orchestration: only the build and deploy platform changes</li>
+        <li>Quality system is the same</li>
+      </ul>
     </div>
 
     <p class="animate" style="--i:71"><strong>Agents already in this pipeline:</strong></p>
     <ul class="styled-list animate" style="--i:72">
-      <li><strong>BuRDy</strong> (IS) -- BRD interview agent. 9 repair cycles complete. Approaching production.</li>
-      <li><strong>Deal Desk Agent</strong> (Sales/Finance) -- Quote-to-cash support. In testing.</li>
-      <li><strong>Legal Separation Agent</strong> (Legal/HR) -- Agreement generation + severance calculation. In discovery.</li>
-      <li><strong>ITFA Vendor Research Agent</strong> (Procurement) -- Automated vendor security/privacy research for IT intake. In testing.</li>
-      <li><strong>JD Generator</strong> (People/HR) -- Structured job description generation from intake data. In testing.</li>
-      <li><strong>Discovery PuRDy</strong> (Cross-functional) -- Product requirements interviews. Pipeline integration planned.</li>
+      <li><strong>BuRDy</strong> (IS): BRD interview agent. 9 repair cycles complete. Entering team testing.</li>
+      <li><strong>Deal Desk Agent</strong> (Sales/Finance): Quote-to-cash support. In testing.</li>
+      <li><strong>Legal Separation Agent</strong> (Legal/HR): Agreement generation + severance calculation. In discovery.</li>
+      <li><strong>ITFA Vendor Research Agent</strong> (Procurement): Automated vendor security/privacy research for IT intake. In testing.</li>
+      <li><strong>JD Generator</strong> (People/HR): Structured job description generation from intake data. In testing.</li>
+      <li><strong>Discovery PuRDy</strong> (Cross-functional): Product requirements interviews. Ready for testing.</li>
     </ul>
 
     <div class="footer animate" style="--i:73">
@@ -929,7 +1000,7 @@
       tertiaryBorderColor: isDark ? '#4ade80' : '#15803d',
       tertiaryTextColor: isDark ? '#f5f5f4' : '#1c1917',
       lineColor: isDark ? '#a8a29e' : '#78716c',
-      fontSize: '14px',
+      fontSize: '16px',
       fontFamily: "'DM Sans', system-ui, sans-serif",
       noteBkgColor: isDark ? '#44403c' : '#fefce8',
       noteTextColor: isDark ? '#f5f5f4' : '#1c1917',
