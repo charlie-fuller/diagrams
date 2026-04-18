@@ -859,33 +859,32 @@
       </div>
       <pre class="mermaid">
         graph TD
-          REQ["New agent request\nfrom any team"] --> DISC["Discovery + requirements\nwith stakeholders"]
-          DISC --> PLATFORM{"Platform\ndetermination"}
-          PLATFORM -->|"Conversational AI"| GLEAN["Glean"]
-          PLATFORM -->|"Custom logic needed"| CUSTOM["Custom build"]
-          PLATFORM -->|"Existing tool fit"| THIRD["Third-party tool"]
-          PLATFORM -->|"Mixed needs"| HYBRID["Hybrid approach"]
-          GLEAN --> RUBRIC["Define rubric\nwith business stakeholders"]
-          CUSTOM --> RUBRIC
-          THIRD --> RUBRIC
-          HYBRID --> RUBRIC
-          RUBRIC --> BUILD["Build initial version"]
-          BUILD --> LOOP["Eval-Repair Loop\nuntil quality bar met"]
-          LOOP --> DEPLOY["Deploy with monitoring"]
-          DEPLOY --> IMPROVE["Continuous improvement\nfrom real usage data"]
+          REQ["New agent request\nfrom any team"] --> INTAKE["Intake + Discovery\nRequirements, stakeholders, constraints"]
+          INTAKE --> PLATFORM{"Can this work\nin Glean?"}
+          PLATFORM -->|"Yes"| GLEAN_PATH["Glean Path\nFully developed"]
+          PLATFORM -->|"No"| OTHER_PATH["Other Platform\nTo be determined"]
+          GLEAN_PATH --> AF["Agent Factory\nbuilds instructions"]
+          AF --> EVAL["Eval-Repair Loop\nuntil quality bar met"]
+          EVAL --> DEPLOY_G["Deploy to Glean\nwith monitoring"]
+          DEPLOY_G --> IMPROVE["Continuous improvement"]
+          OTHER_PATH --> GAP["Platform + tooling TBD\nCustom build, hybrid, or\nthird-party evaluation needed"]
+          GAP -.-> EVAL2["Same eval-repair\nmethodology applies"]
 
           classDef process fill:#b4530922,stroke:#b45309,stroke-width:2px
-          classDef platform fill:#1d4ed822,stroke:#1d4ed8,stroke-width:2px
+          classDef glean fill:#15803d22,stroke:#15803d,stroke-width:2px
+          classDef gap fill:#b91c1c22,stroke:#b91c1c,stroke-width:2px,stroke-dasharray:5 5
           classDef decision fill:#7e22ce22,stroke:#7e22ce,stroke-width:2px
 
-          class REQ,DISC,RUBRIC,BUILD,LOOP,DEPLOY,IMPROVE process
-          class GLEAN,CUSTOM,THIRD,HYBRID platform
+          class REQ,INTAKE process
           class PLATFORM decision
+          class GLEAN_PATH,AF,EVAL,DEPLOY_G,IMPROVE glean
+          class OTHER_PATH,GAP gap
+          class EVAL2 process
       </pre>
     </div>
 
     <div class="callout animate" style="--i:70">
-      <strong>For every future deployment:</strong> Start with discovery -- understand the problem, the users, and the constraints. Determine the right platform (not every agent belongs in Glean). Define what "good" looks like with business stakeholders. Build. Evaluate with real conversations. Repair until the quality bar is met. Deploy with monitoring. Improve continuously. The same loop, the same rigor, the same auditability -- regardless of the domain or platform.
+      <strong>What's built today:</strong> The intake process and the Glean path are fully developed -- from discovery through Agent Factory build, eval-repair cycles, and monitored deployment. <strong>The gap:</strong> When a use case doesn't fit Glean's capabilities (needs external API calls, database writes, complex logic, or cross-system orchestration), the platform and tooling for that path are not yet defined. The eval-repair methodology still applies -- the build tooling is what changes. Defining that second path is a near-term priority.
     </div>
 
     <p class="animate" style="--i:71"><strong>Agents already in this pipeline:</strong></p>
