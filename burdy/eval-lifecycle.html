@@ -104,7 +104,7 @@
     grid-template-columns: 180px 1fr;
     gap: 0 40px;
   }
-  .main { min-width: 0; }
+  .main { min-width: 0; padding: 0 32px; }
 
   .toc {
     position: sticky;
@@ -470,12 +470,16 @@
     <p class="subtitle animate" style="--i:1">AI Strategy &middot; Build &rarr; Evaluate &rarr; Repair &rarr; Deploy &middot; April 2026</p>
 
     <div class="lead animate" style="--i:2">
-      <strong>We built a repeatable process for developing, evaluating, and deploying AI agents.</strong> <strong>BuRDy</strong> (our BRD interview agent) is the first one through it. The methodology is universal.
+      <strong>AI agents are already handling real work across the company.</strong> The question leadership should be asking: how do we know they're good?
       <ul class="styled-list" style="margin-top:14px;">
-        <li>Scored against business-defined rubrics, red-teamed across difficulty tiers, improved through structured repair cycles</li>
-        <li><strong>Deal Desk</strong>, <strong>Legal Separation</strong>, and every future agent follow the same path</li>
-        <li>Early stages determine the right platform (Glean, custom build, third-party, or hybrid) before anything is built</li>
+        <li><strong>Risk:</strong> Without measurable quality standards, every agent is a liability. One bad interaction with an employee or customer erodes trust in the entire AI program.</li>
+        <li><strong>Scale:</strong> We have six agents in the pipeline today. That number will grow. A repeatable quality process is the only way to scale AI deployment responsibly.</li>
+        <li><strong>Governance:</strong> Every agent is scored against business-defined rubrics, stress-tested across difficulty tiers, and improved through evidence-based repair cycles. Leadership can see exactly what "good" means and hold the program accountable.</li>
       </ul>
+    </div>
+
+    <div class="callout animate" style="--i:2">
+      <strong>BuRDy</strong> (our BRD interview agent) is the first agent through this process. The methodology applies to <strong>Deal Desk</strong>, <strong>Legal Separation</strong>, and every future deployment.
     </div>
 
     <!-- ===== 1. THE PROBLEM ===== -->
@@ -632,15 +636,7 @@
     </div>
 
     <div class="callout animate" style="--i:21">
-      <strong>Each cycle is the same:</strong>
-      <ul class="styled-list">
-        <li>Run evaluation scenarios against the current agent version</li>
-        <li>Score every dimension</li>
-        <li>Generate a weakness report with specific, prioritized findings</li>
-        <li>Run a repair session that produces targeted instruction changes</li>
-        <li>Deploy the new version</li>
-        <li>Repeat</li>
-      </ul>
+      <strong>No version ships without evidence.</strong> Every instruction change traces to a scored finding, and every finding traces to a real conversation.
     </div>
 
     <!-- ===== 4. TOOLCHAIN ===== -->
@@ -735,6 +731,8 @@
         <ul class="styled-list">
           <li><strong>Gap and inconsistency surfacing</strong>: catches contradictions, missing stakeholders?</li>
           <li><strong>Scope and routing assessment</strong>: identifies non-IS projects, routes appropriately?</li>
+          <li><strong>Hallucination detection</strong>: fabricated contacts, invented policies, unsupported claims?</li>
+          <li><strong>Citation integrity</strong>: references real documents, links to actual sources?</li>
         </ul>
       </div>
       <div class="card animate" style="--i:36">
@@ -750,7 +748,7 @@
     </div>
 
     <h3 class="animate" style="--i:37">Scenario Library: Tiered Difficulty, Real Conversations</h3>
-    <p class="animate" style="--i:38"><strong>Goal-driven personas conduct real, multi-turn conversations</strong> with the live agent (15-50 turns). Scenarios stress-test across project types, user behaviors, and difficulty levels.</p>
+    <p class="animate" style="--i:38">Goal-driven personas stress-test across project types, user behaviors, and difficulty levels.</p>
 
     <div class="value-grid">
       <div class="card animate" style="--i:39">
@@ -774,6 +772,13 @@
           <li>Tests red flag detection, routing, coaching under pressure</li>
         </ul>
       </div>
+      <div class="card animate" style="--i:42">
+        <div class="card__label" style="color: var(--purple);">Ethics, Bias + Safety</div>
+        <ul class="styled-list" style="margin:0">
+          <li>Discriminatory inputs, leading assumptions, personally identifiable data</li>
+          <li>Tests fairness guardrails, refusal behaviors, safe handling of sensitive content</li>
+        </ul>
+      </div>
     </div>
 
     <div class="callout animate" style="--i:42">
@@ -787,7 +792,7 @@
 
     <!-- ===== 6. SCORE PROGRESSION ===== -->
     <div id="s6" class="sec-head animate" style="--i:42">6 - Score Progression Across Versions</div>
-    <p class="sec-sub animate" style="--i:43">Measurable improvement from v1 through v8+</p>
+    <p class="sec-sub animate" style="--i:43">Measurable improvement from v1 through v9</p>
 
     <div class="chart-container animate" style="--i:44">
       <canvas id="scoreChart"></canvas>
@@ -818,6 +823,11 @@
         <div class="timeline-item__version">v6-v8 - Cross-Scenario Hardening</div>
         <div class="timeline-item__title">Tested against Standard tier, tightened coaching moves</div>
         <div class="timeline-item__detail">Active listening callbacks, metadata pre-verification, ROI validation, named routing destinations. Scores stabilized at 8.0+ across all dimensions.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-item__version">v9 - All-Scenario Validation</div>
+        <div class="timeline-item__title">Ran full suite across all scenario tiers</div>
+        <div class="timeline-item__detail">Red flag detection climbed to 8.3. Process quality dipped to 7.5 on challenging tier (question batching, classification gate timing). Punch list: enforce one-question-per-response, add explicit classification confirmation gate, apply depth-matrix probing as floor.</div>
       </div>
     </div>
 
@@ -876,7 +886,7 @@
     <div id="s8" class="sec-head animate" style="--i:58">8 - Post-Deploy: Continuous Monitoring</div>
     <p class="sec-sub animate" style="--i:59">The eval loop doesn't stop at launch</p>
 
-    <p class="animate" style="--i:60">After launch, the same eval infrastructure becomes a <strong>continuous quality monitoring system</strong>.</p>
+    <p class="animate" style="--i:60">The eval loop keeps running after launch.</p>
 
     <div class="mermaid-wrap animate" style="--i:61">
       <div class="zoom-controls">
@@ -915,14 +925,9 @@
       </pre>
     </div>
 
-    <ul class="styled-list animate" style="--i:62">
-      <li><strong>Evaluate real conversations</strong>: sample actual user interactions on a regular cadence and score them against the same 16-criteria rubric</li>
-      <li><strong>Detect answer quality issues</strong>: scores trending down across dimensions, incomplete BRDs, missed coaching moves</li>
-      <li><strong>Catch topic drift</strong>: questions ranging outside expected scope, users going off-script, agent following them instead of redirecting</li>
-      <li><strong>Identify prompt drift</strong>: agent behavior shifting away from its instructions over time</li>
-      <li><strong>Trigger repair cycles</strong>: same Build-Eval-Repair loop runs on production findings</li>
-      <li><strong>Report to leadership</strong>: IS leadership sees scores, trends, and fixes each month</li>
-    </ul>
+    <div class="callout animate" style="--i:62">
+      <strong>Agents don't degrade silently.</strong> The same eval infrastructure that got <strong>BuRDy</strong> to 8.2 keeps running after launch. Leadership sees scores, trends, and fixes each month.
+    </div>
 
     <!-- ===== 9. WHY THIS MATTERS ===== -->
     <div id="s9" class="sec-head animate" style="--i:63">9 - Why This Matters</div>
@@ -981,13 +986,7 @@
     </div>
 
     <div class="callout animate" style="--i:70">
-      <strong>Agent Factory manages the quality process regardless of platform.</strong>
-      <ul class="styled-list">
-        <li>Rubric, scenarios, evaluation, and repair all run through <strong>Agent Factory</strong> regardless of where the agent lives</li>
-        <li>Glean path is fully developed today</li>
-        <li>For use cases needing external APIs, database writes, or cross-system orchestration: only the build and deploy platform changes</li>
-        <li>Quality system is the same</li>
-      </ul>
+      <strong>Platform changes. Quality doesn't.</strong> The eval-repair loop applies the same rigor whether an agent runs in Glean, a custom app, or a third-party tool.
     </div>
 
     <p class="animate" style="--i:71"><strong>Agents already in this pipeline:</strong></p>
@@ -1100,39 +1099,39 @@
     new Chart(document.getElementById('scoreChart'), {
       type: 'line',
       data: {
-        labels: ['v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7', 'v8'],
+        labels: ['v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7', 'v8', 'v9'],
         datasets: [
           {
             label: 'Goal Completion (25%)',
-            data: [4.5, 7.5, 8.2, 8.8, 8.5, 8.5, 8.8, 8.8],
+            data: [4.5, 7.5, 8.2, 8.8, 8.5, 8.5, 8.8, 8.8, 8.5],
             borderColor: isDark ? '#f59e0b' : '#b45309',
             backgroundColor: isDark ? 'rgba(245,158,11,0.1)' : 'rgba(180,83,9,0.1)',
             borderWidth: 2, tension: 0.3, pointRadius: 4, fill: false,
           },
           {
             label: 'Process Quality (20%)',
-            data: [4.25, 7.0, 7.8, 8.5, 8.3, 8.0, 8.0, 8.8],
+            data: [4.25, 7.0, 7.8, 8.5, 8.3, 8.0, 8.0, 8.8, 7.5],
             borderColor: isDark ? '#60a5fa' : '#1d4ed8',
             backgroundColor: isDark ? 'rgba(96,165,250,0.1)' : 'rgba(29,78,216,0.1)',
             borderWidth: 2, tension: 0.3, pointRadius: 4, fill: false,
           },
           {
             label: 'Conversational Skill (10%)',
-            data: [5.0, 7.0, 7.5, 8.7, 8.3, 8.0, 8.0, 8.7],
+            data: [5.0, 7.0, 7.5, 8.7, 8.3, 8.0, 8.0, 8.7, 8.0],
             borderColor: isDark ? '#2dd4bf' : '#0f766e',
             backgroundColor: isDark ? 'rgba(45,212,191,0.1)' : 'rgba(15,118,110,0.1)',
             borderWidth: 2, tension: 0.3, pointRadius: 4, fill: false,
           },
           {
             label: 'Red Flag Detection (20%)',
-            data: [4.0, 6.0, 6.5, 7.3, 7.3, 7.3, 8.0, 8.0],
+            data: [4.0, 6.0, 6.5, 7.3, 7.3, 7.3, 8.0, 8.0, 8.3],
             borderColor: isDark ? '#f87171' : '#b91c1c',
             backgroundColor: isDark ? 'rgba(248,113,113,0.1)' : 'rgba(185,28,28,0.1)',
             borderWidth: 2, tension: 0.3, pointRadius: 4, fill: false,
           },
           {
             label: 'Output Quality (25%)',
-            data: [5.0, 7.5, 8.0, 8.7, 8.7, 8.3, 8.3, 8.7],
+            data: [5.0, 7.5, 8.0, 8.7, 8.7, 8.3, 8.3, 8.7, 8.3],
             borderColor: isDark ? '#c084fc' : '#7e22ce',
             backgroundColor: isDark ? 'rgba(192,132,252,0.1)' : 'rgba(126,34,206,0.1)',
             borderWidth: 2, tension: 0.3, pointRadius: 4, fill: false,
