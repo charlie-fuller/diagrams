@@ -261,6 +261,10 @@
     border-radius: 10px;
     padding: 20px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
   .kpi-card__value {
     font-family: var(--font-display);
@@ -488,11 +492,11 @@
         <div class="kpi-card__label">Required Sections</div>
       </div>
       <div class="kpi-card animate-scale" style="--i:7">
-        <div class="kpi-card__value" style="font-size:28px;">60%+</div>
+        <div class="kpi-card__value">60%+</div>
         <div class="kpi-card__label">Incomplete Submissions</div>
       </div>
       <div class="kpi-card animate-scale" style="--i:8">
-        <div class="kpi-card__value" style="font-size:28px;">Linear</div>
+        <div class="kpi-card__value">Linear</div>
         <div class="kpi-card__label">Bottleneck Scaling</div>
       </div>
     </div>
@@ -504,8 +508,8 @@
     </div>
 
     <!-- ===== 2. WHAT BURDY IS ===== -->
-    <div id="s2" class="sec-head animate" style="--i:11">2 - What BuRDy Is</div>
-    <p class="sec-sub animate" style="--i:12">Self-service BRD interview agent + automated formatting pipeline</p>
+    <div id="s2" class="sec-head animate" style="--i:11">2 - What We Built</div>
+    <p class="sec-sub animate" style="--i:12">Two interview agents for two audiences, with automated formatting</p>
 
     <div class="mermaid-wrap animate" style="--i:13">
       <div class="zoom-controls">
@@ -515,23 +519,37 @@
       </div>
       <pre class="mermaid">
         graph TD
-          A["Employee has a project idea"] --> B["Opens BuRDy in Glean"]
-          B --> C["Guided interview -- 8 adaptive stages"]
-          C --> D["Agent classifies project type and adjusts depth"]
-          D --> E["Produces substance-focused BRD"]
-          E --> F["Paste into Google Doc"]
-          F --> G["Apps Script formats to IS BRD template"]
-          G --> H["Submission-ready BRD + Jira intake fields"]
+          A["Someone has a project idea"] --> SCALE{"How big is it?"}
+
+          SCALE -->|"Under 20 hours"| BURDY["Opens BuRDy in Glean"]
+          BURDY --> B_INT["Guided interview\n8 adaptive stages"]
+          B_INT --> B_CLASS["Classifies project type\nadjusts depth"]
+          B_CLASS --> B_BRD["Produces substance-focused BRD"]
+          B_BRD --> B_DOC["Paste into Google Doc"]
+          B_DOC --> B_FMT["Apps Script formats\nto IS BRD template"]
+          B_FMT --> B_OUT["Submission-ready BRD\n+ Jira intake fields"]
+
+          SCALE -->|"20+ hours"| PURDY["Opens PuRDy in Glean"]
+          PURDY --> P_INT["6-stage requirements\ninterview"]
+          P_INT --> P_PRD["Structured PRD\n+ process map"]
+          P_PRD --> P_AF["Feeds into Agent Factory\nfor agent builds"]
 
           classDef user fill:#b4530922,stroke:#b45309,stroke-width:2px
-          classDef agent fill:#1d4ed822,stroke:#1d4ed8,stroke-width:2px
+          classDef decision fill:#7e22ce22,stroke:#7e22ce,stroke-width:2px
+          classDef burdy fill:#1d4ed822,stroke:#1d4ed8,stroke-width:2px
+          classDef purdy fill:#7e22ce22,stroke:#7e22ce,stroke-width:2px
           classDef auto fill:#15803d22,stroke:#15803d,stroke-width:2px
-          classDef output fill:#7e22ce22,stroke:#7e22ce,stroke-width:2px
+          classDef output fill:#0f766e22,stroke:#0f766e,stroke-width:2px
 
-          class A,B,F user
-          class C,D,E agent
-          class G auto
-          class H output
+          class A user
+          class SCALE decision
+          class BURDY,B_INT,B_CLASS,B_BRD burdy
+          class B_DOC user
+          class B_FMT auto
+          class B_OUT output
+          class PURDY,P_INT purdy
+          class P_PRD output
+          class P_AF auto
       </pre>
     </div>
 
@@ -567,7 +585,14 @@
       <strong>BRD vs. PRD:</strong> A BRD (Business Requirements Document) is what employees submit to IS when they need something built. A PRD (Product Requirements Document) is what our team uses internally to scope and design the solution. <strong>BuRDy</strong> captures the request. <strong>PuRDy</strong> captures the plan.
     </div>
 
-    <p class="animate" style="--i:16"><strong>What changed:</strong> Employees have a conversation. The agent handles requirements thinking. IS gets complete, submission-ready documents.</p>
+    <div class="callout animate" style="--i:16">
+      <strong>What changed:</strong>
+      <ul class="styled-list">
+        <li>Employees have a conversation instead of a blank template</li>
+        <li>The agent handles the requirements thinking</li>
+        <li>IS gets complete, submission-ready documents</li>
+      </ul>
+    </div>
 
     <!-- ===== 3. THE LOOP ===== -->
     <div id="s3" class="sec-head animate" style="--i:17">3 - The Build-Eval-Repair Loop</div>
@@ -815,7 +840,7 @@
         <div class="kpi-card__label">Repair Cycles</div>
       </div>
       <div class="kpi-card animate-scale" style="--i:51">
-        <div class="kpi-card__value" style="font-size:28px;">30+</div>
+        <div class="kpi-card__value">30+</div>
         <div class="kpi-card__label">Findings Resolved</div>
       </div>
     </div>
@@ -861,33 +886,42 @@
       </div>
       <pre class="mermaid">
         graph TD
-          LIVE["BuRDy in Production\nReal user conversations"] --> SAMPLE["Sample real interactions\nPeriodic or triggered"]
-          SAMPLE --> EVAL["Run through eval rubric\nSame 16 criteria"]
-          EVAL --> META["Meta-Analysis\nCross-conversation patterns"]
-          META --> DRIFT{"Prompt drift\ndetected?"}
-          DRIFT -->|"Yes"| REPAIR["Repair cycle\nTargeted fix"]
-          DRIFT -->|"No"| MONITOR["Continue monitoring"]
+          LIVE["Agent in Production\nReal user conversations"] --> SAMPLE["Sample actual conversations\nRegular cadence"]
+          SAMPLE --> EVAL["Evaluate against rubric\nSame 16 criteria"]
+          EVAL --> ANALYZE["Analyze patterns\nacross conversations"]
+          ANALYZE --> DETECT{"Issues\ndetected?"}
+
+          ANALYZE --> TOPICS["Topic drift:\nquestions ranging outside\nexpected scope"]
+          ANALYZE --> QUALITY["Answer quality:\nscores trending down\nacross dimensions"]
+          ANALYZE --> DRIFT["Prompt drift:\nagent behavior shifting\nfrom instructions"]
+
+          DETECT -->|"Yes"| REPAIR["Repair cycle\nTargeted fix"]
+          DETECT -->|"No"| CONTINUE["Continue monitoring\nNext cadence"]
           REPAIR --> DEPLOY["Deploy updated instructions"]
           DEPLOY --> LIVE
-          META --> INSIGHTS["Quality insights\nfor IS leadership"]
+          ANALYZE --> REPORT["Quality report\nfor IS leadership"]
 
           classDef live fill:#15803d22,stroke:#15803d,stroke-width:2px
           classDef eval fill:#1d4ed822,stroke:#1d4ed8,stroke-width:2px
+          classDef issue fill:#b91c1c22,stroke:#b91c1c,stroke-width:1px,stroke-dasharray:5 5
           classDef repair fill:#b4530922,stroke:#b45309,stroke-width:2px
           classDef insight fill:#7e22ce22,stroke:#7e22ce,stroke-width:2px
 
           class LIVE,DEPLOY live
-          class SAMPLE,EVAL,META,DRIFT,MONITOR eval
+          class SAMPLE,EVAL,ANALYZE,DETECT,CONTINUE eval
+          class TOPICS,QUALITY,DRIFT issue
           class REPAIR repair
-          class INSIGHTS insight
+          class REPORT insight
       </pre>
     </div>
 
     <ul class="styled-list animate" style="--i:62">
-      <li><strong>Prompt drift detection</strong>: scores trending down signal drift. Catch it before users notice.</li>
-      <li><strong>Meta-analysis</strong>: which project types score lower? Which departments struggle? Pattern recognition at scale.</li>
-      <li><strong>Continuous improvement</strong>: the same Build-Eval-Repair loop runs on production data.</li>
-      <li><strong>Quality reporting</strong>: IS leadership sees scores, trends, and fixes each month.</li>
+      <li><strong>Evaluate real conversations</strong>: sample actual user interactions on a regular cadence and score them against the same 16-criteria rubric</li>
+      <li><strong>Detect answer quality issues</strong>: scores trending down across dimensions, incomplete BRDs, missed coaching moves</li>
+      <li><strong>Catch topic drift</strong>: questions ranging outside expected scope, users going off-script, agent following them instead of redirecting</li>
+      <li><strong>Identify prompt drift</strong>: agent behavior shifting away from its instructions over time</li>
+      <li><strong>Trigger repair cycles</strong>: same Build-Eval-Repair loop runs on production findings</li>
+      <li><strong>Report to leadership</strong>: IS leadership sees scores, trends, and fixes each month</li>
     </ul>
 
     <!-- ===== 9. WHY THIS MATTERS ===== -->
