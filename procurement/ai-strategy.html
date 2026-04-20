@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Procurement Contracts -- AI Implementation Roadmap</title>
+<title>Procurement Contracts - AI Implementation Roadmap</title>
 <style>
 :root {
   --bg-page: #f8fafc;
@@ -316,10 +316,10 @@ h1 {
               <li>A simple interface where Morgan or Rory can upload an SOW and/or MSA</li>
               <li>AI reviews the documents and returns a structured report covering:
                 <ul>
-                  <li><strong>Document type classification</strong> -- is this actually an SOW, MSA, NDA, or online terms?</li>
-                  <li><strong>Completeness check</strong> -- are required fields present (quantities, pricing, term length, payment terms, SKUs)?</li>
-                  <li><strong>Playbook compliance</strong> -- flag auto-renewal clauses, payment terms worse than net 60, missing price caps, unlimited increase language</li>
-                  <li><strong>Risk items</strong> -- any unusual clauses or language that warrants closer human review</li>
+                  <li><strong>Document type classification</strong> - is this actually an SOW, MSA, NDA, or online terms?</li>
+                  <li><strong>Completeness check</strong> - are required fields present (quantities, pricing, term length, payment terms, SKUs)?</li>
+                  <li><strong>Playbook compliance</strong> - flag auto-renewal clauses, payment terms worse than net 60, missing price caps, unlimited increase language</li>
+                  <li><strong>Risk items</strong> - any unusual clauses or language that warrants closer human review</li>
                 </ul>
               </li>
               <li>Output is a structured checklist Morgan can act on immediately</li>
@@ -330,7 +330,7 @@ h1 {
           <div class="section-label">Why Start Here</div>
           <div class="section-content">
             <ul>
-              <li>Zero integration dependencies -- works today with no API access or Omnia changes</li>
+              <li>Zero integration dependencies - works today with no API access or Omnia changes</li>
               <li>Morgan already tested contract review in Glean and was "very impressed" by the detail</li>
               <li>Validates accuracy before we connect it to anything automated</li>
               <li>Immediate time savings on the ~40% of submissions that are incomplete or wrong doc type</li>
@@ -376,9 +376,9 @@ h1 {
           <div class="section-label">Prerequisites</div>
           <div class="section-content">
             <ul>
-              <li>Phase 1 validated -- AI review is accurate enough to trust</li>
+              <li>Phase 1 validated - AI review is accurate enough to trust</li>
               <li>API access to Omnia confirmed (meet with Morgan's Omnia rep)</li>
-              <li>Understand Omnia's native capabilities -- they may already support some of this</li>
+              <li>Understand Omnia's native capabilities - they may already support some of this</li>
             </ul>
           </div>
         </div>
@@ -389,7 +389,7 @@ h1 {
               <li><strong>Event trigger:</strong> When a new procurement request is submitted in Omnia with attached documents, automatically pick them up for review</li>
               <li><strong>Same AI review pipeline</strong> from Phase 1, now triggered automatically instead of manually</li>
               <li><strong>Results written back</strong> to the Omnia ticket as a structured review summary</li>
-              <li><strong>Auto-reject for clear failures:</strong> If the system is highly confident the document is incomplete (e.g., NDA uploaded instead of MSA), send it back to the requester immediately with guidance -- before it ever reaches procurement</li>
+              <li><strong>Auto-reject for clear failures:</strong> If the system is highly confident the document is incomplete (e.g., NDA uploaded instead of MSA), send it back to the requester immediately with guidance - before it ever reaches procurement</li>
             </ul>
           </div>
         </div>
@@ -400,7 +400,7 @@ h1 {
               <li>Eliminates the 1-2 week delay where bad documents sit in the queue waiting for human review</li>
               <li>Requester gets feedback in minutes, not weeks</li>
               <li>Procurement team only sees requests that have already passed basic validation</li>
-              <li>Review happens in parallel with FP&A/manager approval -- no sequential bottleneck</li>
+              <li>Review happens in parallel with FP&A/manager approval - no sequential bottleneck</li>
             </ul>
           </div>
         </div>
@@ -423,7 +423,7 @@ h1 {
           <div class="section-label">Prerequisites</div>
           <div class="section-content">
             <ul>
-              <li>Phase 2 running -- automated document intake is working</li>
+              <li>Phase 2 running - automated document intake is working</li>
               <li>LinkSquares integration or API access for pulling historical contracts</li>
               <li>Sufficient historical contract data accessible programmatically</li>
             </ul>
@@ -434,7 +434,7 @@ h1 {
           <div class="section-content">
             <ul>
               <li><strong>Contract diff engine:</strong> For renewals, automatically pull the previous SOW/MSA from LinkSquares and compare against the new submission</li>
-              <li><strong>Change detection:</strong> Highlight every difference between old and new -- price changes, new clauses, removed protections, term modifications</li>
+              <li><strong>Change detection:</strong> Highlight every difference between old and new - price changes, new clauses, removed protections, term modifications</li>
               <li><strong>Risk scoring:</strong> Flag changes that violate playbook rules (price increase >5%, new auto-renewal clause, removed caps)</li>
               <li><strong>Redline generation:</strong> For identified issues, suggest specific contract language changes that procurement can send directly to the requester</li>
             </ul>
@@ -444,7 +444,7 @@ h1 {
           <div class="section-label">Why This Is High Value</div>
           <div class="section-content">
             <ul>
-              <li>Suppliers -- especially large ones -- frequently sneak in unfavorable terms assuming Contentful won't read carefully</li>
+              <li>Suppliers - especially large ones - frequently sneak in unfavorable terms assuming Contentful won't read carefully</li>
               <li>Manual comparison is time-consuming and error-prone</li>
               <li>Morgan's goal: give the requester something they can forward directly to the supplier</li>
               <li>AI is well-suited to exhaustive document comparison at speed</li>
@@ -471,7 +471,7 @@ h1 {
           <div class="section-content">
             <ul>
               <li><strong>Requester guidance at submission:</strong> AI assistant helps the requester understand what documents they need (MSA vs SOW vs NDA), checks uploads in real-time, and prevents bad submissions entirely</li>
-              <li><strong>Parallel pre-review:</strong> The moment documents are uploaded -- even before FP&A or manager approves -- the AI runs completeness, playbook, and comparison checks</li>
+              <li><strong>Parallel pre-review:</strong> The moment documents are uploaded - even before FP&A or manager approves - the AI runs completeness, playbook, and comparison checks</li>
               <li><strong>Auto-generated requester responses:</strong> For standard issues (wrong doc type, missing fields, playbook violations), generate the exact feedback message or redlined document the requester needs to send back to the supplier</li>
               <li><strong>Procurement dashboard:</strong> When the request reaches Morgan and Rory, the AI review is already complete. They validate the AI findings, handle the nuanced cases, and approve</li>
               <li><strong>Learning loop:</strong> Track which AI findings procurement agrees/disagrees with to refine accuracy over time</li>
@@ -486,7 +486,7 @@ h1 {
               <li>Large vendor negotiations where leverage and relationship context matter</li>
               <li>Novel clause types the playbook doesn't yet cover</li>
               <li>Judgment calls on when to push back vs. accept slightly non-standard terms</li>
-              <li>These are the cases Morgan and Rory should be spending their time on -- not catching missing line items</li>
+              <li>These are the cases Morgan and Rory should be spending their time on - not catching missing line items</li>
             </ul>
           </div>
         </div>
@@ -539,7 +539,7 @@ h1 {
     <ol>
       <li><strong>Schedule meeting with Morgan's Omnia rep</strong> to understand API capabilities, webhook support, and any native AI/validation features Omnia already offers</li>
       <li><strong>Get a few sample contracts from Morgan</strong> (one clean SOW, one incomplete SOW, one with playbook violations) to build and test the Phase 1 review pipeline</li>
-      <li><strong>Encode the negotiation playbook</strong> as structured review criteria -- Morgan to confirm the full rule set beyond what was discussed in discovery</li>
+      <li><strong>Encode the negotiation playbook</strong> as structured review criteria - Morgan to confirm the full rule set beyond what was discussed in discovery</li>
       <li><strong>Build Phase 1 prototype</strong> and have Morgan/Rory test it against contracts they've already reviewed to validate accuracy</li>
     </ol>
   </div>

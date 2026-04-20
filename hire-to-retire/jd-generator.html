@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JD Generator -- Glean Agent Flow</title>
+<title>JD Generator - Glean Agent Flow</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -113,7 +113,7 @@
     max-width: 700px;
   }
 
-  /* -- Legend -- */
+  /* - Legend - */
   .legend {
     display: flex;
     flex-wrap: wrap;
@@ -137,7 +137,7 @@
     border-radius: 50%;
   }
 
-  /* -- Phases -- */
+  /* - Phases - */
   .phase {
     margin-bottom: 28px;
   }
@@ -151,7 +151,7 @@
     padding-left: 4px;
   }
 
-  /* -- Step Cards -- */
+  /* - Step Cards - */
   .step {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -237,7 +237,7 @@
     margin-right: 4px;
   }
 
-  /* -- Connector lines -- */
+  /* - Connector lines - */
   .connector {
     display: flex;
     justify-content: center;
@@ -245,7 +245,7 @@
   }
   .connector svg { display: block; }
 
-  /* -- Form fields summary -- */
+  /* - Form fields summary - */
   .fields-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -267,7 +267,7 @@
     margin-top: 2px;
   }
 
-  /* -- Color classes -- */
+  /* - Color classes - */
   .c-trigger  { border-left-color: var(--trigger); }
   .c-trigger:hover, .c-trigger.open { border-left-color: var(--trigger); border-color: var(--trigger); }
   .c-trigger .step-num { background: var(--trigger-dim); color: var(--trigger); }
@@ -298,7 +298,7 @@
   .phase-review .phase-label { color: var(--review); }
   .phase-output .phase-label { color: var(--output); }
 
-  /* -- Model badge -- */
+  /* - Model badge - */
   .model-badge {
     font-family: var(--font-mono);
     font-size: 10px;
@@ -309,7 +309,7 @@
     margin-left: 6px;
   }
 
-  /* -- Memory badge -- */
+  /* - Memory badge - */
   .mem-badge {
     font-family: var(--font-mono);
     font-size: 10px;
@@ -332,7 +332,7 @@
 <div class="container">
 
   <header class="animate" style="--i:0">
-    <h1>JD Generator -- Glean Agent Flow</h1>
+    <h1>JD Generator - Glean Agent Flow</h1>
     <div class="sub">v32 / 11 steps / sequential retrieval + HITL approval</div>
     <div class="desc">
       Generates brand-compliant Contentful job descriptions from a structured form.
@@ -353,14 +353,14 @@
   <div class="phase phase-trigger animate" style="--i:2">
     <div class="phase-label">Input Form (8 fields)</div>
     <div class="fields-grid">
-      <div class="field-chip">Job Title <div class="type">TEXT -- required</div></div>
-      <div class="field-chip">Department <div class="type">SELECT -- 15 options</div></div>
-      <div class="field-chip">Level <div class="type">SELECT -- L1-L10, M variants</div></div>
-      <div class="field-chip">Location <div class="type">SELECT -- 9 offices/remote</div></div>
-      <div class="field-chip">Additional Locations <div class="type">TEXT -- optional</div></div>
-      <div class="field-chip">Travel Requirement <div class="type">SELECT -- optional</div></div>
-      <div class="field-chip">Office Environment <div class="type">TEXT -- optional</div></div>
-      <div class="field-chip">Additional Context <div class="type">TEXT -- optional</div></div>
+      <div class="field-chip">Job Title <div class="type">TEXT - required</div></div>
+      <div class="field-chip">Department <div class="type">SELECT - 15 options</div></div>
+      <div class="field-chip">Level <div class="type">SELECT - L1-L10, M variants</div></div>
+      <div class="field-chip">Location <div class="type">SELECT - 9 offices/remote</div></div>
+      <div class="field-chip">Additional Locations <div class="type">TEXT - optional</div></div>
+      <div class="field-chip">Travel Requirement <div class="type">SELECT - optional</div></div>
+      <div class="field-chip">Office Environment <div class="type">TEXT - optional</div></div>
+      <div class="field-chip">Additional Context <div class="type">TEXT - optional</div></div>
     </div>
   </div>
 
@@ -370,7 +370,7 @@
 
   <!-- Phase: Document Retrieval -->
   <div class="phase phase-retrieve">
-    <div class="phase-label animate" style="--i:4">Phase 1 -- Document Retrieval (sequential chain)</div>
+    <div class="phase-label animate" style="--i:4">Phase 1 - Document Retrieval (sequential chain)</div>
 
     <div class="step c-retrieve animate" style="--i:5" onclick="this.classList.toggle('open')">
       <div class="step-header">
@@ -474,7 +474,7 @@
 
   <!-- Phase: Generation -->
   <div class="phase phase-generate">
-    <div class="phase-label animate" style="--i:12">Phase 2 -- Generation</div>
+    <div class="phase-label animate" style="--i:12">Phase 2 - Generation</div>
 
     <div class="step c-generate animate" style="--i:13" onclick="this.classList.toggle('open')">
       <div class="step-header">
@@ -488,13 +488,13 @@
         <strong>Goal:</strong> Generate a publication-ready Contentful job description from all retrieved context and form inputs.<br><br>
         <strong>Three-part process:</strong>
         <ul>
-          <li><strong>Part 1 -- Input Normalization:</strong> Resolve form inputs to canonical values. Level code resolved against Leveling Guide at runtime (not hardcoded). Detect IC vs People Leader track.</li>
-          <li><strong>Part 2 -- Reference JD Handling:</strong> Use golden examples as tone/style anchors. Adapt and elevate, never copy verbatim. If level mismatch, weight Leveling Guide more heavily.</li>
-          <li><strong>Part 3 -- Generate Sections:</strong>
+          <li><strong>Part 1 - Input Normalization:</strong> Resolve form inputs to canonical values. Level code resolved against Leveling Guide at runtime (not hardcoded). Detect IC vs People Leader track.</li>
+          <li><strong>Part 2 - Reference JD Handling:</strong> Use golden examples as tone/style anchors. Adapt and elevate, never copy verbatim. If level mismatch, weight Leveling Guide more heavily.</li>
+          <li><strong>Part 3 - Generate Sections:</strong>
             <ul>
-              <li><strong>About the Opportunity</strong> -- max 150 words, direct voice, core values woven in, (f/m/d) for EU/UK</li>
-              <li><strong>What to expect?</strong> -- max 6 bullets, action verbs, 2-3 bold phrases per bullet, LinkedIn keywords embedded</li>
-              <li><strong>What you need to be successful?</strong> -- max 6 required + 3 bonus, level-aligned, bold phrases, LinkedIn keywords</li>
+              <li><strong>About the Opportunity</strong> - max 150 words, direct voice, core values woven in, (f/m/d) for EU/UK</li>
+              <li><strong>What to expect?</strong> - max 6 bullets, action verbs, 2-3 bold phrases per bullet, LinkedIn keywords embedded</li>
+              <li><strong>What you need to be successful?</strong> - max 6 required + 3 bonus, level-aligned, bold phrases, LinkedIn keywords</li>
             </ul>
           </li>
         </ul>
@@ -510,7 +510,7 @@
 
   <!-- Phase: Review -->
   <div class="phase phase-review">
-    <div class="phase-label animate" style="--i:15">Phase 3 -- Review and Approval (HITL)</div>
+    <div class="phase-label animate" style="--i:15">Phase 3 - Review and Approval (HITL)</div>
 
     <div class="step c-review animate" style="--i:16" onclick="this.classList.toggle('open')">
       <div class="step-header">
@@ -541,8 +541,8 @@
         <strong>Goal:</strong> Pause the workflow until the hiring manager explicitly approves or requests changes.<br>
         <strong>Options:</strong>
         <ul>
-          <li><strong>Approve</strong> -- proceed to Google Doc creation</li>
-          <li><strong>Request Changes</strong> -- capture feedback for a revised generation</li>
+          <li><strong>Approve</strong> - proceed to Google Doc creation</li>
+          <li><strong>Request Changes</strong> - capture feedback for a revised generation</li>
         </ul>
         <strong>Note:</strong> Requires manual configuration of "Wait for User Input" action in Glean UI after import.
       </div>
@@ -555,7 +555,7 @@
 
   <!-- Phase: Output -->
   <div class="phase phase-output">
-    <div class="phase-label animate" style="--i:19">Phase 4 -- Output</div>
+    <div class="phase-label animate" style="--i:19">Phase 4 - Output</div>
 
     <div class="step c-output animate" style="--i:20" onclick="this.classList.toggle('open')">
       <div class="step-header">
@@ -595,11 +595,11 @@
     <div class="phase-label" style="color: var(--text-dim);">Design Notes</div>
     <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 22px; font-size: 13px; line-height: 1.7; color: var(--text-dim);">
       <ul style="margin-left: 16px;">
-        <li><strong style="color:var(--text)">Sequential retrieval</strong> -- Steps 1-6 run in strict sequence (each depends on the previous) to ensure reliable context loading in Glean's memory window.</li>
-        <li><strong style="color:var(--text)">Runtime document reads</strong> -- All reference documents are read at runtime via live URLs. No frozen content baked into instructions. Leveling Guide is the source of truth for level resolution.</li>
-        <li><strong style="color:var(--text)">Claude Sonnet</strong> -- Generation (Step 7) and review (Step 8) use Vertex AI Claude Sonnet for higher quality output.</li>
-        <li><strong style="color:var(--text)">Human in the loop</strong> -- No JD is published without hiring manager approval at Step 9. The agent generates only; recruiting reviews before posting to Greenhouse.</li>
-        <li><strong style="color:var(--text)">Brand enforcement</strong> -- Zero em-dashes, no level codes in visible text, bold formatting on key phrases, LinkedIn keywords embedded naturally.</li>
+        <li><strong style="color:var(--text)">Sequential retrieval</strong> - Steps 1-6 run in strict sequence (each depends on the previous) to ensure reliable context loading in Glean's memory window.</li>
+        <li><strong style="color:var(--text)">Runtime document reads</strong> - All reference documents are read at runtime via live URLs. No frozen content baked into instructions. Leveling Guide is the source of truth for level resolution.</li>
+        <li><strong style="color:var(--text)">Claude Sonnet</strong> - Generation (Step 7) and review (Step 8) use Vertex AI Claude Sonnet for higher quality output.</li>
+        <li><strong style="color:var(--text)">Human in the loop</strong> - No JD is published without hiring manager approval at Step 9. The agent generates only; recruiting reviews before posting to Greenhouse.</li>
+        <li><strong style="color:var(--text)">Brand enforcement</strong> - Zero em-dashes, no level codes in visible text, bold formatting on key phrases, LinkedIn keywords embedded naturally.</li>
         <li><strong style="color:var(--text)">Owner:</strong> Bella Thomas (Recruiting) / Charlie Fuller (builder). Target: 60% of net new roles.</li>
       </ul>
     </div>

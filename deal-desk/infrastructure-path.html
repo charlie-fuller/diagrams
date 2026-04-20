@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deal Desk Calculator -- Infrastructure Path</title>
+<title>Deal Desk Calculator - Infrastructure Path</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -674,7 +674,7 @@
   <h1 class="anim-up" style="--i:0">Where Does the Calculator Live?</h1>
   <p class="subtitle anim-up" style="--i:1">infrastructure path for deal desk deterministic services</p>
   <p class="intro anim-up" style="--i:2">
-    The calculator service is <strong>stateless Python</strong> -- it doesn't care where it runs.
+    The calculator service is <strong>stateless Python</strong> - it doesn't care where it runs.
     But Glean needs to reach it over HTTPS, and Contentful needs to own it in production.
     This creates a phased path: <strong>prove the pattern locally, then migrate to Contentful infrastructure</strong>
     once the sandbox environment (G07) is ready.
@@ -712,7 +712,7 @@
         <svg viewBox="0 0 24 24"><path d="M12 4 L12 20 M7 15 L12 20 L17 15"/></svg>
         <svg viewBox="0 0 24 24"><path d="M12 20 L12 4 M7 9 L12 4 L17 9"/></svg>
       </div>
-      <span class="conn-text--warn">Auth mechanism TBD -- Tyler conversation Apr 20</span>
+      <span class="conn-text--warn">Auth mechanism TBD - Tyler conversation Apr 20</span>
     </div>
 
     <!-- Contentful Infrastructure -->
@@ -726,7 +726,7 @@
         <div class="net-card">
           <div class="card-label" style="color: var(--infra);">Compute</div>
           <div class="card-title">Calculator Service</div>
-          <div class="card-desc">Python / FastAPI. Stateless -- no database, no sessions. Receives JSON, returns JSON. Scales horizontally.</div>
+          <div class="card-desc">Python / FastAPI. Stateless - no database, no sessions. Receives JSON, returns JSON. Scales horizontally.</div>
         </div>
         <div class="net-card">
           <div class="card-label" style="color: var(--infra);">Observability</div>
@@ -743,20 +743,20 @@
   </div>
 
   <!-- OPEN QUESTIONS FOR TYLER -->
-  <div class="section-title anim-up" style="--i:6">Open Questions -- Glean Actions Feasibility</div>
+  <div class="section-title anim-up" style="--i:6">Open Questions - Glean Actions Feasibility</div>
   <div class="questions-grid anim-up" style="--i:7">
     <div class="question-card">
-      <div class="q-who">Tyler -- Apr 20</div>
+      <div class="q-who">Tyler - Apr 20</div>
       <div class="q-text">Can Actions pass structured JSON bodies?</div>
       <div class="q-context">Calculators need typed fields (numbers, arrays), not just query string parameters. Does the Action config support POST with JSON body?</div>
     </div>
     <div class="question-card">
-      <div class="q-who">Tyler -- Apr 20</div>
+      <div class="q-who">Tyler - Apr 20</div>
       <div class="q-text">What auth methods for outbound Actions?</div>
       <div class="q-context">API key in header? OAuth? mTLS? This determines whether the calculator can sit on the open internet with a key or needs network-level access control.</div>
     </div>
     <div class="question-card">
-      <div class="q-who">Tyler -- Apr 20</div>
+      <div class="q-who">Tyler - Apr 20</div>
       <div class="q-text">Can the agent use Action response fields?</div>
       <div class="q-context">The Think step after the Action needs to reference specific fields from the calculator response (e.g., within_policy, approval_level). Does Glean pass structured responses back to the workflow?</div>
     </div>
@@ -778,7 +778,7 @@
         <div class="phase-body">
           <strong>Port Excel logic to Python, test against original outputs.</strong>
           No hosting needed yet. Run locally, validate row-by-row against the spreadsheet calculators.
-          This is pure business logic extraction -- the hardest part is getting the formulas right, not the infrastructure.
+          This is pure business logic extraction - the hardest part is getting the formulas right, not the infrastructure.
         </div>
         <div class="phase-details">
           <div class="phase-detail-card">
@@ -798,7 +798,7 @@
           </div>
           <div class="phase-detail-card">
             <div class="pd-label">Risk</div>
-            <div class="pd-value">None -- fully local, reversible</div>
+            <div class="pd-value">None - fully local, reversible</div>
             <div class="pd-note">No infrastructure, no security review</div>
           </div>
         </div>
@@ -823,7 +823,7 @@
           <div class="phase-detail-card">
             <div class="pd-label">Runs on</div>
             <div class="pd-value">Temporary endpoint (ngrok / <code>fly.io</code> staging)</div>
-            <div class="pd-note">Throwaway -- not production</div>
+            <div class="pd-note">Throwaway - not production</div>
           </div>
           <div class="phase-detail-card">
             <div class="pd-label">Deliverable</div>
@@ -837,7 +837,7 @@
           </div>
           <div class="phase-detail-card">
             <div class="pd-label">Risk</div>
-            <div class="pd-value">Low -- demo data only, no real deals</div>
+            <div class="pd-value">Low - demo data only, no real deals</div>
             <div class="pd-note">Temporary infra, torn down after demo</div>
           </div>
         </div>
@@ -855,7 +855,7 @@
         </div>
         <div class="phase-body">
           <strong>Move validated calculator into Contentful-owned infrastructure.</strong>
-          Same code, new home. The service is stateless Python -- migration is a deployment config change, not a rewrite.
+          Same code, new home. The service is stateless Python - migration is a deployment config change, not a rewrite.
           This is where the sandbox pitch becomes concrete: "we have a working tool that saves X hours per deal, it needs a home."
         </div>
         <div class="phase-details">
@@ -893,7 +893,7 @@
       "this saves the deal desk team X hours per deal and it needs a production home."</strong>
       The sandbox conversation shifts from "we need infrastructure for AI apps" (vague)
       to "we have a working tool that needs hosting" (concrete). The deal desk calculator becomes
-      the first tenant that justifies the platform -- and every future deterministic service
+      the first tenant that justifies the platform - and every future deterministic service
       (legal calculators, finance tools, HR automation) follows the same pattern.
     </div>
   </div>
@@ -911,7 +911,7 @@
       <div class="dep-owner dep-owner--danny">Danny / Kevin</div>
       <div class="dep-title">Sandbox Environment (G07)</div>
       <div class="dep-desc">IS-managed compute that can host stateless Python services with HTTPS endpoints accessible from Glean's cloud.</div>
-      <div class="dep-date">Target: TBD -- pending Danny conversation</div>
+      <div class="dep-date">Target: TBD - pending Danny conversation</div>
     </div>
     <div class="dep-card">
       <div class="dep-owner dep-owner--steffan">Steffan</div>

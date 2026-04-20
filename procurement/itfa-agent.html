@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ITFA Vendor Research Agent -- Glean Agent Flow</title>
+<title>ITFA Vendor Research Agent - Glean Agent Flow</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -107,7 +107,7 @@
     max-width: 700px;
   }
 
-  /* -- Legend -- */
+  /* - Legend - */
   .legend {
     display: flex;
     flex-wrap: wrap;
@@ -123,7 +123,7 @@
   .legend-item { display: flex; align-items: center; gap: 6px; }
   .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
 
-  /* -- Phases -- */
+  /* - Phases - */
   .phase { margin-bottom: 28px; }
   .phase-label {
     font-family: var(--font-mono);
@@ -135,7 +135,7 @@
     padding-left: 4px;
   }
 
-  /* -- Step Cards -- */
+  /* - Step Cards - */
   .step {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -210,7 +210,7 @@
   .connector { display: flex; justify-content: center; padding: 2px 0; }
   .connector svg { display: block; }
 
-  /* -- Form fields -- */
+  /* - Form fields - */
   .fields-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -232,7 +232,7 @@
     margin-top: 2px;
   }
 
-  /* -- Coverage table -- */
+  /* - Coverage table - */
   .coverage-table {
     width: 100%;
     border-collapse: collapse;
@@ -273,7 +273,7 @@
     font-weight: 500;
   }
 
-  /* -- Color classes -- */
+  /* - Color classes - */
   .c-trigger  { border-left-color: var(--trigger); }
   .c-trigger:hover, .c-trigger.open { border-left-color: var(--trigger); border-color: var(--trigger); }
   .c-trigger .step-num { background: var(--trigger-dim); color: var(--trigger); }
@@ -331,7 +331,7 @@
 <div class="container">
 
   <header class="animate" style="--i:0">
-    <h1>ITFA Vendor Research Agent -- Glean Agent Flow</h1>
+    <h1>ITFA Vendor Research Agent - Glean Agent Flow</h1>
     <div class="sub">v4 / 6 steps / research + template generation + Google Doc output</div>
     <div class="desc">
       Researches vendor documentation (DPA, trust center, security pages, sub-processors, privacy policy)
@@ -353,10 +353,10 @@
   <div class="phase phase-trigger animate" style="--i:2">
     <div class="phase-label">Input Form (4 fields)</div>
     <div class="fields-grid">
-      <div class="field-chip">Link to Vendor Website <div class="type">TEXT -- e.g. https://cursor.com</div></div>
-      <div class="field-chip">Name of Covered Tool <div class="type">TEXT -- e.g. Cursor, Notion</div></div>
-      <div class="field-chip">Department <div class="type">TEXT -- submitting department</div></div>
-      <div class="field-chip">Contact Name <div class="type">TEXT -- responsible contact</div></div>
+      <div class="field-chip">Link to Vendor Website <div class="type">TEXT - e.g. https://cursor.com</div></div>
+      <div class="field-chip">Name of Covered Tool <div class="type">TEXT - e.g. Cursor, Notion</div></div>
+      <div class="field-chip">Department <div class="type">TEXT - submitting department</div></div>
+      <div class="field-chip">Contact Name <div class="type">TEXT - responsible contact</div></div>
     </div>
   </div>
 
@@ -366,7 +366,7 @@
 
   <!-- Phase: Context Loading -->
   <div class="phase phase-retrieve">
-    <div class="phase-label animate" style="--i:4">Phase 1 -- Context Loading (sequential)</div>
+    <div class="phase-label animate" style="--i:4">Phase 1 - Context Loading (sequential)</div>
 
     <div class="step c-retrieve animate" style="--i:5" onclick="this.classList.toggle('open')">
       <div class="step-header">
@@ -388,7 +388,7 @@
     <div class="step c-retrieve animate" style="--i:6" onclick="this.classList.toggle('open')">
       <div class="step-header">
         <div class="step-num">2</div>
-        <div class="step-title">Golden Example -- Cursor Completed Form</div>
+        <div class="step-title">Golden Example - Cursor Completed Form</div>
         <div class="step-tool">Read document</div>
         <div class="step-chevron">&#9654;</div>
       </div>
@@ -424,7 +424,7 @@
 
   <!-- Phase: Web Research -->
   <div class="phase phase-research">
-    <div class="phase-label animate" style="--i:9">Phase 2 -- Vendor Web Research</div>
+    <div class="phase-label animate" style="--i:9">Phase 2 - Vendor Web Research</div>
 
     <div class="step c-research animate" style="--i:10" onclick="this.classList.toggle('open')">
       <div class="step-header">
@@ -437,16 +437,16 @@
         <strong>Goal:</strong> Research the vendor's public documentation across 5 search domains.<br><br>
         <strong>Search areas:</strong>
         <ul>
-          <li><strong>Trust Center / Security</strong> -- SOC 2, ISO 27001, encryption, access controls, SSO, monitoring</li>
-          <li><strong>DPA (Data Processing Agreement)</strong> -- personal data categories, purposes, TOMs, SCCs, deletion, hosting regions</li>
-          <li><strong>Sub-Processors</strong> -- names, countries, services provided</li>
-          <li><strong>Privacy Policy</strong> -- data types collected, IP/location data, retention periods</li>
-          <li><strong>Deletion / Retention</strong> -- timelines, schedules, termination data handling</li>
+          <li><strong>Trust Center / Security</strong> - SOC 2, ISO 27001, encryption, access controls, SSO, monitoring</li>
+          <li><strong>DPA (Data Processing Agreement)</strong> - personal data categories, purposes, TOMs, SCCs, deletion, hosting regions</li>
+          <li><strong>Sub-Processors</strong> - names, countries, services provided</li>
+          <li><strong>Privacy Policy</strong> - data types collected, IP/location data, retention periods</li>
+          <li><strong>Deletion / Retention</strong> - timelines, schedules, termination data handling</li>
         </ul>
         <strong>Terminology awareness:</strong> DPA = Data Processing Agreement = Data Processing Addendum = Data Protection Agreement. TOMs = Technical and Organizational Measures. SCCs = Standard Contractual Clauses.<br><br>
         <strong>Output per area:</strong> URL found (or NOT FOUND), relevant excerpts with direct quotes.<br>
         <strong>Status:</strong> COMPLETE | PARTIAL | MINIMAL<br>
-        <span class="no-mem-badge">memory: NO_MEMORY</span> (stateless -- no prior context carried)
+        <span class="no-mem-badge">memory: NO_MEMORY</span> (stateless - no prior context carried)
       </div>
     </div>
   </div>
@@ -457,7 +457,7 @@
 
   <!-- Phase: Template Generation -->
   <div class="phase phase-generate">
-    <div class="phase-label animate" style="--i:12">Phase 3 -- Template Generation</div>
+    <div class="phase-label animate" style="--i:12">Phase 3 - Template Generation</div>
 
     <div class="step c-generate animate" style="--i:13" onclick="this.classList.toggle('open')">
       <div class="step-header">
@@ -512,7 +512,7 @@
 
   <!-- Phase: Output -->
   <div class="phase phase-output">
-    <div class="phase-label animate" style="--i:15">Phase 4 -- Output</div>
+    <div class="phase-label animate" style="--i:15">Phase 4 - Output</div>
 
     <div class="step c-output animate" style="--i:16" onclick="this.classList.toggle('open')">
       <div class="step-header">
@@ -536,12 +536,12 @@
     <div class="phase-label" style="color: var(--text-dim);">Design Notes</div>
     <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 22px; font-size: 13px; line-height: 1.7; color: var(--text-dim);">
       <ul style="margin-left: 16px;">
-        <li><strong style="color:var(--text)">ITFA context</strong> -- The IT Framework Agreement (ITFA) with the German Works Council requires detailed documentation for every new software tool procurement. This agent automates the research portion of that process.</li>
-        <li><strong style="color:var(--text)">Operator model</strong> -- Run by Legal/IT/People review team (6-8 people), not by the requester. Keeps the user base small and feedback loops tight.</li>
-        <li><strong style="color:var(--text)">Coverage: 9 of 14</strong> -- Agent fully answers 6 questions, partially answers 3, and flags 5 for human input. "Better than what the requester typically provides" is the success bar.</li>
-        <li><strong style="color:var(--text)">Stateless research</strong> -- Step 4 (web research) runs with NO_MEMORY to keep the context window clean for broad search. Steps 1-3 and 5-6 use ALL_DEPENDENCIES.</li>
-        <li><strong style="color:var(--text)">Confidence levels</strong> -- Every agent-answered question includes High/Medium/Low confidence so reviewers know where to focus attention.</li>
-        <li><strong style="color:var(--text)">Omnia integration path</strong> -- V1 outputs a Google Doc. Post-V1, the agent could trigger automatically from Omnia procurement workflows and populate form fields directly via API.</li>
+        <li><strong style="color:var(--text)">ITFA context</strong> - The IT Framework Agreement (ITFA) with the German Works Council requires detailed documentation for every new software tool procurement. This agent automates the research portion of that process.</li>
+        <li><strong style="color:var(--text)">Operator model</strong> - Run by Legal/IT/People review team (6-8 people), not by the requester. Keeps the user base small and feedback loops tight.</li>
+        <li><strong style="color:var(--text)">Coverage: 9 of 14</strong> - Agent fully answers 6 questions, partially answers 3, and flags 5 for human input. "Better than what the requester typically provides" is the success bar.</li>
+        <li><strong style="color:var(--text)">Stateless research</strong> - Step 4 (web research) runs with NO_MEMORY to keep the context window clean for broad search. Steps 1-3 and 5-6 use ALL_DEPENDENCIES.</li>
+        <li><strong style="color:var(--text)">Confidence levels</strong> - Every agent-answered question includes High/Medium/Low confidence so reviewers know where to focus attention.</li>
+        <li><strong style="color:var(--text)">Omnia integration path</strong> - V1 outputs a Google Doc. Post-V1, the agent could trigger automatically from Omnia procurement workflows and populate form fields directly via API.</li>
         <li><strong style="color:var(--text)">Owner:</strong> Matthew (Legal) / Charlie Fuller (builder). Tested against Cursor as the golden example vendor.</li>
       </ul>
     </div>

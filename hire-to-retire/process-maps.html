@@ -524,7 +524,7 @@ h1 {
 <body>
 
 <div class="container">
-  <h1>Hire to Retire -- Process Maps</h1>
+  <h1>Hire to Retire - Process Maps</h1>
   <p class="subtitle">Source: CKO Workshop (Feb 12, 2026) + Hire to Paycheck Process Map (Jun 2024) + Recruiting Notes + Payroll Review Meeting (Mar 4, 2026)</p>
 
   <div class="tabs" id="tabs"></div>
@@ -546,7 +546,7 @@ h1 {
 </div>
 
 <script>
-// -- PROCESS DATA --
+// - PROCESS DATA --
 const PROCESSES = [
 {
   id: 'hire-to-paycheck',
@@ -571,7 +571,7 @@ const PROCESSES = [
         { title:'Create Job Requisition', summary:'Job req created in Workday with job description, requirements, and level.', systems:['workday'],
           controls:[{id:'HR.01', text:'Job reqs are reviewed for compliance with job profiles, grade profiles, and require budget approval from FP&A. Approvals are documented in Workday.'}],
           detail:'Manual Process: RecOps actually creates the job requisition in Workday, based on hiring team and FP&A approved headcount. All reqs for ProdDev and Field are created by RecOps.',
-          flags:[{text:'Rework: If level needs adjustment, HM works with FP&A and budget owner -- all coordination via Slack.', source:'Recruiting Notes'}, {text:'Heavy Slack dependency for awareness and approvals instead of structured system workflows.', source:'CKO Workshop'}]
+          flags:[{text:'Rework: If level needs adjustment, HM works with FP&A and budget owner - all coordination via Slack.', source:'Recruiting Notes'}, {text:'Heavy Slack dependency for awareness and approvals instead of structured system workflows.', source:'CKO Workshop'}]
         },
         { title:'Review by Comp, FP&A, ELT', summary:'Job requisitions reviewed by compensation, FP&A, and ELT for approval.', type:'subprocess',
           flags:[{text:'If manager decides to change anything after kickoff (up-leveling), this is a manual change requiring FP&A sign-off with recurring meetings and Slack.', source:'CKO Workshop'}]
@@ -579,7 +579,7 @@ const PROCESSES = [
         { type:'interface', title:'Interface 1: WD to GH', summary:'Approved job req automatically sent from Workday to Greenhouse. Manually checked by recruiting: salary range, level, title.',
           systems:['workday','greenhouse'],
           controls:[{id:'HR.02', text:'Monthly audit performed to reconcile job requisitions in Greenhouse vs Workday.'}],
-          flags:[{text:'Changes to req title, level, and HM between role creation in GH and posting may cause inconsistencies if not caught by recruiter.', source:'Recruiting Notes'},{text:'If change happens in Greenhouse, the update to Workday is manual. Usually communicated via Slack.', source:'CKO Workshop'},{text:'Manual review does not check every field -- checks job title but not job level.', source:'CKO Workshop'}],
+          flags:[{text:'Changes to req title, level, and HM between role creation in GH and posting may cause inconsistencies if not caught by recruiter.', source:'Recruiting Notes'},{text:'If change happens in Greenhouse, the update to Workday is manual. Usually communicated via Slack.', source:'CKO Workshop'},{text:'Manual review does not check every field - checks job title but not job level.', source:'CKO Workshop'}],
           detail:'Limited circumstance: Compensation assists with manual changes to job/grade profile.'
         },
         { title:'Job Posting (Internal + External)', summary:'RC reviews JD format and posts job live in Greenhouse. EMEA/US/AUS roles posted to internal board simultaneously for legal/internal mobility requirements.', systems:['greenhouse'],
@@ -591,7 +591,7 @@ const PROCESSES = [
         },
         { title:'Interview Process', summary:'With HM approval, candidates proceed through interviews. Scorecards should be completed same day.', systems:['greenhouse'],
           detail:'May include take-home challenge or presentation (discussed at kickoff). Debrief meeting led by Hire Champion within 24 hours of final interviews.',
-          flags:[{text:'Legal check handled manually via email to Will Simmons -- no structured/embedded workflow.', source:'CKO Workshop'},{text:'Check for skill overlap done with Comp team over Slack.', source:'CKO Workshop'}]
+          flags:[{text:'Legal check handled manually via email to Will Simmons - no structured/embedded workflow.', source:'CKO Workshop'},{text:'Check for skill overlap done with Comp team over Slack.', source:'CKO Workshop'}]
         },
         { title:'Negotiate Offer', summary:'Recruiter confirms offer details including compensation, equity, and start date.', systems:['greenhouse'],
           detail:'Reference check using HiPeople. Legal check. After decision, move to offer approval process.'
@@ -608,7 +608,7 @@ const PROCESSES = [
         { title:'Mark Hired & Notify', summary:'Recruiter marks candidate as hired in GH, submits ticket, contract generated. Updates JIRA to inform People Ops.',
           systems:['greenhouse','jira','docusign'], ref:'A',
           detail:'RC initiates background check. People Ops monitors. This process also applies to internal transfers (e.g. transfers from one cost center to another).',
-          flags:[{text:'Recruiter must flag candidate as hired for subsequent steps to kick off -- some manual chasing by the team to get the checkbox checked.', source:'CKO Workshop'}]
+          flags:[{text:'Recruiter must flag candidate as hired for subsequent steps to kick off - some manual chasing by the team to get the checkbox checked.', source:'CKO Workshop'}]
         },
       ]
     },
@@ -618,10 +618,10 @@ const PROCESSES = [
       steps: [
         { ref_in:'A', title:'Receive Contract & Ticket', summary:'People Ops receives signed contract and ticket requesting a new hire job profile.' },
         { title:'Create New Hire Profile', summary:'POps manually creates the new hire job profile and hires the new hire into the job requisition within Workday.', systems:['workday'],
-          flags:[{text:'Integration breakdowns usually caused by text field mismatches between Greenhouse and Workday -- things like zip codes having dashes.', source:'CKO Workshop'},{text:'Once in Workday, POps gets notification to start compensation process. Comp, stock, and CF email entered here.', source:'CKO Workshop'}]
+          flags:[{text:'Integration breakdowns usually caused by text field mismatches between Greenhouse and Workday - things like zip codes having dashes.', source:'CKO Workshop'},{text:'Once in Workday, POps gets notification to start compensation process. Comp, stock, and CF email entered here.', source:'CKO Workshop'}]
         },
         { title:'Submit Profile & Trigger Email', summary:'Submitted profile triggers onboarding email to new hire requesting: hiring documents, emergency contacts, contact details, payment info.', systems:['workday'], ref:'B',
-          detail:'Typically takes 1 hr to a day for the candidate to receive the email. Waiting for right-to-work and background checks -- EMEA takes longer.',
+          detail:'Typically takes 1 hr to a day for the candidate to receive the email. Waiting for right-to-work and background checks - EMEA takes longer.',
           flags:[{text:'Workday cannot be accessed prior to hire date. Dual authenticator does not work yet.', source:'CKO Workshop'},{text:'Communicating to other stakeholders about onboarding type (VIP, confidential) is a gap.', source:'CKO Workshop'},{text:'People Ops also checks for anyone being "slow" and manually reaches out. Payroll deadlines can be a problem.', source:'CKO Workshop'}]
         },
         { title:'IT Provisioning', summary:'IS updates onboarding sheet in Workday (once daily). JIRA ticket created with laptop info and access package. Activation takes ~3 days.',
@@ -632,7 +632,7 @@ const PROCESSES = [
           systems:['workday'],
           controls:[{id:'HR.04', text:'Before payroll cutoff, People Ops runs the Pending Transaction report to determine if all information has been properly entered by the new hire (including right to work check).'}],
           detail:'There is a specific new hire report that POps checks. Also part of the overall POps audit process.',
-          flags:[{text:'POps does bi-weekly audits for compliance on the tight EMEA window to get all hiring documentation in -- dependent on the new employee to respond.', source:'CKO Workshop'},{text:'Workday only moves when everything is completed; then POps gets it all at once. They want it to happen sequentially.', source:'CKO Workshop'}]
+          flags:[{text:'POps does bi-weekly audits for compliance on the tight EMEA window to get all hiring documentation in - dependent on the new employee to respond.', source:'CKO Workshop'},{text:'Workday only moves when everything is completed; then POps gets it all at once. They want it to happen sequentially.', source:'CKO Workshop'}]
         },
       ]
     },
@@ -664,7 +664,7 @@ const PROCESSES = [
 },
 {
   id: 'comp-cycle',
-  title: 'Compensation -- Main Comp Cycle',
+  title: 'Compensation - Main Comp Cycle',
   description: 'Annual compensation cycle from Master File creation through EIB loading to Workday production, including SMT/ELT review and approval process.',
   lanes: [
     {
@@ -789,7 +789,7 @@ const PROCESSES = [
 },
 {
   id: 'pafs',
-  title: 'PAFs -- Annual Variable Compensation',
+  title: 'PAFs - Annual Variable Compensation',
   description: 'Annual process for reviewing, approving, and implementing variable compensation plan changes through Plan Amendment Forms (PAFs).',
   lanes: [
     {
@@ -844,7 +844,7 @@ const PROCESSES = [
       steps: [
         { type:'start', title:'Start', summary:'Semi-monthly cycle begins ~5 days before pay date.' },
         { title:'Run Pre-Payroll Checklist', summary:'Execute Workday reports from standardized checklist covering new hires, terminations, changes, and compliance items.', systems:['workday'],
-          detail:'Checklist built by Steve and Molly when Workday was first implemented. Many items are vestiges from pre-integration era -- OSV-Workday integration now has IT General Controls that may make some checks redundant.',
+          detail:'Checklist built by Steve and Molly when Workday was first implemented. Many items are vestiges from pre-integration era - OSV-Workday integration now has IT General Controls that may make some checks redundant.',
           flags:[{text:'Many completeness checks are vestiges from pre-integration era. OSV-Workday integration now has IT General Controls, making some manual checks potentially redundant.', source:'Payroll Review (Mar 4)'}]
         },
         { title:'Pull External Disability Reports', summary:'Pull Sparrow and Ferrell disability/leave reports from external providers for payroll adjustments.', systems:['workday'] },
@@ -873,7 +873,7 @@ const PROCESSES = [
           ref:'A'
         },
         { ref_in:'B', title:'Fund Schwab 401K', summary:'Compare Workday outbound payroll report to breakdown report. Exclude ad hoc variances already funded. Submit funding to Schwab.', systems:['workday','schwab'],
-          detail:'Off-cycle ad hoc payments have 401K contributions funded to Schwab immediately, but Workday records them in the next pay period -- creating reconciliation variances. Schwab pulls funding 3-4 days after file is funded.',
+          detail:'Off-cycle ad hoc payments have 401K contributions funded to Schwab immediately, but Workday records them in the next pay period - creating reconciliation variances. Schwab pulls funding 3-4 days after file is funded.',
           flags:[{text:'Off-cycle 401K timing mismatch: Schwab gets funded immediately for ad hoc payments but Workday records it in the next pay period, creating reconciliation variances.', source:'Payroll Review (Mar 4)'},
                  {text:'December Schwab integration failure went undetected because existing completeness checks do not catch election-level mismatches.', source:'Payroll Review (Mar 4)'}]
         },
@@ -889,7 +889,7 @@ const PROCESSES = [
       steps: [
         { ref_in:'A', title:'Review Reconciliation', summary:'Payroll Manager reviews reconciliation spreadsheet from Specialist, checking for variances and completeness.', systems:['gsheet'] },
         { title:'Approve Payroll', summary:'Approves payroll via Slack message with screenshot attached to the reconciliation file.', ref:'B',
-          flags:[{text:'Payroll approval evidence is a Slack screenshot attached to a spreadsheet -- not a structured system workflow or audit trail.', source:'Payroll Review (Mar 4)'}]
+          flags:[{text:'Payroll approval evidence is a Slack screenshot attached to a spreadsheet - not a structured system workflow or audit trail.', source:'Payroll Review (Mar 4)'}]
         },
         { title:'Handle Off-Cycle Payments', summary:'Process ad hoc and off-cycle payments. 401K contributions for off-cycle go to Schwab immediately.', systems:['workday','schwab'],
           detail:'Off-cycle payments follow abbreviated version of main process. 401K contributions for these payments are funded to Schwab immediately rather than waiting for regular payroll cycle.'
@@ -912,7 +912,7 @@ const PROCESSES = [
 }
 ];
 
-// -- RENDER ENGINE --
+// - RENDER ENGINE --
 
 function renderTabs() {
   var tabsEl = document.getElementById('tabs');
@@ -1214,7 +1214,7 @@ function renderProcess(process) {
   return panel;
 }
 
-// -- FILTERS --
+// - FILTERS --
 
 function clearFilter(processId) {
   updateFilterButtons(processId, 'all');
@@ -1248,7 +1248,7 @@ function updateFilterButtons(processId, activeFilter) {
   });
 }
 
-// -- INIT --
+// - INIT --
 
 function init() {
   renderTabs();
@@ -1265,7 +1265,7 @@ function init() {
   });
 }
 
-// -- THEME SYNC (for iframe embedding in Thesis) --
+// - THEME SYNC (for iframe embedding in Thesis) --
 function syncTheme() {
   try {
     if (window.parent === window) return false;

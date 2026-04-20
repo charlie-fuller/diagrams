@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Procurement Contracts -- Process Map</title>
+<title>Procurement Contracts - Process Map</title>
 <style>
 :root {
   --bg-page: #f8fafc;
@@ -541,7 +541,7 @@ h1 {
 <body>
 
 <div class="container">
-  <h1>Procurement Contracts -- Process Map</h1>
+  <h1>Procurement Contracts - Process Map</h1>
   <p class="subtitle">Source: Morgan / Charlie Discovery Session (Mar 5, 2026)</p>
 
   <div class="stats-bar">
@@ -615,7 +615,7 @@ var PROCESSES = [
           systems:['omnia'],
           detail:'Currently notifications go via email and Slack. Omnia may allow users to choose notification preference. Looking to reduce notification volume.',
           flags:[{text:'FP&A and manager approvals can take 1-2+ weeks. Managers on vacation cause significant delays. By the time procurement sees the request, urgency has built up.', source:'Morgan'}],
-          opportunities:[{text:'If SOW/MSA are already in the system, begin AI pre-review in parallel with FP&A/manager approval -- do not wait for procurement to be notified.'}]
+          opportunities:[{text:'If SOW/MSA are already in the system, begin AI pre-review in parallel with FP&A/manager approval - do not wait for procurement to be notified.'}]
         },
         { title:'Route to Review Teams', summary:'Based on request type, route to applicable reviewers: Procurement, Legal, Security, Privacy. Software triggers all four.',
           systems:['omnia'],
@@ -660,7 +660,7 @@ var PROCESSES = [
         },
         { title:'Redline or Provide Feedback', summary:'If document is in Word format, procurement redlines directly. If PDF-only, write out requested changes for the requester to take back to the supplier.',
           systems:['jira','omnia'],
-          detail:'Goal is to keep requester responses simple -- provide the exact language or redlines so they can just forward to the supplier rather than having to understand contract law. Procurement tries to convert PDFs to Word when possible to enable direct redlining.',
+          detail:'Goal is to keep requester responses simple - provide the exact language or redlines so they can just forward to the supplier rather than having to understand contract law. Procurement tries to convert PDFs to Word when possible to enable direct redlining.',
           flags:[{text:'Some suppliers only provide non-redlinable PDFs. PDF-to-Word conversion sometimes produces formatting artifacts.', source:'Morgan'}],
           opportunities:[{text:'AI redline generation: given the playbook rules and identified issues, auto-generate redline suggestions or requester-ready feedback language.'}]
         }
@@ -686,7 +686,7 @@ var PROCESSES = [
         { title:'Cross-Reference Past Agreements', summary:'For renewals, compare new terms against previous SOW/order. Check for price increases >5%, new clauses snuck in, changed terms.',
           systems:['linksquares','jira'],
           detail:'Pull previous agreement from LinkSquares or prior Jira tickets. Compare line by line for any changes the supplier may have introduced, even when the requester says "nothing changed."',
-          flags:[{text:'Suppliers -- especially large ones -- frequently sneak in unfavorable new clauses (unlimited price increases, auto-renewal) assuming Contentful won\'t read carefully or can\'t negotiate.', source:'Morgan'}],
+          flags:[{text:'Suppliers - especially large ones - frequently sneak in unfavorable new clauses (unlimited price increases, auto-renewal) assuming Contentful won\'t read carefully or can\'t negotiate.', source:'Morgan'}],
           opportunities:[{text:'AI contract comparison: diff new contract against previous version. Highlight every change, flag risk items (new auto-renewal, removed caps, price increases beyond threshold). This is a high-value, high-accuracy use case for AI.'}]
         }
       ]
@@ -1046,7 +1046,7 @@ PROCESSES.forEach(function(p) {
 var playbookSection = document.createElement('div');
 playbookSection.innerHTML = '<div class="section-sep">Negotiation Playbook (Key Rules)</div>' +
   '<div class="playbook">' +
-  '<h3>Contract Terms -- Standard Requirements</h3>' +
+  '<h3>Contract Terms - Standard Requirements</h3>' +
   '<div class="playbook-rule"><span class="rule-label">Payment Terms</span><span class="rule-value">Net 60 preferred. Net 45 or Net 30 acceptable.</span></div>' +
   '<div class="playbook-rule"><span class="rule-label">Auto-Renewal</span><span class="rule-value">Not accepted. All auto-renewal clauses must be removed.</span></div>' +
   '<div class="playbook-rule"><span class="rule-label">Price Increases</span><span class="rule-value">Cap at 5% per year maximum. Unlimited price increase clauses never accepted.</span></div>' +

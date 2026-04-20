@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Agent Factory -- Build Decision Flow</title>
+<title>Agent Factory - Build Decision Flow</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
@@ -718,16 +718,16 @@
       <strong>How it works:</strong> Each pattern has a keyword list (8-10 terms). The matcher counts keyword hits in the lowercased PRD text. Score > 0 means a match. The top-scoring pattern is passed to Phase 0 as a suggestion, not a binding decision.<br><br>
       <strong>The 10 patterns:</strong>
       <ul>
-        <li><strong>1. Q&A Bot</strong> -- question, answer, knowledge base, search, FAQ</li>
-        <li><strong>2. Workflow Agent</strong> -- form, workflow, collect, process, generate</li>
-        <li><strong>3. Scheduled Reporter</strong> -- report, weekly, daily, digest, recurring</li>
-        <li><strong>4. Approval Workflow</strong> -- approval, route, triage, classify, escalate</li>
-        <li><strong>5. Data Sync Agent</strong> -- sync, migrate, transfer, ETL, pipeline</li>
-        <li><strong>6. Alert Monitor</strong> -- monitor, alert, threshold, detect, anomaly</li>
-        <li><strong>7. Document Generator</strong> -- document, template, memo, draft, compose</li>
-        <li><strong>8. Conversational Assistant</strong> -- chat, conversation, multi-turn, coach</li>
-        <li><strong>9. Onboarding/Guided Flow</strong> -- onboarding, walkthrough, checklist, training</li>
-        <li><strong>10. Decision Tree Agent</strong> -- decision tree, evaluate, criteria, gate, eligibility</li>
+        <li><strong>1. Q&A Bot</strong> - question, answer, knowledge base, search, FAQ</li>
+        <li><strong>2. Workflow Agent</strong> - form, workflow, collect, process, generate</li>
+        <li><strong>3. Scheduled Reporter</strong> - report, weekly, daily, digest, recurring</li>
+        <li><strong>4. Approval Workflow</strong> - approval, route, triage, classify, escalate</li>
+        <li><strong>5. Data Sync Agent</strong> - sync, migrate, transfer, ETL, pipeline</li>
+        <li><strong>6. Alert Monitor</strong> - monitor, alert, threshold, detect, anomaly</li>
+        <li><strong>7. Document Generator</strong> - document, template, memo, draft, compose</li>
+        <li><strong>8. Conversational Assistant</strong> - chat, conversation, multi-turn, coach</li>
+        <li><strong>9. Onboarding/Guided Flow</strong> - onboarding, walkthrough, checklist, training</li>
+        <li><strong>10. Decision Tree Agent</strong> - decision tree, evaluate, criteria, gate, eligibility</li>
       </ul>
       <strong>Limitation:</strong> Keyword matching is shallow. The LLM in Phase 0 makes the real decision. The matcher just primes it.
     </div>
@@ -735,7 +735,7 @@
 
   <details class="drill animate" style="--i:7">
     <summary>
-      Phase 0 Fitness Check -- FAIL Conditions
+      Phase 0 Fitness Check - FAIL Conditions
       <span class="drill-tag tag-fail">mandatory stops</span>
     </summary>
     <div class="drill-body">
@@ -753,7 +753,7 @@
 
   <details class="drill animate" style="--i:8">
     <summary>
-      Quick Scoring Model -- 8 Dimensions
+      Quick Scoring Model - 8 Dimensions
       <span class="drill-tag" style="background:var(--phase0-dim);color:var(--phase0)">0-16 scale</span>
     </summary>
     <div class="drill-body">
@@ -818,7 +818,7 @@
 
   <details class="drill animate" style="--i:9">
     <summary>
-      Hard Gates -- Override the Score
+      Hard Gates - Override the Score
       <span class="drill-tag tag-gate">binding rules</span>
     </summary>
     <div class="drill-body">
@@ -870,7 +870,7 @@
 
   <details class="drill animate" style="--i:10">
     <summary>
-      Phase 1 Gap Analysis -- Build Class Validation (Category 12)
+      Phase 1 Gap Analysis - Build Class Validation (Category 12)
       <span class="drill-tag" style="background:var(--phase0-dim);color:var(--phase0)">can override Phase 0</span>
     </summary>
     <div class="drill-body">
@@ -887,15 +887,15 @@
 
   <details class="drill animate" style="--i:11">
     <summary>
-      HITL Checkpoint -- Human Override
+      HITL Checkpoint - Human Override
       <span class="drill-tag tag-gate">UI checkpoint</span>
     </summary>
     <div class="drill-body">
       <strong>Three verdict types:</strong>
       <ul>
-        <li><strong>BLOCK</strong> -- red UI, requires explicit checkbox override to continue. Indicates critical gaps that may result in a broken agent.</li>
-        <li><strong>CAUTION</strong> -- amber UI, standard approve/reject flow. Gaps exist but are manageable.</li>
-        <li><strong>PROCEED</strong> -- green UI, standard approve/reject. No significant gaps.</li>
+        <li><strong>BLOCK</strong> - red UI, requires explicit checkbox override to continue. Indicates critical gaps that may result in a broken agent.</li>
+        <li><strong>CAUTION</strong> - amber UI, standard approve/reject flow. Gaps exist but are manageable.</li>
+        <li><strong>PROCEED</strong> - green UI, standard approve/reject. No significant gaps.</li>
       </ul>
       <strong>User can:</strong> approve and continue, reject and halt the build, or override the classification (change the build class before proceeding).
     </div>
@@ -959,19 +959,19 @@
       <span class="drill-tag tag-auto">A1, A2, G1</span>
     </summary>
     <div class="drill-body">
-      <strong>Phase 2A -- Instruction Design:</strong>
+      <strong>Phase 2A - Instruction Design:</strong>
       <ul>
         <li>Write the instruction block (scope, persona, knowledge sources, response format)</li>
         <li>Action budget: max 20 actions per Auto Mode agent. MCP tools consume action slots. If exceeded, split or switch to Workflow Mode.</li>
-        <li>Don't over-specify edge cases -- focus on core rules and structural decisions, leave room for adaptation through usage</li>
+        <li>Don't over-specify edge cases - focus on core rules and structural decisions, leave room for adaptation through usage</li>
         <li>Context health check: test for distraction (noise in KB), clash (conflicting instructions), confusion (ambiguous routing)</li>
       </ul>
-      <strong>Phase 3A -- Build Brief:</strong>
+      <strong>Phase 3A - Build Brief:</strong>
       <ul>
         <li>Paste-ready configuration for the Glean UI</li>
         <li>Includes: instructions, knowledge sources, conversation starters, action selections, LLM config</li>
         <li>For A2: also includes routing conditions and agent specs for each routed domain</li>
-        <li>Auto Mode agents cannot be imported via JSON -- manual paste only</li>
+        <li>Auto Mode agents cannot be imported via JSON - manual paste only</li>
       </ul>
     </div>
   </details>
@@ -982,7 +982,7 @@
       <span class="drill-tag tag-workflow">G2, G3, G4</span>
     </summary>
     <div class="drill-body">
-      <strong>Phase 2 -- Workflow Design:</strong>
+      <strong>Phase 2 - Workflow Design:</strong>
       <ul>
         <li>Select base architecture pattern (see Layer 3)</li>
         <li>Apply hybrid modifiers if needed</li>
@@ -990,13 +990,13 @@
         <li>Context health check and skill/action detection scan</li>
         <li>Output: step-by-step architecture with types, dependencies, tool assignments</li>
       </ul>
-      <strong>Phase 3 -- Task Instructions:</strong>
+      <strong>Phase 3 - Task Instructions:</strong>
       <ul>
         <li>Write each step's <code>instructionTemplate</code> using Goal-Return Format-Warnings-Context framework</li>
         <li>Target 4,000 chars per step (warn at 6K, hard limit 8K)</li>
         <li>Wire variable references: <code>[[step_id]]</code> for prior outputs, <code>[[field_name]]</code> for form inputs</li>
       </ul>
-      <strong>Phase 4 -- Generate Outputs:</strong>
+      <strong>Phase 4 - Generate Outputs:</strong>
       <ul>
         <li>Produce importable JSON matching Glean's exact schema</li>
         <li>UUIDs for each step, correct <code>type</code> field (BRANCH/TOOL/AGENT), <code>memoryConfig: ALL_DEPENDENCIES</code></li>
@@ -1122,12 +1122,12 @@
     </summary>
     <div class="drill-body">
       <strong>Flow:</strong> Search + Think + Respond<br><br>
-      <strong>When to use:</strong> Known inputs, defined outputs, standardized process. The vast majority of enterprise workflows are prescriptive -- this is the default.<br><br>
+      <strong>When to use:</strong> Known inputs, defined outputs, standardized process. The vast majority of enterprise workflows are prescriptive - this is the default.<br><br>
       <strong>Key rules:</strong>
       <ul>
         <li>Think is the synthesis step. It reads dependency outputs via memory and compiles into structured result.</li>
         <li>Think is deterministic and controllable.</li>
-        <li>Do NOT use Plan and Execute here -- that is only for genuinely exploratory workflows.</li>
+        <li>Do NOT use Plan and Execute here - that is only for genuinely exploratory workflows.</li>
       </ul>
       <div class="example-box">
         <div class="example-label">Example: Job Description Generator</div>
@@ -1159,7 +1159,7 @@
         <li>Terminal outcomes get dedicated Respond steps</li>
         <li>Final recommendation is a Think step consuming validated outputs from all prior stages</li>
       </ul>
-      <strong>Critical rule:</strong> Gate enforcement must be structural (Branch steps), not behavioral (hoping the LLM follows "do not continue"). A decision tree PRD with 3+ stages MUST produce multiple steps -- a single TOOL step containing all decision logic is always wrong.
+      <strong>Critical rule:</strong> Gate enforcement must be structural (Branch steps), not behavioral (hoping the LLM follows "do not continue"). A decision tree PRD with 3+ stages MUST produce multiple steps - a single TOOL step containing all decision logic is always wrong.
 
       <div class="example-box">
         <div class="example-label">Example: Technology Platform Selector</div>
@@ -1225,13 +1225,13 @@
         <div class="example-label">Example: Quarterly Business Review Generator</div>
         <strong>Trigger:</strong> Form (business unit, quarter, focus areas).<br>
         <strong>Flow:</strong> Search for quarterly metrics docs -> Read relevant dashboards/reports -> Think fills QBR template (executive summary, KPIs, highlights, risks, next quarter priorities) -> Create Confluence page with formatted output.<br>
-        <strong>Why this pattern:</strong> The output is a standardized template. The "intelligence" is in gathering the right data and filling sections accurately -- not in deciding what to do.
+        <strong>Why this pattern:</strong> The output is a standardized template. The "intelligence" is in gathering the right data and filling sections accurately - not in deciding what to do.
       </div>
       <div class="example-box">
         <div class="example-label">Example: New Hire Onboarding Packet</div>
         <strong>Trigger:</strong> Form (hire name, role, department, start date, manager).<br>
         <strong>Flow:</strong> Search role-specific onboarding checklist -> Search department resources and contacts -> Search IT provisioning requirements -> Think compiles into personalized onboarding document (week 1 schedule, key contacts, required trainings, system access) -> Respond with formatted packet.<br>
-        <strong>Why this pattern:</strong> Multiple searches feed a single document with a known template. No branching, no decision logic -- just gather and generate.
+        <strong>Why this pattern:</strong> Multiple searches feed a single document with a known template. No branching, no decision logic - just gather and generate.
       </div>
     </div>
   </details>
@@ -1239,7 +1239,7 @@
   <details class="drill animate" style="--i:24">
     <summary>
       Pattern 5: Dynamic Research
-      <span class="drill-tag tag-pattern">rare -- exploratory only</span>
+      <span class="drill-tag tag-pattern">rare - exploratory only</span>
     </summary>
     <div class="drill-body">
       <strong>Flow:</strong> Plan and Execute<br><br>
@@ -1294,7 +1294,7 @@
 
   <details class="drill animate" style="--i:26">
     <summary>
-      Hybrid Modifiers -- Applied on Top of Base Patterns
+      Hybrid Modifiers - Applied on Top of Base Patterns
       <span class="drill-tag tag-hybrid">optional layer</span>
     </summary>
     <div class="drill-body">
@@ -1304,7 +1304,7 @@
         <summary>Compute Bridge</summary>
         <div class="drill-body">
           <strong>Insert:</strong> Custom Action step BEFORE a Branch step.<br>
-          <strong>When:</strong> Branch needs exact computed values (dates, scores, thresholds, math). Never use Think to compute values for branch routing -- Think output is non-deterministic.<br>
+          <strong>When:</strong> Branch needs exact computed values (dates, scores, thresholds, math). Never use Think to compute values for branch routing - Think output is non-deterministic.<br>
           <div class="example-box">
             <div class="example-label">Example: Contract Renewal Router</div>
             Custom Action calculates days-until-renewal from contract end date. Branch: if <30 days -> urgent renewal path, if 30-90 -> standard renewal path, if >90 -> no action. Without the Compute Bridge, Think might say "about a month" and misroute.
@@ -1349,7 +1349,7 @@
         <div class="drill-body">
           <strong>Insert:</strong> Sub-agent (AGENT step) within parent workflow.<br>
           <strong>When:</strong> Batch processing (CSV Splitter loop), modular domain encapsulation, reusable component across parents.<br>
-          <strong>Key constraint:</strong> Only the Respond step output returns to the parent. No native parent-to-child variable mapping -- use implicit memory only.
+          <strong>Key constraint:</strong> Only the Respond step output returns to the parent. No native parent-to-child variable mapping - use implicit memory only.
 
           <div class="example-box">
             <div class="example-label">Example: CSV Batch Processor</div>
@@ -1384,7 +1384,7 @@
       <details class="drill">
         <summary>Branching on Deterministic Computation</summary>
         <div class="drill-body">
-          When a Branch depends on calculated values (dates, scores, thresholds), route the computation through a Custom Action BEFORE the Branch step. Never use Think to produce numeric values for branch conditions -- LLM arithmetic is unreliable.<br><br>
+          When a Branch depends on calculated values (dates, scores, thresholds), route the computation through a Custom Action BEFORE the Branch step. Never use Think to produce numeric values for branch conditions - LLM arithmetic is unreliable.<br><br>
           <strong>Correct:</strong> Custom Action (compute) -> Branch (on result)<br>
           <strong>Wrong:</strong> Think (compute and decide) -> Branch
         </div>
@@ -1419,7 +1419,7 @@
         <li>Task is 1-2 steps with tight coupling to parent context</li>
         <li>The overhead of a separate agent exceeds the encapsulation benefit</li>
       </ul>
-      <strong>Scoping rules:</strong> Single purpose, max 2 nesting levels, branch logic inside sub-agents to avoid duplication across parent branches. Start with "triage agent plus one or two specialists" -- don't over-architect.
+      <strong>Scoping rules:</strong> Single purpose, max 2 nesting levels, branch logic inside sub-agents to avoid duplication across parent branches. Start with "triage agent plus one or two specialists" - don't over-architect.
     </div>
   </details>
 
@@ -1540,7 +1540,7 @@
             <td><span class="tag tag-auto">Auto</span></td>
             <td>Chat</td>
             <td>Paste-ready brief</td>
-            <td>Broad Q&A, summarization, drafting<br><small>"Help me think through this PRD" -- synthesis not execution, variable sources, follow-up questions matter</small></td>
+            <td>Broad Q&A, summarization, drafting<br><small>"Help me think through this PRD" - synthesis not execution, variable sources, follow-up questions matter</small></td>
           </tr>
           <tr>
             <td><code>A2</code></td>
@@ -1556,7 +1556,7 @@
             <td><span class="tag tag-auto">Auto</span></td>
             <td>Chat</td>
             <td>Paste-ready brief</td>
-            <td>Domain chat, narrow KB, decision logic<br><small>Deal Desk booking policy Q&A -- narrow domain, classification logic, different response paths by deal type</small></td>
+            <td>Domain chat, narrow KB, decision logic<br><small>Deal Desk booking policy Q&A - narrow domain, classification logic, different response paths by deal type</small></td>
           </tr>
           <tr>
             <td><code>G2</code></td>
@@ -1564,7 +1564,7 @@
             <td><span class="tag tag-workflow">Workflow</span></td>
             <td>Form</td>
             <td>Importable JSON</td>
-            <td>Structured inputs, sequential steps<br><small>JD Generator -- user fills role/level/location form, agent searches policies, generates standardized job description</small></td>
+            <td>Structured inputs, sequential steps<br><small>JD Generator - user fills role/level/location form, agent searches policies, generates standardized job description</small></td>
           </tr>
           <tr>
             <td><code>G3</code></td>
@@ -1572,7 +1572,7 @@
             <td><span class="tag tag-workflow">Workflow</span></td>
             <td>Schedule</td>
             <td>JSON + schedule</td>
-            <td>Time-triggered, no user initiation<br><small>Weekly compliance digest -- every Monday, searches recent policy changes, generates summary, posts to Slack channel</small></td>
+            <td>Time-triggered, no user initiation<br><small>Weekly compliance digest - every Monday, searches recent policy changes, generates summary, posts to Slack channel</small></td>
           </tr>
           <tr>
             <td><code>G4</code></td>
@@ -1580,7 +1580,7 @@
             <td><span class="tag tag-workflow">Workflow</span></td>
             <td>Event</td>
             <td>JSON + trigger</td>
-            <td>File/folder event triggers<br><small>Contract review agent -- when new PDF lands in Contracts Drive folder, extracts terms, checks against policy, flags risks</small></td>
+            <td>File/folder event triggers<br><small>Contract review agent - when new PDF lands in Contracts Drive folder, extracts terms, checks against policy, flags risks</small></td>
           </tr>
           <tr>
             <td><code>S1</code></td>
@@ -1588,7 +1588,7 @@
             <td><span class="tag tag-hybrid">Beta</span></td>
             <td>AI-routed</td>
             <td>SKILL.md</td>
-            <td>Narrow reusable single-task<br><small>Severance calculator -- fixed tool sequence (read agreement, calculate package, format output), reusable across HR agents</small></td>
+            <td>Narrow reusable single-task<br><small>Severance calculator - fixed tool sequence (read agreement, calculate package, format output), reusable across HR agents</small></td>
           </tr>
           <tr>
             <td><code>N1</code></td>
@@ -1596,7 +1596,7 @@
             <td><span class="tag tag-fail">None</span></td>
             <td>--</td>
             <td>Gap summary</td>
-            <td>Missing sources, unresolved governance<br><small>"Automate the budget approval process" -- but no budget data in Glean, no approval API, no defined process</small></td>
+            <td>Missing sources, unresolved governance<br><small>"Automate the budget approval process" - but no budget data in Glean, no approval API, no defined process</small></td>
           </tr>
         </tbody>
       </table>
