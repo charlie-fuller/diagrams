@@ -310,10 +310,10 @@
                         <th data-sort="smt">SMT</th>
                         <th data-sort="kpi">KPI</th>
                         <th data-sort="initiative">Initiative</th>
-                        <th data-sort="impact" style="text-align:center">Impact</th>
-                        <th data-sort="effort" style="text-align:center">Effort</th>
-                        <th data-sort="strategic" style="text-align:center">Strategic</th>
-                        <th data-sort="score" style="text-align:center">Score</th>
+                        <th data-sort="impact" style="text-align:center">Impact<br><span style="font-size:10px;font-weight:400;text-transform:none;letter-spacing:0;color:#666">1 = low, 5 = high KPI impact</span></th>
+                        <th data-sort="effort" style="text-align:center">Effort<br><span style="font-size:10px;font-weight:400;text-transform:none;letter-spacing:0;color:#666">1 = hard, 5 = easy</span></th>
+                        <th data-sort="strategic" style="text-align:center">Strategic<br><span style="font-size:10px;font-weight:400;text-transform:none;letter-spacing:0;color:#666">0-10 alignment to strategic initiative</span></th>
+                        <th data-sort="score" style="text-align:center">Score<br><span style="font-size:10px;font-weight:400;text-transform:none;letter-spacing:0;color:#666">(Impact + Effort) x (1 + Strategic/10)</span></th>
                         <th data-sort="status">Status</th>
                         <th>Notes</th>
                     </tr>
@@ -441,7 +441,7 @@
                                     <div class="kanban-card-smt"><span class="dept-tag dept-${deptClass(r.department)}">${r.department}</span> ${r.smt}</div>
                                     ${r.kpi ? `<div class="kanban-card-kpi">${r.kpi}</div>` : ''}
                                     <div class="kanban-card-meta">
-                                        <span>I:${r.impact || '-'} E:${r.effort || '-'} S:${r.strategic || '-'}</span>
+                                        <span title="Impact (KPI) + Effort (ease) x Strategic alignment">I:${r.impact || '-'} E:${r.effort || '-'} S:${r.strategic || '-'}</span>
                                         <span class="score-badge ${scoreClass(r.score)}">${r.score || '--'}</span>
                                     </div>
                                 </div>

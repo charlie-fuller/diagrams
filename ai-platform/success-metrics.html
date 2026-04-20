@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Program Success Metrics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --font-mono: 'DM Mono', 'SF Mono', Consolas, monospace;
+
+    --bg: #fafafa;
+    --surface: #ffffff;
+    --surface2: #f4f4f5;
+    --surface-elevated: #ffffff;
+    --border: rgba(0, 0, 0, 0.07);
+    --border-bright: rgba(0, 0, 0, 0.14);
+    --text: #18181b;
+    --text-dim: #71717a;
+
+    --discover: #7c3aed;
+    --discover-dim: rgba(124, 58, 237, 0.08);
+    --build: #0891b2;
+    --build-dim: rgba(8, 145, 178, 0.08);
+    --prove: #059669;
+    --prove-dim: rgba(5, 150, 105, 0.08);
+    --scale: #d97706;
+    --scale-dim: rgba(217, 119, 6, 0.08);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #09090b;
+      --surface: #18181b;
+      --surface2: #27272a;
+      --surface-elevated: #1e1e22;
+      --border: rgba(255, 255, 255, 0.06);
+      --border-bright: rgba(255, 255, 255, 0.12);
+      --text: #fafafa;
+      --text-dim: #a1a1aa;
+
+      --discover: #a78bfa;
+      --discover-dim: rgba(167, 139, 250, 0.12);
+      --build: #22d3ee;
+      --build-dim: rgba(34, 211, 238, 0.1);
+      --prove: #34d399;
+      --prove-dim: rgba(52, 211, 153, 0.1);
+      --scale: #fbbf24;
+      --scale-dim: rgba(251, 191, 36, 0.1);
+    }
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse at 15% 0%, var(--discover-dim) 0%, transparent 45%),
+      radial-gradient(ellipse at 85% 100%, var(--scale-dim) 0%, transparent 40%);
+    color: var(--text);
+    font-family: var(--font-body);
+    padding: 48px 40px;
+    min-height: 100vh;
+    overflow-wrap: break-word;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeScale {
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-delay: 0ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+    animation: fadeUp 0.4s ease-out both;
+  }
+
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 48px;
+    max-width: 640px;
+    animation: fadeUp 0.4s ease-out both;
+    animation-delay: 0.05s;
+  }
+
+  /* --- PIPELINE --- */
+  .pipeline-header {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+    animation: fadeUp 0.4s ease-out both;
+    animation-delay: 0.1s;
+  }
+
+  .pipeline {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+    align-items: start;
+    gap: 0;
+    margin-bottom: 56px;
+  }
+
+  .stage-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    position: relative;
+    animation: fadeScale 0.4s ease-out both;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .stage-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  .stage-card:nth-child(1) { animation-delay: 0.15s; }
+  .stage-card:nth-child(3) { animation-delay: 0.25s; }
+  .stage-card:nth-child(5) { animation-delay: 0.35s; }
+  .stage-card:nth-child(7) { animation-delay: 0.45s; }
+
+  .stage-card--discover { border-top: 3px solid var(--discover); }
+  .stage-card--build { border-top: 3px solid var(--build); }
+  .stage-card--prove { border-top: 3px solid var(--prove); }
+  .stage-card--scale { border-top: 3px solid var(--scale); }
+
+  .stage-num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
+  }
+
+  .stage-card--discover .stage-num { color: var(--discover); }
+  .stage-card--build .stage-num { color: var(--build); }
+  .stage-card--prove .stage-num { color: var(--prove); }
+  .stage-card--scale .stage-num { color: var(--scale); }
+
+  .stage-name {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .stage-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+
+  .metric {
+    padding: 8px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .metric:last-child {
+    padding-bottom: 0;
+  }
+
+  .metric-name {
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .metric-targets {
+    display: flex;
+    gap: 12px;
+  }
+
+  .metric-target {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .metric-target strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .stage-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
+    padding-top: 48px;
+    color: var(--border-bright);
+    animation: fadeUp 0.3s ease-out both;
+  }
+
+  .stage-arrow:nth-child(2) { animation-delay: 0.2s; }
+  .stage-arrow:nth-child(4) { animation-delay: 0.3s; }
+  .stage-arrow:nth-child(6) { animation-delay: 0.4s; }
+
+  .stage-arrow svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: var(--border-bright);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* --- TIMELINE --- */
+  .timeline-header {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+    animation: fadeUp 0.4s ease-out both;
+    animation-delay: 0.5s;
+  }
+
+  .timeline {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 56px;
+  }
+
+  .timeline-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    animation: fadeUp 0.4s ease-out both;
+  }
+
+  .timeline-card:nth-child(1) { animation-delay: 0.55s; }
+  .timeline-card:nth-child(2) { animation-delay: 0.6s; }
+  .timeline-card:nth-child(3) { animation-delay: 0.65s; }
+
+  .timeline-period {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .timeline-items {
+    list-style: none;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .timeline-items li {
+    padding-left: 14px;
+    position: relative;
+    color: var(--text);
+  }
+
+  .timeline-items li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--border-bright);
+  }
+
+  .timeline-items li + li {
+    margin-top: 4px;
+  }
+
+  /* --- CORE ARGUMENT --- */
+  .argument {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    animation: fadeUp 0.4s ease-out both;
+    animation-delay: 0.7s;
+  }
+
+  .argument-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  .argument-body {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-dim);
+    max-width: 720px;
+  }
+
+  .argument-body strong {
+    color: var(--text);
+  }
+
+  .argument-stages {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .argument-stage {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .argument-stage-label {
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .argument-stage-label--discover { color: var(--discover); }
+  .argument-stage-label--build { color: var(--build); }
+  .argument-stage-label--prove { color: var(--prove); }
+  .argument-stage-label--scale { color: var(--scale); }
+
+  .argument-stage-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  /* --- RESPONSIVE --- */
+  @media (max-width: 900px) {
+    .pipeline {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .stage-arrow {
+      padding: 4px 0;
+      transform: rotate(90deg);
+    }
+    .stage-arrow svg {
+      width: 20px;
+      height: 20px;
+    }
+    .timeline {
+      grid-template-columns: 1fr;
+    }
+    .argument-stages {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 24px 16px; }
+    h1 { font-size: 28px; }
+    .argument-stages { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1>How We Know It's Working</h1>
+  <p class="subtitle">Four stages: Discover, Build, Prove, Scale. Each feeding the next, each built to compound.</p>
+
+  <div class="pipeline-header">Program Framework</div>
+
+  <div class="pipeline">
+
+    <div class="stage-card stage-card--discover">
+      <div class="stage-num">Stage 1</div>
+      <div class="stage-name">Discover</div>
+      <div class="stage-desc">Find the right problems with the people closest to the work.</div>
+      <div class="metric">
+        <div class="metric-name">Discovery sessions completed</div>
+        <div class="metric-targets">
+          <span class="metric-target">Q2: <strong>6</strong></span>
+          <span class="metric-target">6mo: <strong>15</strong></span>
+        </div>
+      </div>
+      <div class="metric">
+        <div class="metric-name">Initiatives scored through intake</div>
+        <div class="metric-targets">
+          <span class="metric-target">Q2: <strong>10</strong></span>
+          <span class="metric-target">6mo: <strong>25</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage-arrow">
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </div>
+
+    <div class="stage-card stage-card--build">
+      <div class="stage-num">Stage 2</div>
+      <div class="stage-name">Build</div>
+      <div class="stage-desc">Ship agents that solve real problems, through infrastructure anyone can use.</div>
+      <div class="metric">
+        <div class="metric-name">Agents adopted by target team</div>
+        <div class="metric-targets">
+          <span class="metric-target">Q2: <strong>3</strong></span>
+          <span class="metric-target">6mo: <strong>8</strong></span>
+        </div>
+      </div>
+      <div class="metric">
+        <div class="metric-name">Source document coverage</div>
+        <div class="metric-targets">
+          <span class="metric-target">Q2: <strong>90%+</strong></span>
+          <span class="metric-target">6mo: <strong>90%+</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage-arrow">
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </div>
+
+    <div class="stage-card stage-card--prove">
+      <div class="stage-num">Stage 3</div>
+      <div class="stage-name">Prove</div>
+      <div class="stage-desc">Demonstrate outcomes with measurement rigor that transfers to anyone.</div>
+      <div class="metric">
+        <div class="metric-name">Agent accuracy score (automated)</div>
+        <div class="metric-targets">
+          <span class="metric-target">Q2: <strong>85%</strong></span>
+          <span class="metric-target">6mo: <strong>90%</strong></span>
+        </div>
+      </div>
+      <div class="metric">
+        <div class="metric-name">Agents with documented outcome</div>
+        <div class="metric-targets">
+          <span class="metric-target">Q2: <strong>100%</strong></span>
+          <span class="metric-target">6mo: <strong>100%</strong></span>
+        </div>
+      </div>
+      <div class="metric">
+        <div class="metric-name">Outcomes validated against priorities</div>
+        <div class="metric-targets">
+          <span class="metric-target">Q2: <strong>1</strong></span>
+          <span class="metric-target">6mo: <strong>3</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage-arrow">
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </div>
+
+    <div class="stage-card stage-card--scale">
+      <div class="stage-num">Stage 4</div>
+      <div class="stage-name">Scale</div>
+      <div class="stage-desc">Export the methodology so teams operate independently.</div>
+      <div class="metric">
+        <div class="metric-name">Teams operating agents independently</div>
+        <div class="metric-targets">
+          <span class="metric-target">Q2: <strong>1</strong></span>
+          <span class="metric-target">6mo: <strong>3</strong></span>
+        </div>
+      </div>
+      <div class="metric">
+        <div class="metric-name">Time: discovery to deployed agent</div>
+        <div class="metric-targets">
+          <span class="metric-target">Q2: <strong>Baseline</strong></span>
+          <span class="metric-target">6mo: <strong>-30%</strong></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="timeline-header">Timeline</div>
+
+  <div class="timeline">
+    <div class="timeline-card">
+      <div class="timeline-period">Now through May</div>
+      <ul class="timeline-items">
+        <li>Deal Desk, JD Generator, PRD, BRD agents in testing</li>
+        <li>ITFA Agent in testing (Matthew Fischer)</li>
+        <li>Agent Factory operational</li>
+        <li>Eval scores established</li>
+        <li>First business outcomes underway</li>
+      </ul>
+    </div>
+    <div class="timeline-card">
+      <div class="timeline-period">June -- July</div>
+      <ul class="timeline-items">
+        <li>Deal Desk outcome metrics (case volume reduction)</li>
+        <li>Eval accuracy 85%+ across portfolio</li>
+        <li>All live agents with documented outcomes</li>
+        <li>Agent Factory available via AI Sandbox</li>
+      </ul>
+    </div>
+    <div class="timeline-card">
+      <div class="timeline-period">August -- September</div>
+      <ul class="timeline-items">
+        <li>Teams operating agents independently</li>
+        <li>Governance model operational</li>
+        <li>Measurable improvement in time to deploy</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="argument">
+    <div class="argument-title">Why this works</div>
+    <div class="argument-body">
+      Every agent solves a specific problem for a specific team. <strong>The spot solution is real. The infrastructure underneath it is what compounds.</strong> The same pipeline that built the Deal Desk agent builds the next one. The same eval framework that proved accuracy for one agent proves it for all of them.
+    </div>
+    <div class="argument-stages">
+      <div class="argument-stage">
+        <div class="argument-stage-label argument-stage-label--discover">Discover</div>
+        <div class="argument-stage-desc">Are we finding the right problems?</div>
+      </div>
+      <div class="argument-stage">
+        <div class="argument-stage-label argument-stage-label--build">Build</div>
+        <div class="argument-stage-desc">Are we shipping?</div>
+      </div>
+      <div class="argument-stage">
+        <div class="argument-stage-label argument-stage-label--prove">Prove</div>
+        <div class="argument-stage-desc">Does it hold up?</div>
+      </div>
+      <div class="argument-stage">
+        <div class="argument-stage-label argument-stage-label--scale">Scale</div>
+        <div class="argument-stage-desc">Does the method spread?</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
