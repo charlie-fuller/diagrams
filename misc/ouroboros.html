@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Ouroboros: AI Building AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-display: 'Instrument Serif', Georgia, serif;
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+    --bg: #0C141C;
+    --surface: #1B273A;
+    --text: #E7EBEE;
+    --text-dim: #8994A8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 24px;
+  }
+  .back {
+    align-self: flex-start;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto 24px;
+  }
+  .back a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    transition: color 0.15s;
+  }
+  .back a:hover { color: var(--text); }
+  h1 {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 400;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 14px;
+    text-align: center;
+    max-width: 680px;
+    line-height: 1.5;
+    margin-bottom: 32px;
+  }
+  .image-container {
+    max-width: 1400px;
+    width: 100%;
+  }
+  .image-container img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    border: 1px solid rgba(174, 193, 204, 0.15);
+  }
+</style>
+</head>
+<body>
+  <div class="back"><a href="../">&larr; All Diagrams</a></div>
+  <h1>The Ouroboros: AI Building AI</h1>
+  <p class="subtitle">An 8-dimension stack where humans move from manual coding to high-level architecture. A linear feeder pipeline transitions into a self-improving loop where AI evaluates and repairs itself, while humans maintain ultimate authority over quality and deployment.</p>
+  <div class="image-container">
+    <img src="ouroboros.png" alt="The Ouroboros: AI Building AI - 8-dimension framework showing the recursive cycle of AI building, evaluating, scoring, and repairing AI">
+  </div>
+</body>
+</html>
