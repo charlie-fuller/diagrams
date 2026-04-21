@@ -136,8 +136,18 @@
         .status-backlog { background: rgba(139,143,154,0.15); color: var(--text-muted); }
         .status-on-deck { background: rgba(59,130,246,0.15); color: var(--blue); }
         .status-in-progress { background: rgba(234,179,8,0.15); color: var(--yellow); }
+        .status-blocked { background: rgba(239,68,68,0.18); color: var(--red); }
         .status-in-beta { background: rgba(99,102,241,0.15); color: var(--accent-light); }
         .status-done { background: rgba(34,197,94,0.15); color: var(--green); }
+
+        .blocker-note {
+            margin-top: 4px;
+            font-size: 12px;
+            font-style: italic;
+            color: var(--red);
+            opacity: 0.85;
+        }
+        .blocker-note strong { font-weight: 600; color: var(--red); }
 
         .dept-tag {
             font-size: 12px;
@@ -194,6 +204,20 @@
             border-radius: 10px;
             font-size: 12px;
             color: var(--text-muted);
+        }
+        .kanban-column.column-blocked { border-color: rgba(239,68,68,0.45); }
+        .kanban-column.column-blocked .kanban-header {
+            background: rgba(239,68,68,0.12);
+            border-bottom-color: rgba(239,68,68,0.35);
+        }
+        .kanban-column.column-blocked .kanban-header h3 { color: var(--red); }
+        .kanban-column.column-wip-over .kanban-header {
+            background: rgba(249,115,22,0.12);
+            border-bottom-color: rgba(249,115,22,0.35);
+        }
+        .kanban-column.column-wip-over .kanban-count {
+            background: rgba(249,115,22,0.2);
+            color: var(--orange);
         }
         .kanban-cards { padding: 8px; display: flex; flex-direction: column; gap: 8px; }
         .kanban-card {
@@ -289,6 +313,7 @@
                 <option value="Backlog">Backlog</option>
                 <option value="On Deck">On Deck</option>
                 <option value="In Progress">In Progress</option>
+                <option value="Blocked">Blocked</option>
                 <option value="In Beta">In Beta</option>
                 <option value="Done">Done</option>
             </select>
@@ -335,6 +360,7 @@
         let allRecords = [];
         let sortField = 'score';
         let sortDir = 'desc';
+        const WIP_LIMITS = { 'In Progress': 5 };
 
         // --- DATA ---
         async function fetchRecords() {
@@ -407,7 +433,11 @@
                 tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;padding:40px;color:var(--text-muted)">No initiatives match filters</td></tr>';
                 return;
             }
-            tbody.innerHTML = records.map(r => `
+            tbody.innerHTML = records.map(r => {
+                const blocker = (r.status === 'Blocked' && r.blocker_reason)
+                    ? `<div class="blocker-note"><strong>Blocked:</strong> ${r.blocker_reason}${r.unblocker ? ` &middot; needs: ${r.unblocker}` : ''}</div>`
+                    : '';
+                return `
                 <tr>
                     <td><span class="dept-tag dept-${deptClass(r.department)}">${r.department}</span></td>
                     <td style="white-space:nowrap">${r.smt}</td>
@@ -418,21 +448,25 @@
                     <td style="text-align:center">${r.strategic || '--'}</td>
                     <td style="text-align:center"><span class="score-badge ${scoreClass(r.score)}">${r.score || '--'}</span></td>
                     <td><span class="status-pill ${statusClass(r.status)}">${r.status || '--'}</span></td>
-                    <td class="notes-cell">${r.notes || ''}</td>
-                </tr>
-            `).join('');
+                    <td class="notes-cell">${r.notes || ''}${blocker}</td>
+                </tr>`;
+            }).join('');
         }
 
         function renderKanban(records) {
             const container = document.getElementById('kanban-container');
-            const columns = ['Backlog', 'On Deck', 'In Progress', 'In Beta', 'Done'];
+            const columns = ['Backlog', 'On Deck', 'In Progress', 'Blocked', 'In Beta', 'Done'];
             container.innerHTML = columns.map(col => {
                 const items = records.filter(r => r.status === col).sort((a, b) => (b.score || 0) - (a.score || 0));
+                const wipLimit = WIP_LIMITS[col];
+                const overWip = wipLimit && items.length >= wipLimit;
+                const columnClass = (col === 'Blocked' ? 'column-blocked ' : '') + (overWip ? 'column-wip-over' : '');
+                const countText = wipLimit ? `${items.length}/${wipLimit}` : items.length;
                 return `
-                    <div class="kanban-column">
+                    <div class="kanban-column ${columnClass}">
                         <div class="kanban-header">
                             <h3>${col}</h3>
-                            <span class="kanban-count">${items.length}</span>
+                            <span class="kanban-count">${countText}</span>
                         </div>
                         <div class="kanban-cards">
                             ${items.map(r => `
@@ -440,6 +474,7 @@
                                     <div class="kanban-card-title">${initLink(r.initiative || r.kpi || '(untitled)', r.jira_epic)}</div>
                                     <div class="kanban-card-smt"><span class="dept-tag dept-${deptClass(r.department)}">${r.department}</span> ${r.smt}</div>
                                     ${r.kpi ? `<div class="kanban-card-kpi">${r.kpi}</div>` : ''}
+                                    ${col === 'Blocked' && r.blocker_reason ? `<div class="blocker-note"><strong>Blocked:</strong> ${r.blocker_reason}${r.unblocker ? `<br><strong>Needs:</strong> ${r.unblocker}` : ''}</div>` : ''}
                                     <div class="kanban-card-meta">
                                         <span title="Impact (KPI) + Effort (ease) x Strategic alignment">I:${r.impact || '-'} E:${r.effort || '-'} S:${r.strategic || '-'}</span>
                                         <span class="score-badge ${scoreClass(r.score)}">${r.score || '--'}</span>
