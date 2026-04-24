@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G&amp;A AI Partnership — Stage-Gate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============ PORSCHE GULF LIVERY ============
+     Gulf Blue body · Gulf Orange racing stripe · racing-navy accents
+     Classic 1970 Porsche 917K palette
+  */
+  :root {
+    --font-display: 'Fraunces', Georgia, serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+    --bg: #9cc6dc;              /* Gulf blue body */
+    --bg-glow: #b7d6e6;         /* lighter pool */
+    --bg-glow-2: #ffd7a8;       /* orange warmth corner */
+    --surface: #fafcfd;         /* paper card */
+    --surface-alt: #ffffff;
+    --border: rgba(12, 35, 64, 0.18);
+    --text: #0c2340;            /* racing navy */
+    --text-dim: #3d5876;
+
+    --stage: #ef7b00;           /* Gulf orange — the stripe */
+    --stage-dim: rgba(239, 123, 0, 0.12);
+    --gate: #0c2340;            /* racing navy */
+    --gate-dim: rgba(12, 35, 64, 0.10);
+    --gate-bg: #ffffff;
+    --accent: #ef7b00;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0a1826;
+      --bg-glow: #13304f;
+      --bg-glow-2: #3a1f05;
+      --surface: #112540;
+      --surface-alt: #173052;
+      --border: rgba(156, 198, 220, 0.18);
+      --text: #e6f2f9;
+      --text-dim: #9cc6dc;
+
+      --stage: #ff9426;
+      --stage-dim: rgba(255, 148, 38, 0.16);
+      --gate: #9cc6dc;
+      --gate-dim: rgba(156, 198, 220, 0.12);
+      --gate-bg: #0a1826;
+      --accent: #ff9426;
+    }
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(ellipse at 15% 10%, var(--bg-glow) 0%, transparent 45%),
+      radial-gradient(ellipse at 85% 75%, var(--bg-glow-2) 0%, transparent 50%);
+    color: var(--text);
+    font-family: var(--font-body);
+    padding: 72px 40px 80px;
+    min-height: 100vh;
+    line-height: 1.55;
+  }
+
+  .container { max-width: 960px; margin: 0 auto; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate {
+    animation: fadeUp 0.5s ease-out both;
+    animation-delay: calc(var(--i, 0) * 0.07s);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-delay: 0ms !important; }
+  }
+
+  /* ============ HEADER ============ */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: 48px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin-bottom: 12px;
+    text-wrap: balance;
+    font-variation-settings: "opsz" 144;
+  }
+
+  .lede {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 18px;
+    color: var(--text-dim);
+    max-width: 580px;
+    margin-bottom: 56px;
+    line-height: 1.5;
+  }
+
+  /* ============ PIPE ============ */
+  .pipe {
+    position: relative;
+  }
+
+  /* double Gulf racing stripe running through the spine */
+  .pipe::before {
+    content: "";
+    position: absolute;
+    left: 56px;
+    top: 24px;
+    bottom: 24px;
+    width: 8px;
+    background:
+      linear-gradient(to right,
+        var(--stage) 0 2px,
+        transparent 2px 6px,
+        var(--stage) 6px 8px);
+    opacity: 0.55;
+    z-index: 0;
+  }
+
+  .row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 28px;
+    align-items: start;
+    padding: 12px 0;
+    z-index: 1;
+  }
+
+  .marker {
+    width: 120px;
+    display: flex;
+    justify-content: center;
+    padding-top: 18px;
+  }
+
+  /* ============ STAGE ============ */
+  .stage .dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 3px solid var(--stage);
+    position: relative;
+    z-index: 2;
+  }
+
+  .stage .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--stage);
+    border-radius: 4px;
+    padding: 18px 24px 20px;
+    transition: transform 0.2s ease;
+  }
+
+  .stage .card:hover { transform: translateX(2px); }
+
+  .stage .label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+  }
+
+  .stage .name {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    color: var(--stage);
+    margin-bottom: 6px;
+  }
+
+  .stage .purpose {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+
+  /* ============ GATE ============ */
+  .gate .marker { padding-top: 14px; }
+
+  .gate .diamond {
+    width: 40px;
+    height: 40px;
+    background: var(--gate-bg);
+    border: 2px solid var(--gate);
+    transform: rotate(45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .gate .diamond span {
+    transform: rotate(-45deg);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gate);
+  }
+
+  .gate .card {
+    background: var(--gate-dim);
+    border: 1px solid var(--gate);
+    border-radius: 4px;
+    padding: 16px 22px 18px;
+  }
+
+  .gate .label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gate);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .gate .name {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 10px;
+    font-style: italic;
+  }
+
+  /* ============ SHARED CHECKLIST ============ */
+  .checks {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 4px;
+  }
+
+  .checks li {
+    position: relative;
+    padding: 3px 0 3px 20px;
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 1.5;
+    overflow-wrap: break-word;
+  }
+
+  .stage .checks li::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 10px;
+    width: 8px;
+    height: 1.5px;
+    background: var(--stage);
+  }
+
+  .gate .checks li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: 2px;
+    font-size: 13px;
+    color: var(--gate);
+    font-weight: 600;
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 720px) {
+    body { padding: 40px 20px 60px; }
+    h1 { font-size: 34px; }
+    .lede { font-size: 16px; margin-bottom: 40px; }
+    .pipe::before { left: 36px; }
+    .row { grid-template-columns: 80px 1fr; gap: 14px; }
+    .marker { width: 80px; }
+    .stage .name { font-size: 20px; }
+    .stage .purpose { font-size: 14px; }
+    .gate .name { font-size: 16px; }
+    .checks li { font-size: 13px; }
+    .stage .card, .gate .card { padding: 14px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="eyebrow animate" style="--i:0">G&amp;A AI Partnership</div>
+  <h1 class="animate" style="--i:1">Stage-gate, end to end</h1>
+  <p class="lede animate" style="--i:2">Four stages, three gates. Stages say what the work is. Gates say what has to be true before we move forward.</p>
+
+  <div class="pipe">
+
+    <!-- STAGE 1 -->
+    <div class="row stage animate" style="--i:3">
+      <div class="marker"><div class="dot"></div></div>
+      <div class="card">
+        <div class="label">Stage 01</div>
+        <div class="name">Discover</div>
+        <div class="purpose">Are they ready, and are we the right ones to help?</div>
+        <ul class="checks">
+          <li>Intake triage and portfolio scoring</li>
+          <li>Readiness assessment across four dimensions</li>
+          <li>Remediation path for weak areas — no straight shot to Build</li>
+          <li>Sponsorship on record at exec, manager, and user level</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- GATE A -->
+    <div class="row gate animate" style="--i:4">
+      <div class="marker"><div class="diamond"><span>A</span></div></div>
+      <div class="card">
+        <div class="label">Gate A · readiness</div>
+        <div class="name">Before we build anything</div>
+        <ul class="checks">
+          <li>Four readiness dimensions clear — technical, domain, strategic, data</li>
+          <li>Sponsor, manager, and user engagement confirmed</li>
+          <li>Named process owner who can decide, not just relay</li>
+          <li>Working Agreement signed between engager and partner</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- STAGE 2 -->
+    <div class="row stage animate" style="--i:5">
+      <div class="marker"><div class="dot"></div></div>
+      <div class="card">
+        <div class="label">Stage 02</div>
+        <div class="name">Build &amp; Coach</div>
+        <div class="purpose">Ship the agreed agents and grow builders inside the department so we can leave.</div>
+        <ul class="checks">
+          <li>Build the agreed agents on the platform</li>
+          <li>Coach in-department builders toward independence</li>
+          <li>Co-author the adoption plan with the partner team</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- GATE B -->
+    <div class="row gate animate" style="--i:6">
+      <div class="marker"><div class="diamond"><span>B</span></div></div>
+      <div class="card">
+        <div class="label">Gate B · handoff</div>
+        <div class="name">Before we move to prove</div>
+        <ul class="checks">
+          <li>Agreed agents delivered and performing</li>
+          <li>In-department builders operating independently</li>
+          <li>Adoption plan signed — owner, metric, cadence, escalation path</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- STAGE 3 -->
+    <div class="row stage animate" style="--i:7">
+      <div class="marker"><div class="dot"></div></div>
+      <div class="card">
+        <div class="label">Stage 03</div>
+        <div class="name">Prove</div>
+        <div class="purpose">Show the work lands in practice — usage against the plan, not just at launch.</div>
+        <ul class="checks">
+          <li>Run enablement — workshops, coaching, reinforcement</li>
+          <li>Track usage signals against the adoption plan's metric</li>
+          <li>Monthly reviews for the first 90 days, then quarterly</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- GATE C -->
+    <div class="row gate animate" style="--i:8">
+      <div class="marker"><div class="diamond"><span>C</span></div></div>
+      <div class="card">
+        <div class="label">Gate C · closure</div>
+        <div class="name">Before we hand over and step back</div>
+        <ul class="checks">
+          <li>Closure memo signed by sponsor and process owner</li>
+          <li>Ownership transferred — builder and adoption owner in place</li>
+          <li>Adoption plan in operation — cadence running on its own</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- STAGE 4 -->
+    <div class="row stage animate" style="--i:9">
+      <div class="marker"><div class="dot"></div></div>
+      <div class="card">
+        <div class="label">Stage 04</div>
+        <div class="name">Scale</div>
+        <div class="purpose">Keep it running without us. Feed the learning back into the platform.</div>
+        <ul class="checks">
+          <li>Quarterly check-ins against the adoption metric</li>
+          <li>Harden the agents; fold patterns into the platform</li>
+          <li>Case study and methodology back into the Build System</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>
