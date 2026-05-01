@@ -153,9 +153,14 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1.5px;
+    line-height: 1;
     color: var(--text-muted);
-    padding: 10px 4px 4px 18px;
+    padding: 0 4px 0 18px;
     list-style: none;
+  }
+  .diagram-list li.subcat-label {
+    margin-top: 8px;
+    margin-bottom: 4px;
   }
 
   /* Match subcat-label color to section accent */
@@ -180,10 +185,6 @@
   <div class="project project--teal">
     <div class="project-name">IS</div>
     <ul class="diagram-list">
-      <li><a href="ga-ai/">
-        G&A AI Projects
-        <div class="desc">Prioritization dashboard and kanban board for all G&A AI initiatives, backed by PocketBase</div>
-      </a></li>
       <li><a href="ai-platform/decision-tree.html">
         Platform Selection Decision Tree v3.0
         <div class="desc">Decision framework for choosing between Glean, custom build, and third-party AI tools</div>
