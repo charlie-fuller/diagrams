@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BCD Form Agent — Eval Score Progression</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #07101E;
+  --surface: #0D1B2E;
+  --surface2: #122238;
+  --surface3: #182B46;
+  --border: rgba(255,255,255,0.06);
+  --border-bright: rgba(255,255,255,0.12);
+  --text: #E2EAF6;
+  --text-dim: #4F6E90;
+  --text-med: #8AA4BF;
+
+  --blue: #4A9EFF;
+  --blue-dim: rgba(74,158,255,0.12);
+  --blue-glow: rgba(74,158,255,0.18);
+  --gold: #F5C842;
+  --gold-dim: rgba(245,200,66,0.12);
+  --teal: #28D0A0;
+  --teal-dim: rgba(40,208,160,0.12);
+  --red: #FF5252;
+  --red-dim: rgba(255,82,82,0.12);
+  --orange: #FF8B42;
+  --purple: #9B6DFF;
+  --pink: #FF6EAE;
+
+  --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 70% 40% at 65% 0%, rgba(74,158,255,0.06) 0%, transparent 70%),
+    radial-gradient(circle, rgba(255,255,255,0.012) 1px, transparent 1px);
+  background-size: auto, 28px 28px;
+  color: var(--text);
+  font-family: var(--font);
+  min-height: 100vh;
+  padding: 52px 44px;
+  overflow-wrap: break-word;
+}
+
+.wrap {
+  max-width: 1060px;
+  margin: 0 auto;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeScale {
+  from { opacity: 0; transform: scale(0.91); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.fade-up    { animation: fadeUp   0.5s ease-out both; animation-delay: calc(var(--i,0) * 0.09s); }
+.fade-scale { animation: fadeScale 0.4s ease-out both; animation-delay: calc(var(--i,0) * 0.08s); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===== HEADER ===== */
+.page-header { margin-bottom: 32px; }
+
+.project-tag {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--blue);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.project-tag::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 1.5px;
+  background: var(--blue);
+}
+
+h1 {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.7px;
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* ===== KPI ROW ===== */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.kpi {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+}
+.kpi--start {
+  border-color: rgba(255,82,82,0.22);
+  background: color-mix(in srgb, var(--surface) 88%, rgba(255,82,82,0.15) 12%);
+}
+.kpi--end {
+  border-color: rgba(74,158,255,0.25);
+  background: color-mix(in srgb, var(--surface) 90%, rgba(74,158,255,0.1) 10%);
+}
+.kpi--gain {
+  border-color: rgba(40,208,160,0.22);
+  background: color-mix(in srgb, var(--surface) 90%, rgba(40,208,160,0.08) 10%);
+}
+.kpi--jump {
+  border-color: rgba(245,200,66,0.22);
+  background: color-mix(in srgb, var(--surface) 90%, rgba(245,200,66,0.07) 10%);
+}
+
+.kpi-value {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.kpi--start .kpi-value { color: var(--red); }
+.kpi--end .kpi-value   { color: var(--blue); }
+.kpi--gain .kpi-value  { color: var(--teal); }
+.kpi--jump .kpi-value  { color: var(--gold); }
+
+.kpi-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  margin-top: 7px;
+}
+.kpi-sub {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 3px;
+}
+
+/* ===== CHART PANELS ===== */
+.chart-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 26px 24px 20px;
+  margin-bottom: 10px;
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chart-title {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+}
+
+.legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+}
+.leg-line {
+  width: 18px;
+  height: 2px;
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+.leg-line--dashed {
+  height: 0;
+  border-top-width: 1.5px;
+  border-top-style: dashed;
+}
+
+/* ===== VERSION CARDS ===== */
+.ver-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.ver-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 11px 13px;
+}
+.ver-card--baseline {
+  border-color: rgba(255,82,82,0.24);
+  background: color-mix(in srgb, var(--surface2) 85%, rgba(255,82,82,0.12) 15%);
+}
+.ver-card--jump {
+  border-color: rgba(245,200,66,0.24);
+  background: color-mix(in srgb, var(--surface2) 85%, rgba(245,200,66,0.08) 15%);
+}
+.ver-card--current {
+  border-color: rgba(74,158,255,0.28);
+  background: color-mix(in srgb, var(--surface2) 85%, rgba(74,158,255,0.08) 15%);
+}
+
+.ver-label {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+.ver-card--baseline .ver-label { color: var(--red); }
+.ver-card--jump .ver-label     { color: var(--gold); }
+.ver-card--current .ver-label  { color: var(--blue); }
+.ver-card .ver-label           { color: var(--text-med); }
+
+.ver-score {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-bottom: 5px;
+}
+
+.ver-note {
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.45;
+}
+
+.ver-delta {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  margin-top: 6px;
+}
+.ver-delta--jump { color: var(--gold); }
+.ver-delta--up   { color: var(--teal); }
+.ver-delta--hold { color: var(--text-dim); }
+.ver-delta--base { color: var(--text-dim); }
+
+/* ===== DIM LEGEND ===== */
+.dim-legend {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+  padding-top: 13px;
+  border-top: 1px solid var(--border);
+}
+.dim-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+.dim-swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* ===== FOOT NOTE ===== */
+.footnote {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  line-height: 1.6;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 800px) {
+  body { padding: 24px 18px; }
+  h1 { font-size: 24px; }
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
+  .ver-row  { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 480px) {
+  .ver-row { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Header -->
+  <div class="page-header fade-up" style="--i:0">
+    <div class="project-tag">bcd-form-agent</div>
+    <h1>Eval Score Progression</h1>
+    <p class="subtitle">Standard-tier scenario &middot; Procurement Analyst input &middot; 6 evaluation runs &middot; AESOP evaluator</p>
+  </div>
+
+  <!-- KPI Row -->
+  <div class="kpi-row">
+    <div class="kpi kpi--start fade-scale" style="--i:1">
+      <div class="kpi-value">4.4</div>
+      <div class="kpi-label">Baseline (v3)</div>
+      <div class="kpi-sub">Below eval threshold</div>
+    </div>
+    <div class="kpi kpi--end fade-scale" style="--i:2">
+      <div class="kpi-value">9.3</div>
+      <div class="kpi-label">Current (v10)</div>
+      <div class="kpi-sub">Above production target</div>
+    </div>
+    <div class="kpi kpi--gain fade-scale" style="--i:3">
+      <div class="kpi-value">+4.9</div>
+      <div class="kpi-label">Total Gain</div>
+      <div class="kpi-sub">Across 6 eval runs</div>
+    </div>
+    <div class="kpi kpi--jump fade-scale" style="--i:4">
+      <div class="kpi-value">+4.4</div>
+      <div class="kpi-label">v3 &#8594; v4 Jump</div>
+      <div class="kpi-sub">Largest single leap</div>
+    </div>
+  </div>
+
+  <!-- Main line chart -->
+  <div class="chart-panel fade-up" style="--i:5">
+    <div class="chart-header">
+      <span class="chart-title">Overall Weighted Score &mdash; /10</span>
+      <div class="legend">
+        <div class="legend-item">
+          <div class="leg-line" style="background:var(--blue);height:2.5px;"></div>
+          Score
+        </div>
+        <div class="legend-item">
+          <div class="leg-line leg-line--dashed" style="border-top-color:var(--gold);"></div>
+          Eval threshold (7.5)
+        </div>
+        <div class="legend-item">
+          <div class="leg-line leg-line--dashed" style="border-top-color:var(--teal);"></div>
+          Production target (9.0)
+        </div>
+      </div>
+    </div>
+    <canvas id="mainChart"></canvas>
+  </div>
+
+  <!-- Version annotation cards -->
+  <div class="ver-row fade-up" style="--i:6">
+    <div class="ver-card ver-card--baseline">
+      <div class="ver-label">v3</div>
+      <div class="ver-score">4.4 / 10</div>
+      <div class="ver-note">Never reached BCD generation &mdash; session terminated mid-interview</div>
+      <div class="ver-delta ver-delta--base">Baseline</div>
+    </div>
+    <div class="ver-card ver-card--jump">
+      <div class="ver-label">v4</div>
+      <div class="ver-score">8.8 / 10</div>
+      <div class="ver-note">Session completion loop + confirmation gate enforced</div>
+      <div class="ver-delta ver-delta--jump">+4.4</div>
+    </div>
+    <div class="ver-card">
+      <div class="ver-label" style="color:var(--text-med)">v6</div>
+      <div class="ver-score">8.8 / 10</div>
+      <div class="ver-note">Efficiency gain: 24 turns &#8594; 12, quality held</div>
+      <div class="ver-delta ver-delta--hold">held</div>
+    </div>
+    <div class="ver-card">
+      <div class="ver-label" style="color:var(--text-med)">v8</div>
+      <div class="ver-score">9.0 / 10</div>
+      <div class="ver-note">Gate phrasing fixed + PRD Section 13 format enforced</div>
+      <div class="ver-delta ver-delta--up">+0.2</div>
+    </div>
+    <div class="ver-card">
+      <div class="ver-label" style="color:var(--text-med)">v9</div>
+      <div class="ver-score">9.0 / 10</div>
+      <div class="ver-note">Gap verdict verbalization + KB citation accuracy</div>
+      <div class="ver-delta ver-delta--hold">held</div>
+    </div>
+    <div class="ver-card ver-card--current">
+      <div class="ver-label">v10</div>
+      <div class="ver-score">9.3 / 10</div>
+      <div class="ver-note">Red flag detection overhaul + question discipline tightened</div>
+      <div class="ver-delta ver-delta--up">+0.3</div>
+    </div>
+  </div>
+
+  <!-- Dimension breakdown -->
+  <div class="chart-panel fade-up" style="--i:7">
+    <div class="chart-header">
+      <span class="chart-title">Dimension Breakdown &mdash; /10</span>
+    </div>
+    <canvas id="dimChart"></canvas>
+    <div class="dim-legend">
+      <div class="dim-item"><div class="dim-swatch" style="background:#4A9EFF"></div>Goal Completion</div>
+      <div class="dim-item"><div class="dim-swatch" style="background:#9B6DFF"></div>Process Quality</div>
+      <div class="dim-item"><div class="dim-swatch" style="background:#28D0A0"></div>Conversational Skill</div>
+      <div class="dim-item"><div class="dim-swatch" style="background:#FF8B42"></div>Red Flag Detection</div>
+      <div class="dim-item"><div class="dim-swatch" style="background:#F5C842"></div>Output Quality</div>
+      <div class="dim-item"><div class="dim-swatch" style="background:#FF6EAE"></div>Downstream Readiness</div>
+    </div>
+  </div>
+
+  <p class="footnote fade-up" style="--i:8">
+    v5, v7 were repair iterations without full eval runs &middot;
+    A v10 error run scoring 5.2 was excluded (form invocation fault) &middot;
+    Single standard-tier scenario throughout (Procurement Analyst &mdash; Vendor Onboarding)
+  </p>
+
+</div><!-- /wrap -->
+
+<script>
+  Chart.defaults.color = '#4F6E90';
+  Chart.defaults.font.family = "'JetBrains Mono', Consolas, monospace";
+  Chart.defaults.font.size = 11;
+  Chart.defaults.borderColor = 'rgba(255,255,255,0.05)';
+
+  const versions = ['v3', 'v4', 'v6', 'v8', 'v9', 'v10'];
+  const overall  = [4.4, 8.8, 8.8, 9.0, 9.0, 9.3];
+  const thresh   = [7.5, 7.5, 7.5, 7.5, 7.5, 7.5];
+  const target   = [9.0, 9.0, 9.0, 9.0, 9.0, 9.0];
+
+  const tooltipNotes = [
+    'Session terminated — no BCD generated',
+    'Session loop + confirmation gate fixed',
+    'Efficiency: 24 turns reduced to 12',
+    'Gate phrasing + PRD Section 13 format',
+    'Gap verdict verbalization + citations',
+    'Red flag overhaul + question discipline',
+  ];
+
+  /* ---- Main chart ---- */
+  const mainCtx = document.getElementById('mainChart').getContext('2d');
+
+  const fillGrad = mainCtx.createLinearGradient(0, 0, 0, 340);
+  fillGrad.addColorStop(0,   'rgba(74,158,255,0.30)');
+  fillGrad.addColorStop(0.5, 'rgba(74,158,255,0.08)');
+  fillGrad.addColorStop(1,   'rgba(74,158,255,0.00)');
+
+  const ptColors = ['#FF5252','#F5C842','#8AA4BF','#8AA4BF','#8AA4BF','#4A9EFF'];
+  const ptSizes  = [8, 8, 6, 6, 6, 8];
+
+  new Chart(mainCtx, {
+    type: 'line',
+    data: {
+      labels: versions,
+      datasets: [
+        {
+          label: 'Overall Score',
+          data: overall,
+          borderColor: '#4A9EFF',
+          backgroundColor: fillGrad,
+          borderWidth: 2.5,
+          tension: 0.38,
+          fill: true,
+          pointBackgroundColor: ptColors,
+          pointBorderColor: '#0D1B2E',
+          pointBorderWidth: 2,
+          pointRadius: ptSizes,
+          pointHoverRadius: ptSizes.map(s => s + 3),
+          order: 1,
+        },
+        {
+          label: 'Eval threshold (7.5)',
+          data: thresh,
+          borderColor: '#F5C842',
+          borderWidth: 1.5,
+          borderDash: [5, 5],
+          pointRadius: 0,
+          pointHoverRadius: 0,
+          fill: false,
+          tension: 0,
+          order: 2,
+        },
+        {
+          label: 'Production target (9.0)',
+          data: target,
+          borderColor: '#28D0A0',
+          borderWidth: 1.5,
+          borderDash: [5, 5],
+          pointRadius: 0,
+          pointHoverRadius: 0,
+          fill: false,
+          tension: 0,
+          order: 3,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      aspectRatio: 3,
+      interaction: { mode: 'index', intersect: false },
+      animation: { duration: 900, easing: 'easeOutCubic' },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#0D1B2E',
+          borderColor: 'rgba(255,255,255,0.1)',
+          borderWidth: 1,
+          padding: 12,
+          callbacks: {
+            title: (ctx) => ctx[0].label,
+            label: (ctx) => {
+              if (ctx.datasetIndex === 0) return '  Score: ' + ctx.raw + ' / 10';
+              if (ctx.datasetIndex === 1) return '  Eval threshold: 7.5';
+              return '  Production target: 9.0';
+            },
+            afterBody: (ctx) => {
+              const idx = ctx[0].dataIndex;
+              return ['', '  ' + tooltipNotes[idx]];
+            },
+          },
+        },
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(255,255,255,0.04)' },
+          ticks: { color: '#4F6E90', font: { weight: '600', size: 12 }, padding: 6 },
+          border: { color: 'rgba(255,255,255,0.06)' },
+        },
+        y: {
+          min: 0,
+          max: 10,
+          grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
+          ticks: {
+            color: '#4F6E90',
+            stepSize: 2,
+            callback: (v) => v.toFixed(0),
+            padding: 8,
+          },
+          border: { color: 'transparent' },
+        },
+      },
+    },
+  });
+
+  /* ---- Dimension chart ---- */
+  const dimCtx = document.getElementById('dimChart').getContext('2d');
+
+  const dimColors = [
+    { fill: 'rgba(74,158,255,0.6)',  border: '#4A9EFF' },  // goal
+    { fill: 'rgba(155,109,255,0.6)', border: '#9B6DFF' },  // process
+    { fill: 'rgba(40,208,160,0.6)',  border: '#28D0A0' },  // conversational
+    { fill: 'rgba(255,139,66,0.6)',  border: '#FF8B42' },  // red_flag
+    { fill: 'rgba(245,200,66,0.6)',  border: '#F5C842' },  // output
+    { fill: 'rgba(255,110,174,0.6)', border: '#FF6EAE' },  // downstream
+  ];
+
+  const dimLabels = [
+    'Goal Completion', 'Process Quality', 'Conversational Skill',
+    'Red Flag Detection', 'Output Quality', 'Downstream Ready'
+  ];
+
+  const dimValues = [
+    [3.3, 9.5, 9.5, 9.5, 9.3, 9.8],  // goal
+    [4.8, 8.8, 8.8, 9.0, 9.0, 9.3],  // process
+    [7.3, 8.7, 9.0, 9.0, 9.0, 9.3],  // conversational
+    [7.4, 8.2, 8.6, 8.4, 8.7, 9.4],  // red_flag
+    [1.0, 9.0, 9.0, 9.0, 9.0, 9.0],  // output
+    [2.7, 9.3, 8.3, 9.3, 9.7, 9.7],  // downstream
+  ];
+
+  new Chart(dimCtx, {
+    type: 'bar',
+    data: {
+      labels: versions,
+      datasets: dimValues.map((data, i) => ({
+        label: dimLabels[i],
+        data,
+        backgroundColor: dimColors[i].fill,
+        borderColor: dimColors[i].border,
+        borderWidth: 1,
+        borderRadius: 3,
+        borderSkipped: false,
+      })),
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      aspectRatio: 3.2,
+      interaction: { mode: 'index', intersect: false },
+      animation: { duration: 900, easing: 'easeOutCubic' },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#0D1B2E',
+          borderColor: 'rgba(255,255,255,0.1)',
+          borderWidth: 1,
+          padding: 12,
+        },
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(255,255,255,0.04)' },
+          ticks: { color: '#4F6E90', font: { weight: '600', size: 12 }, padding: 6 },
+          border: { color: 'rgba(255,255,255,0.06)' },
+        },
+        y: {
+          min: 0,
+          max: 10,
+          grid: { color: 'rgba(255,255,255,0.04)' },
+          ticks: {
+            color: '#4F6E90',
+            stepSize: 2,
+            callback: (v) => v.toFixed(0),
+            padding: 8,
+          },
+          border: { color: 'transparent' },
+        },
+      },
+    },
+  });
+</script>
+</body>
+</html>

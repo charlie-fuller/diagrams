@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BuRDy: AI-Powered BRD Quality at Scale</title>
+<title>BCD: AI-Powered BCD Quality at Scale</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -453,7 +453,7 @@
   <nav class="toc" id="toc">
     <div class="toc-title">Contents</div>
     <a href="#s1">1. The Problem</a>
-    <a href="#s2">2. What BuRDy Is</a>
+    <a href="#s2">2. What BCD Is</a>
     <a href="#s3">3. The Build-Eval-Repair Loop</a>
     <a href="#s4">4. Toolchain</a>
     <a href="#s5">5. How Evals Work</a>
@@ -466,7 +466,7 @@
 
   <div class="main">
 
-    <h1 class="animate" style="--i:0">BuRDy: AI Agent Quality at Scale</h1>
+    <h1 class="animate" style="--i:0">BCD: AI Agent Quality at Scale</h1>
     <p class="subtitle animate" style="--i:1">AI Strategy &middot; Build &rarr; Evaluate &rarr; Repair &rarr; Deploy &middot; April 2026</p>
 
     <div class="lead animate" style="--i:2">
@@ -479,17 +479,17 @@
     </div>
 
     <div class="callout animate" style="--i:2">
-      <strong>BuRDy</strong> (our BRD interview agent) is the first agent through this process. The methodology applies to <strong>Deal Desk</strong>, <strong>Legal Separation</strong>, and every future deployment.
+      <strong>BCD</strong> (our BCD interview agent) is the first agent through this process. The methodology applies to <strong>Deal Desk</strong>, <strong>Legal Separation</strong>, and every future deployment.
     </div>
 
     <!-- ===== 1. THE PROBLEM ===== -->
     <div id="s1" class="sec-head animate" style="--i:3">1 - The Problem We Solved</div>
-    <p class="sec-sub animate" style="--i:4">Why BRD intake was broken, and what it costs</p>
+    <p class="sec-sub animate" style="--i:4">Why BCD intake was broken, and what it costs</p>
 
     <div class="kpi-row">
       <div class="kpi-card animate-scale" style="--i:5">
         <div class="kpi-card__value">15</div>
-        <div class="kpi-card__label">Page BRD Template</div>
+        <div class="kpi-card__label">Page BCD Template</div>
       </div>
       <div class="kpi-card animate-scale" style="--i:6">
         <div class="kpi-card__value">9</div>
@@ -511,7 +511,7 @@
       <strong>The deeper issue:</strong> Incomplete requirements lead to misscoped projects, scope creep, and rework. The real cost shows up downstream: projects that go wrong because they started with bad requirements.
     </div>
 
-    <!-- ===== 2. WHAT BURDY IS ===== -->
+    <!-- ===== 2. WHAT BCD IS ===== -->
     <div id="s2" class="sec-head animate" style="--i:11">2 - What We Built</div>
     <p class="sec-sub animate" style="--i:12">Two interview agents for two audiences, with automated formatting</p>
 
@@ -525,13 +525,13 @@
         graph TD
           A["Someone has a project idea"] --> SCALE{"How big is it?"}
 
-          SCALE -->|"Under 20 hours"| BURDY["Opens BuRDy in Glean"]
-          BURDY --> B_INT["Guided interview\n8 adaptive stages"]
+          SCALE -->|"Under 20 hours"| BCD["Opens BCD in Glean"]
+          BCD --> B_INT["Guided interview\n8 adaptive stages"]
           B_INT --> B_CLASS["Classifies project type\nadjusts depth"]
-          B_CLASS --> B_BRD["Produces substance-focused BRD"]
-          B_BRD --> B_DOC["Paste into Google Doc"]
+          B_CLASS --> B_BCD["Produces substance-focused BCD"]
+          B_BCD --> B_DOC["Paste into Google Doc"]
           B_DOC --> B_FMT["Apps Script formats\nto IS BRD template"]
-          B_FMT --> B_OUT["Submission-ready BRD\n+ Jira intake fields"]
+          B_FMT --> B_OUT["Submission-ready BCD\n+ Jira intake fields"]
 
           SCALE -->|"20+ hours"| PURDY["Opens PuRDy in Glean"]
           PURDY --> P_INT["6-stage requirements\ninterview"]
@@ -540,14 +540,14 @@
 
           classDef user fill:#b4530922,stroke:#b45309,stroke-width:2px
           classDef decision fill:#7e22ce22,stroke:#7e22ce,stroke-width:2px
-          classDef burdy fill:#1d4ed822,stroke:#1d4ed8,stroke-width:2px
+          classDef bcd fill:#1d4ed822,stroke:#1d4ed8,stroke-width:2px
           classDef purdy fill:#7e22ce22,stroke:#7e22ce,stroke-width:2px
           classDef auto fill:#15803d22,stroke:#15803d,stroke-width:2px
           classDef output fill:#0f766e22,stroke:#0f766e,stroke-width:2px
 
           class A user
           class SCALE decision
-          class BURDY,B_INT,B_CLASS,B_BRD burdy
+          class BCD,B_INT,B_CLASS,B_BCD bcd
           class B_DOC user
           class B_FMT auto
           class B_OUT output
@@ -559,7 +559,7 @@
 
     <div class="value-grid">
       <div class="card animate" style="--i:14">
-        <div class="card__label" style="color: var(--blue);">Glean Agent (BuRDy)</div>
+        <div class="card__label" style="color: var(--blue);">Glean Agent (BCD)</div>
         <ul class="styled-list" style="margin:0">
           <li>Any employee, any time</li>
           <li>Classifies into 7 project types and adapts depth</li>
@@ -578,7 +578,7 @@
       <div class="card animate" style="--i:16">
         <div class="card__label" style="color: var(--green);">Google Apps Script</div>
         <ul class="styled-list" style="margin:0">
-          <li>Maps <strong>BuRDy</strong> output to the official IS BRD template</li>
+          <li>Maps <strong>BCD</strong> output to the official IS BRD template</li>
           <li>Cover page, 9 numbered sections, approvals tracker, Jira intake fields</li>
           <li>Flags gaps with [NEEDS REVIEW]</li>
         </ul>
@@ -586,7 +586,7 @@
     </div>
 
     <div class="callout animate" style="--i:17">
-      <strong>BRD vs. PRD:</strong> A BRD (Business Requirements Document) is what employees submit to IS when they need something built. A PRD (Product Requirements Document) is what our team uses internally to scope and design the solution. <strong>BuRDy</strong> captures the request. <strong>PuRDy</strong> captures the plan.
+      <strong>BCD vs. PRD:</strong> A BCD (Business Case Document) is what employees submit to IS when they need something built. A PRD (Product Requirements Document) is what our team uses internally to scope and design the solution. <strong>BCD</strong> captures the request. <strong>PuRDy</strong> captures the plan.
     </div>
 
     <div class="callout animate" style="--i:16">
@@ -680,7 +680,7 @@
         <span class="tag tag--green">Format</span>
         <span class="tag tag--teal">Deliver</span>
         <ul class="styled-list" style="margin-top:8px">
-          <li>Parses <strong>BuRDy</strong> output into a Google Doc: cover page, 9 sections, Jira intake fields</li>
+          <li>Parses <strong>BCD</strong> output into a Google Doc: cover page, 9 sections, Jira intake fields</li>
           <li>Flags anything missing with [NEEDS REVIEW]</li>
           <li>Zero manual formatting</li>
         </ul>
@@ -699,8 +699,8 @@
         <div class="card__label" style="color: var(--accent);">Goal Completion</div>
         <span class="tag tag--accent">25% weight</span>
         <ul class="styled-list">
-          <li><strong>BRD production</strong>: does the artifact exist with all 4 minimum elements?</li>
-          <li><strong>Depth calibration</strong>: lean BRD for simple projects, full for complex?</li>
+          <li><strong>BCD production</strong>: does the artifact exist with all 4 minimum elements?</li>
+          <li><strong>Depth calibration</strong>: lean BCD for simple projects, full for complex?</li>
           <li><strong>Problem-first orientation</strong>: describes a problem, not a solution?</li>
           <li><strong>Open questions captured</strong>: real gaps documented, not perfunctory?</li>
         </ul>
@@ -722,7 +722,7 @@
           <li><strong>Question pacing</strong>: one question per response, natural rhythm?</li>
           <li><strong>Active listening</strong>: references prior answers before next probe?</li>
           <li><strong>Coaching move deployment</strong>: uses prescribed techniques?</li>
-          <li><strong>Summary quality</strong>: accurate confirmation before generating BRD?</li>
+          <li><strong>Summary quality</strong>: accurate confirmation before generating BCD?</li>
         </ul>
       </div>
       <div class="card animate" style="--i:35">
@@ -740,7 +740,7 @@
         <span class="tag tag--purple">25% weight</span>
         <ul class="styled-list">
           <li><strong>Content specificity</strong>: names, numbers, systems from the conversation?</li>
-          <li><strong>Section structure</strong>: matches expected BRD format?</li>
+          <li><strong>Section structure</strong>: matches expected BCD format?</li>
           <li><strong>Downstream readiness</strong>: IS team can act on this document?</li>
           <li><strong>Synthesis quality</strong>: overview captures the whole story?</li>
         </ul>
@@ -874,7 +874,7 @@
       </div>
       <div class="card animate" style="--i:56">
         <div class="card__label" style="color: var(--teal);">Governance</div>
-        <p style="margin:0">Rubric is <strong>defined by people, based on real business values</strong>. What does IS need in a BRD? What does ELT use to decide? Those answers are the scoring criteria.</p>
+        <p style="margin:0">Rubric is <strong>defined by people, based on real business values</strong>. What does IS need in a BCD? What does ELT use to decide? Those answers are the scoring criteria.</p>
       </div>
       <div class="card animate" style="--i:57">
         <div class="card__label" style="color: var(--red);">Explainability</div>
@@ -926,7 +926,7 @@
     </div>
 
     <div class="callout animate" style="--i:62">
-      <strong>Agents don't degrade silently.</strong> The same eval infrastructure that got <strong>BuRDy</strong> to 8.2 keeps running after launch. Leadership sees scores, trends, and fixes each month.
+      <strong>Agents don't degrade silently.</strong> The same eval infrastructure that got <strong>BCD</strong> to 8.2 keeps running after launch. Leadership sees scores, trends, and fixes each month.
     </div>
 
     <!-- ===== 9. WHY THIS MATTERS ===== -->
@@ -947,7 +947,7 @@
 
     <!-- ===== 10. THE MODEL ===== -->
     <div id="s10" class="sec-head animate" style="--i:66">10 - The Model Going Forward</div>
-    <p class="sec-sub animate" style="--i:67"><strong>BuRDy</strong> is agent #1. This is how we build every AI deployment.</p>
+    <p class="sec-sub animate" style="--i:67"><strong>BCD</strong> is agent #1. This is how we build every AI deployment.</p>
 
     <p class="animate" style="--i:68"><strong>Platform-agnostic.</strong> The early stages determine the right platform before anything is built.</p>
 
@@ -991,7 +991,7 @@
 
     <p class="animate" style="--i:71"><strong>Agents already in this pipeline:</strong></p>
     <ul class="styled-list animate" style="--i:72">
-      <li><strong>BuRDy</strong> (IS): BRD interview agent. 9 repair cycles complete. Entering team testing.</li>
+      <li><strong>BCD</strong> (IS): BCD interview agent. 9 repair cycles complete. Entering team testing.</li>
       <li><strong>Deal Desk Agent</strong> (Sales/Finance): Quote-to-cash support. In testing.</li>
       <li><strong>Legal Separation Agent</strong> (Legal/HR): Agreement generation + severance calculation. In discovery.</li>
       <li><strong>ITFA Vendor Research Agent</strong> (Procurement): Automated vendor security/privacy research for IT intake. In testing.</li>
