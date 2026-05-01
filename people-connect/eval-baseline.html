@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>People Connect Agent — Eval Baseline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #07101E;
+  --surface: #0D1B2E;
+  --surface2: #122238;
+  --surface3: #182B46;
+  --border: rgba(255,255,255,0.06);
+  --border-bright: rgba(255,255,255,0.12);
+  --text: #E2EAF6;
+  --text-dim: #4F6E90;
+  --text-med: #8AA4BF;
+
+  --blue: #4A9EFF;
+  --blue-dim: rgba(74,158,255,0.12);
+  --teal: #28D0A0;
+  --teal-dim: rgba(40,208,160,0.12);
+  --gold: #F5C842;
+  --gold-dim: rgba(245,200,66,0.12);
+  --red: #FF5252;
+  --red-dim: rgba(255,82,82,0.12);
+  --orange: #FF8B42;
+  --purple: #9B6DFF;
+
+  --cat-functional:     #4A9EFF;
+  --cat-knowledge:      #9B6DFF;
+  --cat-aspirational:   #28D0A0;
+  --cat-trust:          #F5C842;
+  --cat-safety:         #FF8B42;
+
+  --ans-correct:   #28D0A0;
+  --ans-improve:   #4A9EFF;
+  --ans-review:    #F5C842;
+  --ans-incorrect: #FF5252;
+
+  --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 70% 40% at 30% 0%, rgba(40,208,160,0.05) 0%, transparent 70%),
+    radial-gradient(circle, rgba(255,255,255,0.012) 1px, transparent 1px);
+  background-size: auto, 28px 28px;
+  color: var(--text);
+  font-family: var(--font);
+  min-height: 100vh;
+  padding: 52px 44px;
+  overflow-wrap: break-word;
+}
+
+.wrap { max-width: 1060px; margin: 0 auto; }
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeScale {
+  from { opacity: 0; transform: scale(0.91); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.fade-up    { animation: fadeUp    0.5s ease-out both; animation-delay: calc(var(--i,0) * 0.09s); }
+.fade-scale { animation: fadeScale 0.4s ease-out both; animation-delay: calc(var(--i,0) * 0.08s); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ===== HEADER ===== */
+.page-header { margin-bottom: 32px; }
+
+.project-tag {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--teal);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.project-tag::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 1.5px;
+  background: var(--teal);
+}
+
+h1 {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.7px;
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* ===== V1 BADGE ===== */
+.v1-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface2);
+  border: 1px solid rgba(245,200,66,0.3);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gold);
+  margin-bottom: 28px;
+}
+.v1-badge::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+/* ===== KPI ROW ===== */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.kpi {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+}
+.kpi--accuracy {
+  border-color: rgba(74,158,255,0.22);
+  background: color-mix(in srgb, var(--surface) 90%, rgba(74,158,255,0.1) 10%);
+}
+.kpi--citation {
+  border-color: rgba(155,109,255,0.22);
+  background: color-mix(in srgb, var(--surface) 90%, rgba(155,109,255,0.08) 10%);
+}
+.kpi--count {
+  border-color: rgba(40,208,160,0.22);
+  background: color-mix(in srgb, var(--surface) 90%, rgba(40,208,160,0.08) 10%);
+}
+.kpi--correct {
+  border-color: rgba(255,82,82,0.18);
+  background: color-mix(in srgb, var(--surface) 90%, rgba(255,82,82,0.06) 10%);
+}
+
+.kpi-value {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.kpi--accuracy .kpi-value { color: var(--blue); }
+.kpi--citation .kpi-value { color: var(--purple); }
+.kpi--count .kpi-value    { color: var(--teal); }
+.kpi--correct .kpi-value  { color: var(--gold); }
+
+.kpi-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  margin-top: 7px;
+}
+.kpi-sub { font-size: 11px; color: var(--text-dim); margin-top: 3px; }
+
+/* ===== TWO-COL LAYOUT ===== */
+.two-col {
+  display: grid;
+  grid-template-columns: 1.7fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.two-col > * { min-width: 0; }
+
+/* ===== CHART PANELS ===== */
+.chart-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px 22px 18px;
+  margin-bottom: 10px;
+}
+.chart-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.chart-title {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+}
+.chart-note {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+}
+
+/* ===== ANSWER DISTRIBUTION ===== */
+.dist-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px 22px 18px;
+}
+
+.dist-bars { margin-top: 4px; }
+
+.dist-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.dist-label {
+  font-size: 11px;
+  color: var(--text-dim);
+  width: 140px;
+  flex-shrink: 0;
+}
+.dist-track {
+  flex: 1;
+  height: 8px;
+  background: var(--surface2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.dist-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.8s ease-out;
+}
+.dist-pct {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  width: 36px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.dist-count {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  width: 24px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ===== WEAKNESS SECTION ===== */
+.weakness-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 4px;
+}
+.weakness-item {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 11px 14px;
+}
+.weakness-pattern {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+  line-height: 1.35;
+}
+.weakness-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+.weakness-score {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+}
+.weakness-qs {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+}
+.w-bar-track {
+  flex: 1;
+  height: 4px;
+  background: var(--surface3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.w-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+}
+
+/* ===== FOOTNOTE ===== */
+.footnote {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  line-height: 1.6;
+}
+
+/* ===== CAT LEGEND ===== */
+.cat-legend {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.cat-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-dim); }
+.cat-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 800px) {
+  body { padding: 24px 18px; }
+  h1 { font-size: 24px; }
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
+  .two-col  { grid-template-columns: 1fr; }
+  .weakness-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Header -->
+  <div class="page-header fade-up" style="--i:0">
+    <div class="project-tag">people-connect-agent</div>
+    <h1>Eval Baseline</h1>
+    <p class="subtitle">45 questions &middot; Q&amp;A accuracy scoring &middot; LLM judge vs synthesized perfect answers &middot; 2026-04-30</p>
+  </div>
+
+  <div class="v1-badge fade-up" style="--i:1">v1 &mdash; Initial baseline &middot; Future runs will show progression from here</div>
+
+  <!-- KPI Row -->
+  <div class="kpi-row">
+    <div class="kpi kpi--accuracy fade-scale" style="--i:2">
+      <div class="kpi-value">71.2</div>
+      <div class="kpi-label">Avg Accuracy</div>
+      <div class="kpi-sub">/ 100 &middot; target: 80+</div>
+    </div>
+    <div class="kpi kpi--citation fade-scale" style="--i:3">
+      <div class="kpi-value">70.6</div>
+      <div class="kpi-label">Citation Quality</div>
+      <div class="kpi-sub">/ 100 &middot; document-level only</div>
+    </div>
+    <div class="kpi kpi--count fade-scale" style="--i:4">
+      <div class="kpi-value">45</div>
+      <div class="kpi-label">Questions Evaluated</div>
+      <div class="kpi-sub">Across 5 categories</div>
+    </div>
+    <div class="kpi kpi--correct fade-scale" style="--i:5">
+      <div class="kpi-value">6.7%</div>
+      <div class="kpi-label">Fully Correct</div>
+      <div class="kpi-sub">3 of 45 &middot; 73% need improvement</div>
+    </div>
+  </div>
+
+  <!-- Category chart + Answer distribution -->
+  <div class="two-col fade-up" style="--i:6">
+
+    <div class="chart-panel">
+      <div class="chart-header">
+        <span class="chart-title">Accuracy by Category &mdash; /100</span>
+        <span class="chart-note">dashed = 80 target</span>
+      </div>
+      <canvas id="catChart"></canvas>
+      <div class="cat-legend">
+        <div class="cat-item"><div class="cat-dot" style="background:var(--cat-functional)"></div>Functional (23q)</div>
+        <div class="cat-item"><div class="cat-dot" style="background:var(--cat-knowledge)"></div>Knowledge (15q)</div>
+        <div class="cat-item"><div class="cat-dot" style="background:var(--cat-aspirational)"></div>Aspirational (5q)</div>
+        <div class="cat-item"><div class="cat-dot" style="background:var(--cat-trust)"></div>Trustworthiness (2q)</div>
+        <div class="cat-item"><div class="cat-dot" style="background:var(--cat-safety)"></div>Safety/Ethics (1q)</div>
+      </div>
+    </div>
+
+    <div class="dist-panel">
+      <div class="chart-header">
+        <span class="chart-title">Answer Distribution</span>
+      </div>
+      <div class="dist-bars">
+        <div class="dist-row">
+          <div class="dist-label">Correct</div>
+          <div class="dist-track"><div class="dist-fill" style="width:6.7%;background:var(--ans-correct)"></div></div>
+          <div class="dist-pct" style="color:var(--ans-correct)">6.7%</div>
+          <div class="dist-count">3</div>
+        </div>
+        <div class="dist-row">
+          <div class="dist-label">Room for improvement</div>
+          <div class="dist-track"><div class="dist-fill" style="width:73.3%;background:var(--ans-improve)"></div></div>
+          <div class="dist-pct" style="color:var(--ans-improve)">73.3%</div>
+          <div class="dist-count">33</div>
+        </div>
+        <div class="dist-row">
+          <div class="dist-label">Needs Review</div>
+          <div class="dist-track"><div class="dist-fill" style="width:13.3%;background:var(--ans-review)"></div></div>
+          <div class="dist-pct" style="color:var(--ans-review)">13.3%</div>
+          <div class="dist-count">6</div>
+        </div>
+        <div class="dist-row">
+          <div class="dist-label">Incorrect</div>
+          <div class="dist-track"><div class="dist-fill" style="width:6.7%;background:var(--ans-incorrect)"></div></div>
+          <div class="dist-pct" style="color:var(--ans-incorrect)">6.7%</div>
+          <div class="dist-count">3</div>
+        </div>
+      </div>
+
+      <div style="margin-top:20px;padding-top:14px;border-top:1px solid var(--border)">
+        <div class="chart-title" style="margin-bottom:10px">Scores by Eval Type</div>
+        <canvas id="typeChart" height="110"></canvas>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Weakness patterns -->
+  <div class="chart-panel fade-up" style="--i:7">
+    <div class="chart-header">
+      <span class="chart-title">Weakness Patterns &mdash; avg accuracy of affected questions</span>
+      <span class="chart-note">lower = higher priority</span>
+    </div>
+    <div class="weakness-grid">
+
+      <div class="weakness-item">
+        <div class="weakness-pattern">Uncited factual assertions — contacts, numbers, dates</div>
+        <div class="weakness-meta">
+          <span class="weakness-score" style="color:var(--red)">62.1</span>
+          <div class="w-bar-track"><div class="w-bar-fill" style="width:62.1%;background:var(--red)"></div></div>
+          <span class="weakness-qs">11 questions</span>
+        </div>
+      </div>
+
+      <div class="weakness-item">
+        <div class="weakness-pattern">Policy vs inference — elaborating beyond documented facts</div>
+        <div class="weakness-meta">
+          <span class="weakness-score" style="color:var(--red)">64.9</span>
+          <div class="w-bar-track"><div class="w-bar-fill" style="width:64.9%;background:var(--red)"></div></div>
+          <span class="weakness-qs">7 questions</span>
+        </div>
+      </div>
+
+      <div class="weakness-item">
+        <div class="weakness-pattern">Incomplete multi-source citation — cites 1 of N required sources</div>
+        <div class="weakness-meta">
+          <span class="weakness-score" style="color:var(--orange)">65.2</span>
+          <div class="w-bar-track"><div class="w-bar-fill" style="width:65.2%;background:var(--orange)"></div></div>
+          <span class="weakness-qs">11 questions</span>
+        </div>
+      </div>
+
+      <div class="weakness-item">
+        <div class="weakness-pattern">Incomplete answers — omits key points from source material</div>
+        <div class="weakness-meta">
+          <span class="weakness-score" style="color:var(--orange)">66.8</span>
+          <div class="w-bar-track"><div class="w-bar-fill" style="width:66.8%;background:var(--orange)"></div></div>
+          <span class="weakness-qs">10 questions</span>
+        </div>
+      </div>
+
+      <div class="weakness-item">
+        <div class="weakness-pattern">Unverified specifics added — dollar amounts, program names</div>
+        <div class="weakness-meta">
+          <span class="weakness-score" style="color:var(--gold)">68.4</span>
+          <div class="w-bar-track"><div class="w-bar-fill" style="width:68.4%;background:var(--gold)"></div></div>
+          <span class="weakness-qs">21 questions</span>
+        </div>
+      </div>
+
+      <div class="weakness-item">
+        <div class="weakness-pattern">Country specificity not flagged — answers as if benefit is global</div>
+        <div class="weakness-meta">
+          <span class="weakness-score" style="color:var(--gold)">72.1</span>
+          <div class="w-bar-track"><div class="w-bar-fill" style="width:72.1%;background:var(--gold)"></div></div>
+          <span class="weakness-qs">8 questions</span>
+        </div>
+      </div>
+
+      <div class="weakness-item">
+        <div class="weakness-pattern">Vague citations — no URLs, no section references</div>
+        <div class="weakness-meta">
+          <span class="weakness-score" style="color:var(--gold)">70.3</span>
+          <div class="w-bar-track"><div class="w-bar-fill" style="width:70.3%;background:var(--gold)"></div></div>
+          <span class="weakness-qs">16 questions</span>
+        </div>
+      </div>
+
+      <div class="weakness-item">
+        <div class="weakness-pattern">Missing section-level citations — document only, no section path</div>
+        <div class="weakness-meta">
+          <span class="weakness-score" style="color:var(--text-med)">71.1</span>
+          <div class="w-bar-track"><div class="w-bar-fill" style="width:71.1%;background:var(--text-med)"></div></div>
+          <span class="weakness-qs">All 45 questions</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <p class="footnote fade-up" style="--i:8">
+    v1 baseline only &middot; scores reflect LLM-to-LLM comparison (judge vs synthesized perfect answers) &middot;
+    3 questions (Q6, Q18, Q19) flagged for perfect-answer validity review before v2 &middot;
+    Glean Agent Factory — Evaluation Mode
+  </p>
+
+</div>
+
+<script>
+  Chart.defaults.color = '#4F6E90';
+  Chart.defaults.font.family = "'JetBrains Mono', Consolas, monospace";
+  Chart.defaults.font.size = 11;
+  Chart.defaults.borderColor = 'rgba(255,255,255,0.05)';
+
+  /* ---- Category accuracy chart ---- */
+  const catCtx = document.getElementById('catChart').getContext('2d');
+
+  const catColors = [
+    { fill: 'rgba(74,158,255,0.65)',  border: '#4A9EFF'  },
+    { fill: 'rgba(155,109,255,0.65)', border: '#9B6DFF'  },
+    { fill: 'rgba(40,208,160,0.65)',  border: '#28D0A0'  },
+    { fill: 'rgba(245,200,66,0.65)',  border: '#F5C842'  },
+    { fill: 'rgba(255,139,66,0.65)',  border: '#FF8B42'  },
+  ];
+
+  new Chart(catCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Functional', 'Knowledge', 'Aspirational', 'Trustworthiness', 'Safety / Ethics'],
+      datasets: [
+        {
+          label: 'Avg Accuracy',
+          data: [70.2, 71.4, 72.9, 68.3, 73.8],
+          backgroundColor: catColors.map(c => c.fill),
+          borderColor:      catColors.map(c => c.border),
+          borderWidth: 1,
+          borderRadius: 4,
+          borderSkipped: false,
+        },
+        {
+          label: 'Target (80)',
+          data: [80, 80, 80, 80, 80],
+          type: 'line',
+          borderColor: 'rgba(40,208,160,0.45)',
+          borderWidth: 1.5,
+          borderDash: [5, 5],
+          pointRadius: 0,
+          pointHoverRadius: 0,
+          fill: false,
+          tension: 0,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      aspectRatio: 1.8,
+      animation: { duration: 900, easing: 'easeOutCubic' },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#0D1B2E',
+          borderColor: 'rgba(255,255,255,0.1)',
+          borderWidth: 1,
+          padding: 10,
+          callbacks: {
+            label: (ctx) => {
+              if (ctx.datasetIndex === 1) return '';
+              const qs = [23, 15, 5, 2, 1];
+              return '  ' + ctx.raw + ' / 100  (' + qs[ctx.dataIndex] + ' questions)';
+            },
+          },
+        },
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(255,255,255,0.04)' },
+          ticks: { color: '#4F6E90', font: { size: 10 }, maxRotation: 0 },
+          border: { color: 'rgba(255,255,255,0.06)' },
+        },
+        y: {
+          min: 50,
+          max: 100,
+          grid: { color: 'rgba(255,255,255,0.04)' },
+          ticks: { color: '#4F6E90', stepSize: 10, padding: 6 },
+          border: { color: 'transparent' },
+        },
+      },
+    },
+  });
+
+  /* ---- Accuracy vs Citation type chart ---- */
+  const typeCtx = document.getElementById('typeChart').getContext('2d');
+
+  new Chart(typeCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Accuracy', 'Citation Quality'],
+      datasets: [
+        {
+          data: [71.2, 70.6],
+          backgroundColor: ['rgba(74,158,255,0.65)', 'rgba(155,109,255,0.65)'],
+          borderColor:      ['#4A9EFF', '#9B6DFF'],
+          borderWidth: 1,
+          borderRadius: 4,
+          borderSkipped: false,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 900, easing: 'easeOutCubic' },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#0D1B2E',
+          borderColor: 'rgba(255,255,255,0.1)',
+          borderWidth: 1,
+          padding: 10,
+          callbacks: {
+            label: (ctx) => '  ' + ctx.raw + ' / 100',
+          },
+        },
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { color: '#4F6E90', font: { size: 11, weight: '600' } },
+          border: { color: 'rgba(255,255,255,0.06)' },
+        },
+        y: {
+          min: 50,
+          max: 100,
+          grid: { color: 'rgba(255,255,255,0.04)' },
+          ticks: { color: '#4F6E90', stepSize: 10, padding: 6 },
+          border: { color: 'transparent' },
+        },
+      },
+    },
+  });
+</script>
+</body>
+</html>

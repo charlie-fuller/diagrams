@@ -147,6 +147,17 @@
   .project--teal .diagram-list a { border-left-color: var(--teal-dim); }
   .project--teal .diagram-list a:hover { border-left-color: var(--teal); border-color: var(--teal); }
 
+  .subcat-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    padding: 10px 4px 4px;
+    list-style: none;
+  }
+
   @media (max-width: 600px) {
     body { padding: 20px; }
     h1 { font-size: 24px; }
@@ -176,6 +187,15 @@
       <li><a href="ga-ai/partnership-stage-gate.html">
         G&A AI Partnership - Stage-Gate
         <div class="desc">End-to-end operating model: four stages, three gates, with what happens in each stage and what must be true to pass each gate</div>
+      </a></li>
+      <li class="subcat-label">BCD Form Agent</li>
+      <li><a href="bcd/eval-lifecycle.html">
+        AI Agent Quality at Scale
+        <div class="desc">Build-Eval-Repair lifecycle: score progression from v1 (4.5) to v8 (8.2+), toolchain, rubric design, post-deploy monitoring, and the model for future deployments</div>
+      </a></li>
+      <li><a href="bcd/eval-progression.html">
+        Eval Score Progression
+        <div class="desc">6-run score history from v3 baseline (4.4) to v10 (9.3) — overall line chart, dimension breakdown, and per-version enhancement notes</div>
       </a></li>
     </ul>
   </div>
@@ -208,6 +228,11 @@
       <li><a href="hire-to-retire/jd-generator.html">
         JD Generator - Glean Agent Flow
         <div class="desc">11-step Glean agent: sequential document retrieval, Claude Sonnet generation, HITL approval, Google Doc output</div>
+      </a></li>
+      <li class="subcat-label">People Connect Agent</li>
+      <li><a href="people-connect/eval-baseline.html">
+        Eval Baseline
+        <div class="desc">v1 Q&amp;A accuracy baseline — 45 questions across 5 categories, accuracy 71.2, citation quality 70.6, weakness pattern analysis</div>
       </a></li>
     </ul>
   </div>
@@ -274,20 +299,6 @@
       <li><a href="agent-factory/decision-flow.html">
         Build Decision Flow
         <div class="desc">How the engine decides what to build: build class selection, path routing, pattern selection, hybrid modifiers, and anti-patterns - with drill-down detail at every decision point</div>
-      </a></li>
-    </ul>
-  </div>
-
-  <div class="project project--orange">
-    <div class="project-name">BCD Form Agent</div>
-    <ul class="diagram-list">
-      <li><a href="bcd/eval-lifecycle.html">
-        AI Agent Quality at Scale
-        <div class="desc">Build-Eval-Repair lifecycle: score progression from v1 (4.5) to v8 (8.2+), toolchain, rubric design, post-deploy monitoring, and the model for future deployments</div>
-      </a></li>
-      <li><a href="bcd/eval-progression.html">
-        Eval Score Progression
-        <div class="desc">6-run score history from v3 baseline (4.4) to v10 (9.3) — overall line chart, dimension breakdown, and per-version enhancement notes</div>
       </a></li>
     </ul>
   </div>
