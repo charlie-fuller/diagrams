@@ -154,9 +154,17 @@
     text-transform: uppercase;
     letter-spacing: 1.5px;
     color: var(--text-muted);
-    padding: 10px 4px 4px;
+    padding: 10px 4px 4px 18px;
     list-style: none;
   }
+
+  /* Match subcat-label color to section accent */
+  .project--teal   .subcat-label { color: var(--teal); }
+  .project--blue   .subcat-label { color: var(--blue); }
+  .project--green  .subcat-label { color: var(--green); }
+  .project--orange .subcat-label { color: var(--orange); }
+  .project--purple .subcat-label { color: var(--purple); }
+  .project--red    .subcat-label { color: var(--red); }
 
   @media (max-width: 600px) {
     body { padding: 20px; }
@@ -275,6 +283,11 @@
       <li><a href="deal-desk/infrastructure-path.html">
         Infrastructure Path
         <div class="desc">Three-phase deployment: local validation, temp demo, Contentful sandbox (G07)</div>
+      </a></li>
+      <li class="subcat-label">Deal Desk Agent</li>
+      <li><a href="deal-desk/eval-progression.html">
+        Eval Score Progression
+        <div class="desc">2-run accuracy baseline across 5 question categories — v4 to v5 trajectory, trustworthiness jump (+21.2), aspirational hardening</div>
       </a></li>
     </ul>
   </div>

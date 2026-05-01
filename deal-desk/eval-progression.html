@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deal Desk Agent — Eval Score Progression</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #07101E;
+  --surface: #0D1B2E;
+  --surface2: #122238;
+  --surface3: #182B46;
+  --border: rgba(255,255,255,0.06);
+  --border-bright: rgba(255,255,255,0.12);
+  --text: #E2EAF6;
+  --text-dim: #4F6E90;
+  --text-med: #8AA4BF;
+
+  --blue: #4A9EFF;
+  --blue-dim: rgba(74,158,255,0.12);
+  --gold: #F5C842;
+  --gold-dim: rgba(245,200,66,0.12);
+  --teal: #28D0A0;
+  --teal-dim: rgba(40,208,160,0.12);
+  --red: #FF5252;
+  --red-dim: rgba(255,82,82,0.12);
+  --orange: #FF8B42;
+  --orange-dim: rgba(255,139,66,0.12);
+  --purple: #9B6DFF;
+
+  --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 70% 40% at 60% 0%, rgba(255,139,66,0.05) 0%, transparent 70%),
+    radial-gradient(circle, rgba(255,255,255,0.012) 1px, transparent 1px);
+  background-size: auto, 28px 28px;
+  color: var(--text);
+  font-family: var(--font);
+  min-height: 100vh;
+  padding: 52px 44px;
+  overflow-wrap: break-word;
+}
+
+.wrap {
+  max-width: 1060px;
+  margin: 0 auto;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeScale {
+  from { opacity: 0; transform: scale(0.91); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.fade-up    { animation: fadeUp   0.5s ease-out both; animation-delay: calc(var(--i,0) * 0.09s); }
+.fade-scale { animation: fadeScale 0.4s ease-out both; animation-delay: calc(var(--i,0) * 0.08s); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===== HEADER ===== */
+.page-header { margin-bottom: 32px; }
+
+.project-tag {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--orange);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.project-tag::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 1.5px;
+  background: var(--orange);
+}
+
+h1 {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.7px;
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* ===== KPI ROW ===== */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.kpi {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+}
+.kpi--v4 {
+  border-color: rgba(245,200,66,0.22);
+  background: color-mix(in srgb, var(--surface) 90%, rgba(245,200,66,0.08) 10%);
+}
+.kpi--v5 {
+  border-color: rgba(74,158,255,0.25);
+  background: color-mix(in srgb, var(--surface) 90%, rgba(74,158,255,0.1) 10%);
+}
+.kpi--gain {
+  border-color: rgba(40,208,160,0.22);
+  background: color-mix(in srgb, var(--surface) 90%, rgba(40,208,160,0.08) 10%);
+}
+.kpi--new {
+  border-color: rgba(155,109,255,0.22);
+  background: color-mix(in srgb, var(--surface) 90%, rgba(155,109,255,0.08) 10%);
+}
+
+.kpi-value {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.kpi--v4 .kpi-value   { color: var(--gold); }
+.kpi--v5 .kpi-value   { color: var(--blue); }
+.kpi--gain .kpi-value { color: var(--teal); }
+.kpi--new .kpi-value  { color: var(--purple); }
+
+.kpi-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  margin-top: 7px;
+}
+.kpi-sub {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 3px;
+}
+
+/* ===== CHART PANEL ===== */
+.chart-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 26px 24px 20px;
+  margin-bottom: 10px;
+}
+
+.chart-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chart-title {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+}
+
+.aspir-note {
+  display: inline-block;
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--orange);
+  opacity: 0.85;
+}
+
+.legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-top: 2px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+}
+.leg-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.leg-line--dashed {
+  width: 18px;
+  height: 0;
+  border-top-width: 1.5px;
+  border-top-style: dashed;
+  flex-shrink: 0;
+}
+
+/* ===== VERSION CARDS ===== */
+.ver-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.ver-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 11px 13px;
+}
+.ver-card--build {
+  opacity: 0.72;
+}
+.ver-card--first-eval {
+  border-color: rgba(245,200,66,0.24);
+  background: color-mix(in srgb, var(--surface2) 85%, rgba(245,200,66,0.08) 15%);
+}
+.ver-card--current {
+  border-color: rgba(74,158,255,0.28);
+  background: color-mix(in srgb, var(--surface2) 85%, rgba(74,158,255,0.08) 15%);
+}
+
+.ver-phase {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 4px;
+  color: var(--text-dim);
+}
+.ver-card--first-eval .ver-phase { color: rgba(245,200,66,0.7); }
+.ver-card--current .ver-phase    { color: rgba(74,158,255,0.7); }
+
+.ver-label {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 3px;
+  color: var(--text-med);
+}
+.ver-card--first-eval .ver-label { color: var(--gold); }
+.ver-card--current .ver-label    { color: var(--blue); }
+
+.ver-score {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-bottom: 5px;
+}
+
+.ver-note {
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.45;
+}
+
+.ver-delta {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  margin-top: 6px;
+}
+.ver-delta--up   { color: var(--teal); }
+.ver-delta--base { color: var(--text-dim); }
+
+/* ===== FOOTNOTE ===== */
+.footnote {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  line-height: 1.6;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 860px) {
+  body { padding: 24px 18px; }
+  h1 { font-size: 24px; }
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
+  .ver-row  { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 480px) {
+  .ver-row { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="page-header fade-up" style="--i:0">
+    <div class="project-tag">deal-desk-agent</div>
+    <h1>Eval Score Progression</h1>
+    <p class="subtitle">Sales rep Q&amp;A accuracy &middot; 2 evaluation runs &middot; Glean Agent Factory - Evaluation Mode</p>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi kpi--v4 fade-scale" style="--i:1">
+      <div class="kpi-value">72.5</div>
+      <div class="kpi-label">First Eval (v4)</div>
+      <div class="kpi-sub">54 questions &middot; 4 categories</div>
+    </div>
+    <div class="kpi kpi--v5 fade-scale" style="--i:2">
+      <div class="kpi-value">71.5</div>
+      <div class="kpi-label">Latest Eval (v5)</div>
+      <div class="kpi-sub">58 questions &middot; 5 categories</div>
+    </div>
+    <div class="kpi kpi--gain fade-scale" style="--i:3">
+      <div class="kpi-value">+21.2</div>
+      <div class="kpi-label">Trustworthiness Gain</div>
+      <div class="kpi-sub">68 &rarr; 89.2 &middot; largest single jump</div>
+    </div>
+    <div class="kpi kpi--new fade-scale" style="--i:4">
+      <div class="kpi-value">65.4</div>
+      <div class="kpi-label">Safety &amp; Ethics (new)</div>
+      <div class="kpi-sub">Added in v5 &middot; 7 questions</div>
+    </div>
+  </div>
+
+  <div class="chart-panel fade-up" style="--i:5">
+    <div class="chart-header">
+      <div>
+        <div class="chart-title">Accuracy by Category &mdash; /100</div>
+        <div class="aspir-note">* aspirational questions revised to harder standard at v5 &mdash; score drop is by design, not regression</div>
+      </div>
+      <div class="legend">
+        <div class="legend-item">
+          <div class="leg-dot" style="background:rgba(245,200,66,0.8);"></div>
+          v4
+        </div>
+        <div class="legend-item">
+          <div class="leg-dot" style="background:rgba(74,158,255,0.85);"></div>
+          v5
+        </div>
+        <div class="legend-item">
+          <div class="leg-line--dashed" style="border-top-color:rgba(255,82,82,0.7);"></div>
+          80 target
+        </div>
+      </div>
+    </div>
+    <canvas id="catChart" height="300"></canvas>
+  </div>
+
+  <div class="ver-row">
+    <div class="ver-card ver-card--build fade-up" style="--i:6">
+      <div class="ver-phase">Build</div>
+      <div class="ver-label">v1</div>
+      <div class="ver-note">Basic agent &middot; 2 source docs &middot; no conflict detection</div>
+      <div class="ver-delta ver-delta--base">No eval data</div>
+    </div>
+    <div class="ver-card ver-card--build fade-up" style="--i:7">
+      <div class="ver-phase">Build</div>
+      <div class="ver-label">v2</div>
+      <div class="ver-note">KB expanded to 6 docs &middot; conflict detection added &middot; discount approval handling</div>
+      <div class="ver-delta ver-delta--base">No eval data</div>
+    </div>
+    <div class="ver-card ver-card--build fade-up" style="--i:8">
+      <div class="ver-phase">Build</div>
+      <div class="ver-label">v3</div>
+      <div class="ver-note">Company Details doc added &middot; structured entity load step</div>
+      <div class="ver-delta ver-delta--base">No eval data</div>
+    </div>
+    <div class="ver-card ver-card--first-eval fade-up" style="--i:9">
+      <div class="ver-phase">First Eval</div>
+      <div class="ver-label">v4</div>
+      <div class="ver-score">72.5 avg &middot; 54 questions</div>
+      <div class="ver-note">Image guardrails, NOT_IN_KB flag, conflict detection rewrite, social engineering resistance added</div>
+      <div class="ver-delta ver-delta--base">Baseline established</div>
+    </div>
+    <div class="ver-card ver-card--current fade-up" style="--i:10">
+      <div class="ver-phase">Latest</div>
+      <div class="ver-label">v5</div>
+      <div class="ver-score">71.5 avg &middot; 58 questions</div>
+      <div class="ver-note">Entity inference guardrail, SO workflow lead fixed, citation scorer rewrite, safety &amp; ethics category added</div>
+      <div class="ver-delta ver-delta--up">+21.2 trustworthiness</div>
+    </div>
+  </div>
+
+  <div class="footnote fade-up" style="--i:11">
+    Accuracy scored 0&ndash;100 by LLM judge vs. verified perfect answers &middot; Scores are category averages across all questions in that group &middot; Citation quality not shown: scorer rewritten at v5 and results not directly comparable across runs &middot; Aspirational questions were revised at v5 to test harder scenarios; the accuracy drop (76&rarr;48.9) reflects evaluation rigor increasing, not agent performance declining &middot; Evaluated via Glean Agent Factory - Evaluation Mode
+  </div>
+
+</div>
+<script>
+const targetLinePlugin = {
+  id: 'targetLine',
+  afterDraw(chart) {
+    const { ctx, chartArea: { left, right }, scales: { y } } = chart;
+    const yPx = y.getPixelForValue(80);
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255,82,82,0.6)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([5, 4]);
+    ctx.beginPath();
+    ctx.moveTo(left, yPx);
+    ctx.lineTo(right, yPx);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(255,82,82,0.65)';
+    ctx.font = "500 9px 'JetBrains Mono', monospace";
+    ctx.textAlign = 'right';
+    ctx.fillText('target 80', right - 4, yPx - 5);
+    ctx.restore();
+  }
+};
+
+const ctx = document.getElementById('catChart').getContext('2d');
+
+const labels = ['Functional', 'Knowledge', 'Aspirational *', 'Trustworthiness', 'Safety & Ethics'];
+const v4Data = [68, 78, 76, 68, null];
+const v5Data = [69.4, 84.6, 48.9, 89.2, 65.4];
+
+new Chart(ctx, {
+  type: 'bar',
+  plugins: [targetLinePlugin],
+  data: {
+    labels,
+    datasets: [
+      {
+        label: 'v4',
+        data: v4Data,
+        backgroundColor: 'rgba(245,200,66,0.78)',
+        borderColor: 'rgba(245,200,66,0.95)',
+        borderWidth: 1.5,
+        borderRadius: 4,
+        borderSkipped: false,
+      },
+      {
+        label: 'v5',
+        data: v5Data,
+        backgroundColor: 'rgba(74,158,255,0.8)',
+        borderColor: 'rgba(74,158,255,0.95)',
+        borderWidth: 1.5,
+        borderRadius: 4,
+        borderSkipped: false,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    layout: { padding: { right: 0 } },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#0D1B2E',
+        borderColor: 'rgba(255,255,255,0.08)',
+        borderWidth: 1,
+        titleColor: '#E2EAF6',
+        bodyColor: '#8AA4BF',
+        titleFont: { family: "'JetBrains Mono', monospace", size: 11 },
+        bodyFont: { family: "'JetBrains Mono', monospace", size: 11 },
+        padding: 12,
+        callbacks: {
+          label(item) {
+            if (item.raw === null) return `${item.dataset.label}: —`;
+            let s = `${item.dataset.label}: ${item.raw}`;
+            if (item.label.includes('Aspirational') && item.dataset.label === 'v5') {
+              s += '  (harder questions at v5)';
+            }
+            return s;
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: { color: 'rgba(255,255,255,0.04)' },
+        border: { color: 'rgba(255,255,255,0.06)' },
+        ticks: {
+          color: '#8AA4BF',
+          font: { family: "'JetBrains Mono', monospace", size: 10 }
+        }
+      },
+      y: {
+        min: 0,
+        max: 100,
+        grid: { color: 'rgba(255,255,255,0.05)' },
+        border: { color: 'rgba(255,255,255,0.06)' },
+        ticks: {
+          color: '#4F6E90',
+          font: { family: "'JetBrains Mono', monospace", size: 10 },
+          stepSize: 20
+        }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>
