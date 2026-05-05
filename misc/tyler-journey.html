@@ -9,41 +9,38 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #05080f;
-    --surface: #0c1120;
-    --surface2: #111827;
-    --border: rgba(255,255,255,0.06);
-    --border-bright: rgba(255,255,255,0.12);
-    --text: #e2e8f4;
-    --text-dim: #4b5a72;
-    --text-mid: #8899b0;
+    --bg: #06080f;
+    --surface: #0d1120;
+    --surface2: #131825;
+    --border: rgba(255,255,255,0.07);
+    --border-bright: rgba(255,255,255,0.14);
+    --text: #dde4f0;
+    --text-mid: #7a8ba8;
+    --text-dim: #3d4e66;
 
     --s1: #3b82f6;
-    --s1-dim: rgba(59,130,246,0.1);
     --s2: #6366f1;
-    --s2-dim: rgba(99,102,241,0.1);
     --s3: #8b5cf6;
-    --s3-dim: rgba(139,92,246,0.1);
     --s4: #a855f7;
-    --s4-dim: rgba(168,85,247,0.1);
     --s5: #d946ef;
-    --s5-dim: rgba(217,70,239,0.1);
-    --s6: #475569;
-    --s6-dim: rgba(71,85,105,0.08);
+    --s6: #4a5568;
     --end: #f59e0b;
-    --end-dim: rgba(245,158,11,0.12);
+
+    --line-w: 2px;
+    --dot-size: 36px;
+    --card-radius: 12px;
   }
 
   @media (prefers-color-scheme: light) {
     :root {
-      --bg: #f8fafc;
+      --bg: #f6f8fb;
       --surface: #ffffff;
-      --surface2: #f1f5f9;
-      --border: rgba(0,0,0,0.07);
-      --border-bright: rgba(0,0,0,0.14);
-      --text: #0f172a;
-      --text-dim: #94a3b8;
-      --text-mid: #64748b;
+      --surface2: #f0f4f9;
+      --border: rgba(0,0,0,0.08);
+      --border-bright: rgba(0,0,0,0.15);
+      --text: #0f1929;
+      --text-mid: #526070;
+      --text-dim: #a0aec0;
     }
   }
 
@@ -54,500 +51,509 @@
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
-    padding: 56px 40px 64px;
+    padding: 64px 24px 100px;
     background-image:
-      radial-gradient(ellipse 60% 40% at 70% 20%, rgba(139,92,246,0.06) 0%, transparent 60%),
-      radial-gradient(circle, rgba(255,255,255,0.025) 1px, transparent 1px);
-    background-size: auto, 28px 28px;
+      radial-gradient(ellipse 80% 30% at 50% 0%, rgba(99,102,241,0.06) 0%, transparent 60%);
   }
 
   /* ── Page header ── */
   .page-header {
     text-align: center;
-    margin-bottom: 56px;
+    max-width: 640px;
+    margin: 0 auto 72px;
     animation: fadeUp 0.5s ease both;
   }
 
-  .page-eyebrow {
+  .eyebrow {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--text-dim);
-    margin-bottom: 12px;
+    margin-bottom: 14px;
   }
 
   .page-header h1 {
-    font-size: 30px;
+    font-size: 34px;
     font-weight: 700;
-    letter-spacing: -0.025em;
-    line-height: 1.2;
-    color: var(--text);
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    margin-bottom: 14px;
   }
 
-  .page-header h1 em {
-    font-style: normal;
+  .page-header h1 .dest {
     color: var(--end);
   }
 
-  .page-subtitle {
-    margin-top: 10px;
-    font-size: 14px;
+  .page-header p {
+    font-size: 15px;
     color: var(--text-mid);
-    max-width: 560px;
-    margin-left: auto;
-    margin-right: auto;
-    line-height: 1.6;
+    line-height: 1.65;
   }
 
-  /* ── Diagram shell ── */
-  .diagram-wrap {
-    max-width: 1380px;
+  /* ── Timeline container ── */
+  .timeline {
+    max-width: 680px;
     margin: 0 auto;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .diagram {
     position: relative;
-    width: 1340px;
-    height: 760px;
+  }
+
+  /* Vertical line */
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: calc(var(--dot-size) / 2 - var(--line-w) / 2);
+    top: 18px;
+    bottom: 0;
+    width: var(--line-w);
+    background: linear-gradient(
+      to bottom,
+      var(--s1) 0%,
+      var(--s2) 16%,
+      var(--s3) 32%,
+      var(--s4) 48%,
+      var(--s5) 64%,
+      rgba(245,158,11,0.4) 85%,
+      var(--end) 100%
+    );
+    opacity: 0.45;
+    border-radius: 2px;
+  }
+
+  /* ── Stage row ── */
+  .stage-row {
+    display: grid;
+    grid-template-columns: var(--dot-size) 1fr;
+    gap: 0 20px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.5s ease both;
+    animation-delay: calc(var(--i, 0) * 0.1s);
+  }
+
+  .stage-row--optional {
+    opacity: 0.72;
+    padding-left: 20px;
+    grid-template-columns: var(--dot-size) 1fr;
+  }
+
+  /* ── Timeline dot ── */
+  .dot {
+    width: var(--dot-size);
+    height: var(--dot-size);
+    border-radius: 50%;
+    background: var(--stage-color, var(--s1));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(0,0,0,0.7);
     flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    margin-top: 18px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
   }
 
-  /* ── SVG connector layer ── */
-  .connector-svg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
+  .stage-row--optional .dot {
+    background: none;
+    border: 2px dashed var(--s6);
+    color: var(--s6);
+    font-size: 10px;
   }
 
-  /* ── Stage cards ── */
-  .stage {
-    position: absolute;
-    width: 172px;
-    padding: 15px 14px 13px;
+  /* ── Stage card ── */
+  .card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-left: 3px solid var(--stage-color, var(--s1));
-    border-radius: 10px;
-    animation: fadeUp 0.5s ease both;
-    animation-delay: calc(var(--i, 0) * 0.11s);
+    border-radius: var(--card-radius);
+    padding: 24px 26px 22px;
     transition: border-color 0.2s, box-shadow 0.2s;
   }
 
-  .stage:hover {
+  .card:hover {
     border-color: var(--border-bright);
-    box-shadow: 0 0 0 1px var(--stage-color, var(--s1)), 0 8px 32px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.2);
   }
 
-  .stage-num {
+  .stage-row--optional .card {
+    border-style: dashed;
+    border-left-style: dashed;
+    background: rgba(255,255,255,0.02);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .stage-label {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--stage-color, var(--s1));
-    margin-bottom: 7px;
-    opacity: 0.9;
+    flex-shrink: 0;
   }
 
-  .stage-title {
-    font-size: 13.5px;
-    font-weight: 600;
-    line-height: 1.3;
-    margin-bottom: 8px;
+  .card-title {
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
     color: var(--text);
   }
 
-  .stage-desc {
-    font-size: 11px;
+  .card-value {
+    font-size: 13.5px;
     color: var(--text-mid);
-    line-height: 1.55;
-    margin-bottom: 11px;
+    line-height: 1.65;
+    margin-bottom: 16px;
+    border-left: 2px solid rgba(255,255,255,0.06);
+    padding-left: 12px;
   }
 
-  .stage-tags {
+  .card-value strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .card-abilities {
+    list-style: none;
+    margin-bottom: 16px;
+  }
+
+  .card-abilities li {
+    font-size: 13px;
+    color: var(--text-mid);
+    padding: 4px 0 4px 16px;
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .card-abilities li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 11px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--stage-color, var(--s1));
+    opacity: 0.6;
+  }
+
+  .card-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 4px;
+    gap: 6px;
   }
 
   .tag {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 9.5px;
-    padding: 2px 7px;
+    font-size: 10px;
+    padding: 3px 9px;
     background: rgba(255,255,255,0.04);
     border: 1px solid var(--border);
-    border-radius: 4px;
+    border-radius: 5px;
     color: var(--text-dim);
   }
 
-  /* Optional stage */
-  .stage--optional {
-    border-style: dashed;
-    border-left-style: dashed;
-    background: var(--s6-dim);
-    opacity: 0.7;
-  }
-
-  .stage--optional .stage-num::after {
-    content: ' · optional';
-    opacity: 0.7;
-  }
-
-  .stage--optional:hover {
-    opacity: 0.9;
-  }
-
-  /* End state */
-  .stage--end {
-    width: 200px;
-    background: linear-gradient(150deg, var(--end-dim), rgba(245,158,11,0.04));
-    border-color: rgba(245,158,11,0.25);
-    border-left-color: var(--end);
-    border-left-width: 3px;
-    border-radius: 12px;
-    padding: 18px 16px 16px;
-    box-shadow: 0 0 40px rgba(245,158,11,0.07), 0 2px 16px rgba(0,0,0,0.2);
-  }
-
-  .stage--end:hover {
-    border-color: rgba(245,158,11,0.4);
-    box-shadow: 0 0 0 1px rgba(245,158,11,0.3), 0 0 40px rgba(245,158,11,0.12), 0 8px 32px rgba(0,0,0,0.3);
-  }
-
-  .stage--end .stage-num {
-    color: var(--end);
-  }
-
-  .stage--end .stage-title {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--end);
-  }
-
-  .stage--end .stage-desc {
-    font-size: 11.5px;
+  .tag--accent {
+    border-color: rgba(255,255,255,0.1);
     color: var(--text-mid);
+  }
+
+  /* ── Optional label ── */
+  .optional-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border: 1px dashed var(--s6);
+    border-radius: 20px;
+    color: var(--s6);
+    align-self: center;
+  }
+
+  /* ── End state card ── */
+  .end-row {
+    display: grid;
+    grid-template-columns: var(--dot-size) 1fr;
+    gap: 0 20px;
+    animation: fadeUp 0.5s 0.75s ease both;
+  }
+
+  .end-dot {
+    width: var(--dot-size);
+    height: var(--dot-size);
+    border-radius: 50%;
+    background: var(--end);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    margin-top: 24px;
+    box-shadow: 0 0 0 6px rgba(245,158,11,0.12), 0 0 32px rgba(245,158,11,0.2);
+  }
+
+  .end-dot svg {
+    width: 16px;
+    height: 16px;
+    fill: rgba(0,0,0,0.7);
+  }
+
+  .end-card {
+    background: linear-gradient(145deg, rgba(245,158,11,0.1), rgba(245,158,11,0.04));
+    border: 1px solid rgba(245,158,11,0.25);
+    border-left: 3px solid var(--end);
+    border-radius: var(--card-radius);
+    padding: 28px 28px 26px;
+    box-shadow: 0 0 48px rgba(245,158,11,0.07);
+    transition: box-shadow 0.2s;
+  }
+
+  .end-card:hover {
+    box-shadow: 0 0 48px rgba(245,158,11,0.12);
+  }
+
+  .end-card .stage-label {
+    color: var(--end);
+    opacity: 0.7;
+  }
+
+  .end-card .card-title {
+    font-size: 24px;
+    color: var(--end);
+    margin-bottom: 12px;
+  }
+
+  .end-card .card-value {
+    border-left-color: rgba(245,158,11,0.2);
+    font-size: 14px;
     margin-bottom: 0;
   }
 
-  /* ── Ratio bar ── */
-  .ratio-section {
-    max-width: 1340px;
-    margin: 32px auto 0;
-    padding: 0 4px;
-    animation: fadeUp 0.5s 0.7s ease both;
-  }
-
-  .ratio-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-  }
-
-  .ratio-label {
+  /* ── Manifesto footer ── */
+  .manifesto-line {
+    max-width: 680px;
+    margin: 56px auto 0;
+    padding: 20px 0 0;
+    border-top: 1px solid var(--border);
+    text-align: center;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: var(--text-dim);
-    letter-spacing: 0.05em;
-  }
-
-  .ratio-label strong {
-    color: var(--text-mid);
-    font-weight: 500;
-  }
-
-  .ratio-track {
-    height: 6px;
-    border-radius: 3px;
-    background: linear-gradient(
-      to right,
-      rgba(59,130,246,0.7) 0%,
-      rgba(99,102,241,0.7) 20%,
-      rgba(139,92,246,0.7) 40%,
-      rgba(217,70,239,0.7) 65%,
-      rgba(245,158,11,0.9) 100%
-    );
-    margin-bottom: 8px;
-  }
-
-  .ratio-footer {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .ratio-items {
-    font-size: 10.5px;
-    color: var(--text-dim);
-    line-height: 1.6;
-  }
-
-  .ratio-items span {
-    display: block;
-  }
-
-  /* ── Legend ── */
-  .legend {
-    max-width: 1340px;
-    margin: 28px auto 0;
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    padding: 0 4px;
-    animation: fadeUp 0.5s 0.8s ease both;
-  }
-
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 7px;
     font-size: 11px;
     color: var(--text-dim);
-  }
-
-  .legend-line {
-    width: 28px;
-    height: 2px;
-    border-radius: 1px;
-  }
-
-  .legend-line--solid {
-    background: linear-gradient(to right, var(--s1), var(--end));
-  }
-
-  .legend-line--dotted {
-    background: none;
-    border-top: 2px dashed var(--s6);
-  }
-
-  .legend-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--end);
+    letter-spacing: 0.04em;
+    line-height: 1.7;
+    animation: fadeUp 0.5s 0.9s ease both;
   }
 
   /* ── Animations ── */
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(14px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .stage, .page-header, .ratio-section, .legend { animation: none; }
+    * { animation: none !important; }
   }
 </style>
 </head>
 <body>
 
 <header class="page-header">
-  <div class="page-eyebrow">Tyler's Onboarding Journey</div>
-  <h1>Knowledge Worker &rarr; <em>AI Solutions Architect</em></h1>
-  <p class="page-subtitle">Each stage removes cognitive overhead from synthesis — freeing judgment for the work that only a human can do.</p>
+  <div class="eyebrow">Tyler's Onboarding Journey</div>
+  <h1>Knowledge Worker<br>to <span class="dest">AI Solutions Architect</span></h1>
+  <p>Each stage removes cognitive overhead from synthesis — freeing judgment for the work that only a human can do. Scroll down to see the full arc.</p>
 </header>
 
-<div class="diagram-wrap">
-  <div class="diagram">
+<div class="timeline">
 
-    <!-- SVG: connectors, dots, decorative elements -->
-    <svg class="connector-svg" viewBox="0 0 1340 760" preserveAspectRatio="xMidYMid meet">
-      <defs>
-        <!-- Main path gradient -->
-        <linearGradient id="mainGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%"   stop-color="#3b82f6" stop-opacity="0.6"/>
-          <stop offset="30%"  stop-color="#8b5cf6" stop-opacity="0.6"/>
-          <stop offset="70%"  stop-color="#d946ef" stop-opacity="0.6"/>
-          <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.8"/>
-        </linearGradient>
-
-        <!-- Glow filter for end state -->
-        <filter id="endGlow" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
-          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-
-        <!-- Subtle glow for path -->
-        <filter id="pathGlow" x="-5%" y="-20%" width="110%" height="140%">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
-          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-      </defs>
-
-      <!-- Main connector path (glow layer) -->
-      <polyline
-        points="106,646 294,526 482,410 670,294 858,180 1130,155"
-        stroke="url(#mainGrad)"
-        stroke-width="4"
-        fill="none"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        opacity="0.25"
-        filter="url(#pathGlow)"
-      />
-
-      <!-- Main connector path (solid) -->
-      <polyline
-        points="106,646 294,526 482,410 670,294 858,180 1130,155"
-        stroke="url(#mainGrad)"
-        stroke-width="1.5"
-        fill="none"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        opacity="0.9"
-      />
-
-      <!-- Dotted branch: S5 to S6 (optional) -->
-      <line
-        x1="858" y1="155"
-        x2="940" y2="80"
-        stroke="#475569"
-        stroke-width="1.5"
-        stroke-dasharray="5,4"
-        stroke-linecap="round"
-        opacity="0.7"
-      />
-
-      <!-- Stage dots (main path) -->
-      <circle cx="106" cy="646" r="4.5" fill="#3b82f6" opacity="0.9"/>
-      <circle cx="294" cy="526" r="4.5" fill="#6366f1" opacity="0.9"/>
-      <circle cx="482" cy="410" r="4.5" fill="#8b5cf6" opacity="0.9"/>
-      <circle cx="670" cy="294" r="4.5" fill="#a855f7" opacity="0.9"/>
-      <circle cx="858" cy="180" r="4.5" fill="#d946ef" opacity="0.9"/>
-
-      <!-- Optional stage dot -->
-      <circle cx="940" cy="80" r="3.5" fill="#475569" opacity="0.6"/>
-
-      <!-- End state dot + glow -->
-      <circle cx="1130" cy="155" r="7" fill="#f59e0b" opacity="0.2" filter="url(#endGlow)"/>
-      <circle cx="1130" cy="155" r="5" fill="#f59e0b" opacity="0.9"/>
-
-      <!-- Stage number labels on path -->
-      <text x="106" y="670" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#3b82f6" opacity="0.5">01</text>
-      <text x="294" y="550" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#6366f1" opacity="0.5">02</text>
-      <text x="482" y="434" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#8b5cf6" opacity="0.5">03</text>
-      <text x="670" y="318" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#a855f7" opacity="0.5">04</text>
-      <text x="858" y="204" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#d946ef" opacity="0.5">05</text>
-    </svg>
-
-    <!-- Stage 1 -->
-    <div class="stage" style="--stage-color:var(--s1); --i:0; left:20px; top:568px;">
-      <div class="stage-num">Stage 1</div>
-      <div class="stage-title">Your Brain,<br>Externalized</div>
-      <div class="stage-desc">One place for your work. One interface that reads all of it.</div>
-      <div class="stage-tags">
-        <span class="tag">Vault</span>
-        <span class="tag">CLAUDE.md</span>
-        <span class="tag">CLI</span>
+  <!-- Stage 1 -->
+  <div class="stage-row" style="--stage-color:var(--s1); --i:0;">
+    <div class="dot">01</div>
+    <div class="card">
+      <div class="card-header">
+        <div class="stage-label">Stage 1</div>
+        <div class="card-title">Your Brain, Externalized</div>
+      </div>
+      <p class="card-value">Right now context lives in your head, scattered across Slack threads, and in meeting notes you'll never see again. <strong>This gives you one place where your work lives and one interface that reads all of it</strong> — so you stop spending mental energy on retrieval and start spending it on judgment.</p>
+      <ul class="card-abilities">
+        <li>Ask Claude what's open, what was decided, what needs to happen — against your actual work</li>
+        <li>Turn a raw transcript into a structured meeting note in seconds</li>
+        <li>Draft Slack messages, prep for meetings, surface forgotten context — from one place</li>
+        <li>Have a system that travels with you regardless of employer or machine</li>
+      </ul>
+      <div class="card-tags">
+        <span class="tag tag--accent">Vault folder</span>
+        <span class="tag tag--accent">CLAUDE.md</span>
+        <span class="tag tag--accent">Claude Code CLI</span>
+        <span class="tag">Obsidian (optional)</span>
       </div>
     </div>
+  </div>
 
-    <!-- Stage 2 -->
-    <div class="stage" style="--stage-color:var(--s2); --i:1; left:208px; top:448px;">
-      <div class="stage-num">Stage 2</div>
-      <div class="stage-title">Your Tools<br>Come to You</div>
-      <div class="stage-desc">Stop switching apps. Jira and Glean, one conversation.</div>
-      <div class="stage-tags">
-        <span class="tag">Jira MCP</span>
-        <span class="tag">Glean MCP</span>
+  <!-- Stage 2 -->
+  <div class="stage-row" style="--stage-color:var(--s2); --i:1;">
+    <div class="dot">02</div>
+    <div class="card">
+      <div class="card-header">
+        <div class="stage-label">Stage 2</div>
+        <div class="card-title">Your Tools Come to You</div>
+      </div>
+      <p class="card-value">Every tool switch is a tax on thinking. You open Jira, lose your place, switch to Glean, lose your thread. <strong>After Stage 2, Jira and Glean come to you</strong> — one conversation pulls tickets, searches agents, creates actions, and cross-references your notes. The synthesis is handled. What's left is the call.</p>
+      <ul class="card-abilities">
+        <li>Pull your Jira board and surface what's actually due — without opening Jira</li>
+        <li>Create and update tickets from a conversation</li>
+        <li>Search Glean, review agent inventory, cross-reference against your notes</li>
+        <li>Get a pre-meeting brief that combines notes, tickets, and Glean content in one ask</li>
+      </ul>
+      <div class="card-tags">
+        <span class="tag tag--accent">Jira MCP</span>
+        <span class="tag tag--accent">Glean MCP</span>
       </div>
     </div>
+  </div>
 
-    <!-- Stage 3 -->
-    <div class="stage" style="--stage-color:var(--s3); --i:2; left:396px; top:332px;">
-      <div class="stage-num">Stage 3</div>
-      <div class="stage-title">GitHub<br>+ Memory</div>
-      <div class="stage-desc">Your decisions stick. Your setup travels with you.</div>
-      <div class="stage-tags">
-        <span class="tag">GitHub</span>
-        <span class="tag">claude-mem</span>
-        <span class="tag">API key</span>
+  <!-- Stage 3 -->
+  <div class="stage-row" style="--stage-color:var(--s3); --i:2;">
+    <div class="dot">03</div>
+    <div class="card">
+      <div class="card-header">
+        <div class="stage-label">Stage 3</div>
+        <div class="card-title">GitHub + Memory — Your Work Has a Permanent Home</div>
+      </div>
+      <p class="card-value">Your setup exists on one machine and Claude forgets everything between sessions. <strong>Memory and GitHub solve this together</strong> — decisions stick, context carries over, and your entire system is backed up to the internet and cloneable anywhere. You do all of it in plain language inside the CLI. You never touch the GitHub website.</p>
+      <ul class="card-abilities">
+        <li>Push your vault to GitHub from inside Claude Code — no browser needed</li>
+        <li>Have Claude carry decisions and preferences from one session to the next</li>
+        <li>Set up your own config repo (modeled on Charlie's clode) as personal infrastructure</li>
+        <li>Get your Anthropic API key — needed here and for the meeting enrichment in Stage 4</li>
+      </ul>
+      <div class="card-tags">
+        <span class="tag tag--accent">GitHub</span>
+        <span class="tag tag--accent">claude-mem</span>
+        <span class="tag tag--accent">Anthropic API key</span>
+        <span class="tag">clode repo</span>
+      </div>
+      <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border);">
+        <div class="stage-label" style="margin-bottom:8px; opacity:0.7;">Optional — if you want to build something</div>
+        <p style="font-size:12.5px; color:var(--text-mid); line-height:1.6; margin-bottom:10px;">Set up personal accounts now so they're there when the idea arrives. Free tiers cover everything you need to start. This is Charlie's personal stack.</p>
+        <div class="card-tags">
+          <span class="tag tag--accent">Vercel</span>
+          <span class="tag tag--accent">Supabase</span>
+          <span class="tag tag--accent">Railway</span>
+        </div>
+        <p style="font-size:11px; color:var(--text-dim); margin-top:8px; line-height:1.5;">Vercel = deploy front-end apps &nbsp;·&nbsp; Supabase = managed database &nbsp;·&nbsp; Railway = back-end services</p>
       </div>
     </div>
+  </div>
 
-    <!-- Stage 4 -->
-    <div class="stage" style="--stage-color:var(--s4); --i:3; left:584px; top:216px;">
-      <div class="stage-num">Stage 4</div>
-      <div class="stage-title">Meetings Enrich<br>Themselves</div>
-      <div class="stage-desc">Every meeting becomes structured intelligence. Automatically.</div>
-      <div class="stage-tags">
-        <span class="tag">Granola</span>
-        <span class="tag">Enricher</span>
+  <!-- Stage 4 -->
+  <div class="stage-row" style="--stage-color:var(--s4); --i:3;">
+    <div class="dot">04</div>
+    <div class="card">
+      <div class="card-header">
+        <div class="stage-label">Stage 4</div>
+        <div class="card-title">Meetings Enrich Themselves</div>
+      </div>
+      <p class="card-value">Meetings are where most knowledge work happens and where most of it gets lost. <strong>After Stage 4, every meeting you record becomes a structured intelligence document automatically</strong> — decisions, actions, signals, and connections to everything else you're working on. The meeting note in your vault isn't a transcript. It's an analysis. This is where the system starts compounding.</p>
+      <ul class="card-abilities">
+        <li>Record a meeting; a fully enriched note appears in your vault within minutes</li>
+        <li>See automatically how a meeting connects to other things in your portfolio</li>
+        <li>Ask "what did we decide about X this month" and get a real answer</li>
+        <li>Never write a meeting note by hand again</li>
+      </ul>
+      <div class="card-tags">
+        <span class="tag tag--accent">Granola</span>
+        <span class="tag tag--accent">Granola Sync</span>
+        <span class="tag tag--accent">Auto-enrichment pipeline</span>
+        <span class="tag">Charlie sets up the technical parts</span>
       </div>
     </div>
+  </div>
 
-    <!-- Stage 5 -->
-    <div class="stage" style="--stage-color:var(--s5); --i:4; left:772px; top:102px;">
-      <div class="stage-num">Stage 5</div>
-      <div class="stage-title">Repeatable<br>Workflows</div>
-      <div class="stage-desc">Process overhead goes to zero. Slash commands for everything.</div>
-      <div class="stage-tags">
-        <span class="tag">Commands</span>
-        <span class="tag">clode</span>
+  <!-- Stage 5 -->
+  <div class="stage-row" style="--stage-color:var(--s5); --i:4;">
+    <div class="dot">05</div>
+    <div class="card">
+      <div class="card-header">
+        <div class="stage-label">Stage 5</div>
+        <div class="card-title">Repeatable Workflows</div>
+      </div>
+      <p class="card-value">You've been doing things manually that could be one prompt. <strong>Slash commands turn your most common workflows into single words</strong> — standup, meeting brief, action item extraction, daily focus. And your entire setup is now in a GitHub repo you own, cloneable on any machine in minutes. You stop rebuilding. You continue.</p>
+      <ul class="card-abilities">
+        <li>Run /today for your Jira agenda + open notes in one shot</li>
+        <li>Run /meeting [person] for a pre-meeting brief in seconds</li>
+        <li>Run /process-meeting to extract actions and push them to Jira</li>
+        <li>Clone your setup on a new machine — everything back in minutes</li>
+        <li>Start building your own commands for workflows unique to your job</li>
+      </ul>
+      <div class="card-tags">
+        <span class="tag tag--accent">/today</span>
+        <span class="tag tag--accent">/meeting</span>
+        <span class="tag tag--accent">/jira-standup</span>
+        <span class="tag tag--accent">/process-meeting</span>
+        <span class="tag tag--accent">/think</span>
+        <span class="tag tag--accent">/glean-agent</span>
+        <span class="tag">clode config repo</span>
       </div>
     </div>
+  </div>
 
-    <!-- Stage 6 — optional -->
-    <div class="stage stage--optional" style="--stage-color:var(--s6); --i:5; left:852px; top:20px;">
-      <div class="stage-num">Stage 6</div>
-      <div class="stage-title">Platform<br>Visibility</div>
-      <div class="stage-desc">Agent scoring. KB audit. Strategic alignment at scale.</div>
-      <div class="stage-tags">
-        <span class="tag">KB Audit</span>
-        <span class="tag">Eval</span>
-        <span class="tag">Scoring</span>
+  <!-- Stage 6 — optional -->
+  <div class="stage-row stage-row--optional" style="--stage-color:var(--s6); --i:5;">
+    <div class="dot">06</div>
+    <div class="card">
+      <div class="card-header">
+        <div class="stage-label">Stage 6</div>
+        <div class="card-title">Platform Visibility</div>
+        <span class="optional-badge">optional</span>
+      </div>
+      <p class="card-value">700+ Glean agents in the library. Tyler knows maybe 100 of them. <strong>This stage connects Claude Code to the agent inventory</strong> — scoring against strategic objectives, auditing knowledge bases, surfacing what's valuable and what's withering. Not gatekeeping. Visibility. The call on what matters is still yours.</p>
+      <ul class="card-abilities">
+        <li>Run the KB audit tool against any agent's knowledge base</li>
+        <li>Score agents against strategic objectives and surface alignment gaps</li>
+        <li>Identify high-value agents that are underused or at risk of dying</li>
+        <li>Give teams meaningful signal on what to invest in and what to let go</li>
+      </ul>
+      <div class="card-tags">
+        <span class="tag">KB Audit tool</span>
+        <span class="tag">Eval pipeline</span>
+        <span class="tag">Strategic scoring</span>
+        <span class="tag">Glean agent inventory</span>
       </div>
     </div>
-
-    <!-- End State -->
-    <div class="stage stage--end" style="--i:6; left:1030px; top:68px;">
-      <div class="stage-num">End State</div>
-      <div class="stage-title">AI Solutions<br>Architect</div>
-      <div class="stage-desc">Bridge between technical capacity and business outcome. Judgment at scale. Human work reserved for human thinking.</div>
-    </div>
-
-  </div><!-- /.diagram -->
-</div><!-- /.diagram-wrap -->
-
-<!-- Ratio bar -->
-<div class="ratio-section">
-  <div class="ratio-header">
-    <div class="ratio-label"><strong>AI handles &rarr;</strong></div>
-    <div class="ratio-label"><strong>&rarr; You do</strong></div>
   </div>
-  <div class="ratio-track"></div>
-  <div class="ratio-footer">
-    <div class="ratio-items">
-      <span>retrieval &middot; synthesis &middot; formatting</span>
-      <span>cross-referencing &middot; context &middot; drafting</span>
+
+  <!-- End State -->
+  <div class="end-row">
+    <div class="end-dot">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+      </svg>
     </div>
-    <div class="ratio-items" style="text-align:right;">
-      <span>framing &middot; judgment &middot; empathy</span>
-      <span>sense-making &middot; decision &middot; direction</span>
+    <div class="end-card">
+      <div class="stage-label" style="margin-bottom:8px;">End State</div>
+      <div class="card-title">AI Solutions Architect</div>
+      <p class="card-value">The bridge between technical capacity and business outcome. Claude handles the synthesis — pulling context, cross-referencing, formatting, connecting the dots. You do the work that requires a human: framing the right problem, making the call when data doesn't decide, modeling how people will experience what you're building, tracing second-order effects before you act, knowing what the signal means. Judgment at scale. That's the role. That's the destination.</p>
     </div>
   </div>
-</div>
 
-<!-- Legend -->
-<div class="legend">
-  <div class="legend-item">
-    <div class="legend-line legend-line--solid"></div>
-    <span>main path</span>
-  </div>
-  <div class="legend-item">
-    <div class="legend-line legend-line--dotted"></div>
-    <span>optional stage</span>
-  </div>
-  <div class="legend-item">
-    <div class="legend-dot"></div>
-    <span>destination</span>
-  </div>
-  <div class="legend-item" style="margin-left:auto;">
-    <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-dim);">synthesis is the cost of entry — thinking is the value creation</span>
-  </div>
-</div>
+</div><!-- /.timeline -->
+
+<p class="manifesto-line">
+  "synthesis is the cost of entry — thinking is the value creation"<br>
+  <span style="opacity:0.5; font-size:9px;">The Thesis Manifesto</span>
+</p>
 
 </body>
 </html>
