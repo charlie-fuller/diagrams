@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Factory - Help System Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+    --bg: #f5f7fa;
+    --surface: #ffffff;
+    --surface2: #eef1f6;
+    --border: rgba(0, 0, 0, 0.08);
+    --border-bright: rgba(0, 0, 0, 0.16);
+    --text: #1e293b;
+    --text-dim: #64748b;
+    --text-muted: #94a3b8;
+
+    --c-blue: #0369a1;
+    --c-blue-dim: rgba(3, 105, 161, 0.07);
+    --c-teal: #0f766e;
+    --c-teal-dim: rgba(15, 118, 110, 0.07);
+    --c-purple: #6d28d9;
+    --c-purple-dim: rgba(109, 40, 217, 0.07);
+    --c-green: #166534;
+    --c-green-dim: rgba(22, 101, 52, 0.07);
+    --c-amber: #b45309;
+    --c-amber-dim: rgba(180, 83, 9, 0.09);
+    --c-red: #b91c1c;
+    --c-red-dim: rgba(185, 28, 28, 0.07);
+    --c-slate: #475569;
+    --c-slate-dim: rgba(71, 85, 105, 0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface2: #283548;
+      --border: rgba(255, 255, 255, 0.07);
+      --border-bright: rgba(255, 255, 255, 0.14);
+      --text: #e2e8f0;
+      --text-dim: #94a3b8;
+      --text-muted: #64748b;
+
+      --c-blue: #38bdf8;
+      --c-blue-dim: rgba(56, 189, 248, 0.10);
+      --c-teal: #2dd4bf;
+      --c-teal-dim: rgba(45, 212, 191, 0.10);
+      --c-purple: #a78bfa;
+      --c-purple-dim: rgba(167, 139, 250, 0.12);
+      --c-green: #4ade80;
+      --c-green-dim: rgba(74, 222, 128, 0.10);
+      --c-amber: #fbbf24;
+      --c-amber-dim: rgba(251, 191, 36, 0.12);
+      --c-red: #f87171;
+      --c-red-dim: rgba(248, 113, 113, 0.10);
+      --c-slate: #94a3b8;
+      --c-slate-dim: rgba(148, 163, 184, 0.08);
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    padding: 40px 24px 80px;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; }
+  .back { margin-bottom: 28px; }
+  .back a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  .back a:hover { color: var(--text); }
+  .hdr { margin-bottom: 40px; }
+  .hdr h1 {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+  .hdr-sub {
+    color: var(--text-dim);
+    font-size: 14px;
+    line-height: 1.5;
+    max-width: 600px;
+  }
+
+  .section { margin-bottom: 36px; }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  /* Flow diagram */
+  .flow {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .flow-row {
+    display: grid;
+    grid-template-columns: 1fr 28px 1fr 28px 1fr;
+    align-items: stretch;
+    border-bottom: 1px solid var(--border);
+  }
+  .flow-row:last-child { border-bottom: none; }
+  .flow-cell {
+    padding: 16px 18px;
+  }
+  .flow-arrow-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .flow-arrow-cell svg { width: 14px; height: 14px; }
+  .flow-cell-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .flow-cell-title {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+  .flow-cell-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+  .cell-user .flow-cell-label { color: var(--c-blue); }
+  .cell-user .flow-cell-title { color: var(--c-blue); }
+  .cell-engine .flow-cell-label { color: var(--c-teal); }
+  .cell-engine .flow-cell-title { color: var(--c-teal); }
+  .cell-model .flow-cell-label { color: var(--c-purple); }
+  .cell-model .flow-cell-title { color: var(--c-purple); }
+
+  /* Architecture decision box */
+  .decision-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .decision-header {
+    background: var(--c-teal-dim);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .decision-header-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--c-teal);
+  }
+  .vs-badge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--c-amber-dim);
+    color: var(--c-amber);
+    border: 1px solid rgba(180,83,9,0.15);
+  }
+  .decision-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .decision-col {
+    padding: 18px 20px;
+  }
+  .decision-col:first-child {
+    border-right: 1px solid var(--border);
+  }
+  .decision-col-name {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .decision-col.chosen .decision-col-name { color: var(--c-teal); }
+  .decision-col.rejected .decision-col-name { color: var(--text-muted); }
+  .decision-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .decision-list li {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.5;
+    padding-left: 14px;
+    position: relative;
+  }
+  .decision-list li::before {
+    position: absolute;
+    left: 0;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .chosen .decision-list li::before { content: '+'; color: var(--c-green); }
+  .rejected .decision-list li::before { content: '-'; color: var(--c-red); }
+
+  /* Caching diagram */
+  .cache-diagram {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .cache-row {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .cache-row:last-child { border-bottom: none; }
+  .cache-pill {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    min-width: 80px;
+    text-align: center;
+  }
+  .pill-system { background: var(--c-purple-dim); color: var(--c-purple); }
+  .pill-cached { background: var(--c-green-dim); color: var(--c-green); }
+  .pill-user { background: var(--c-blue-dim); color: var(--c-blue); }
+  .pill-history { background: var(--c-slate-dim); color: var(--c-slate); border: 1px solid var(--border-bright); }
+  .cache-label {
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+    width: 160px;
+  }
+  .cache-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.4;
+  }
+  .cache-cost {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    margin-left: auto;
+    padding: 2px 8px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .cost-once { background: var(--c-amber-dim); color: var(--c-amber); }
+  .cost-free { background: var(--c-green-dim); color: var(--c-green); }
+  .cost-small { background: var(--c-blue-dim); color: var(--c-blue); }
+
+  /* Fabrication rules */
+  .rules-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .rule-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    border-left: 3px solid var(--c-red);
+  }
+  .rule-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--c-red);
+    margin-bottom: 4px;
+  }
+  .rule-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  /* Eval loop */
+  .eval-loop {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .eval-steps {
+    display: flex;
+    gap: 0;
+    align-items: stretch;
+  }
+  .eval-step {
+    flex: 1;
+    padding: 14px 16px;
+    background: var(--surface2);
+    border-radius: 8px;
+    position: relative;
+  }
+  .eval-step-num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--c-purple);
+    margin-bottom: 4px;
+  }
+  .eval-step-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+  .eval-step-desc {
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+  .eval-arrow {
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    color: var(--text-muted);
+  }
+  .eval-arrow svg { width: 14px; height: 14px; flex-shrink: 0; }
+  .eval-note {
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.55;
+    padding: 10px 14px;
+    background: var(--c-purple-dim);
+    border-radius: 8px;
+    border: 1px solid rgba(109,40,217,0.12);
+  }
+
+  @media (max-width: 640px) {
+    .flow-row { grid-template-columns: 1fr; }
+    .flow-arrow-cell { display: none; }
+    .decision-grid { grid-template-columns: 1fr; }
+    .decision-col:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+    .rules-grid { grid-template-columns: 1fr; }
+    .eval-steps { flex-direction: column; }
+    .eval-arrow { transform: rotate(90deg); padding: 4px 0; }
+    .cache-row { flex-wrap: wrap; }
+    .cache-cost { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="back"><a href="../">&larr; All Diagrams</a></div>
+
+  <div class="hdr">
+    <h1>Agent Factory — Help System Architecture</h1>
+    <p class="hdr-sub">How the in-app help assistant works: full-corpus loading, prompt caching, anti-fabrication guardrails, and the self-eval loop.</p>
+  </div>
+
+  <!-- Request flow -->
+  <div class="section">
+    <div class="section-label">Request Flow</div>
+    <div class="flow">
+      <div class="flow-row">
+        <div class="flow-cell cell-user">
+          <div class="flow-cell-label">User</div>
+          <div class="flow-cell-title">Question</div>
+          <div class="flow-cell-desc">Any plain-language question about the app typed into the Help chat</div>
+        </div>
+        <div class="flow-arrow-cell">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+        <div class="flow-cell cell-engine">
+          <div class="flow-cell-label">Backend</div>
+          <div class="flow-cell-title">Corpus + History Assembly</div>
+          <div class="flow-cell-desc">Loads full help corpus from memory cache, prepends last 3 conversation exchanges, appends the new question</div>
+        </div>
+        <div class="flow-arrow-cell">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+        <div class="flow-cell cell-model">
+          <div class="flow-cell-label">Model</div>
+          <div class="flow-cell-title">Claude Haiku</div>
+          <div class="flow-cell-desc">Reads the entire corpus, answers directly. Streams at 0.3 temperature. Max 1024 output tokens.</div>
+        </div>
+      </div>
+      <div class="flow-row">
+        <div class="flow-cell cell-model">
+          <div class="flow-cell-label">Model</div>
+          <div class="flow-cell-title">Answer</div>
+          <div class="flow-cell-desc">Grounded in the corpus. No retrieval. No citations in output by design — the UI doesn't surface them.</div>
+        </div>
+        <div class="flow-arrow-cell">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+        <div class="flow-cell cell-engine">
+          <div class="flow-cell-label">Backend</div>
+          <div class="flow-cell-title">Persist + Return</div>
+          <div class="flow-cell-desc">Writes question and answer to help_conversations + help_messages. Returns answer to frontend.</div>
+        </div>
+        <div class="flow-arrow-cell">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+        <div class="flow-cell cell-user">
+          <div class="flow-cell-label">User</div>
+          <div class="flow-cell-title">Answer in Chat</div>
+          <div class="flow-cell-desc">Displayed inline. Conversation continues — next question includes this exchange as history.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Architecture decision -->
+  <div class="section">
+    <div class="section-label">Architecture Decision — Full Corpus vs RAG</div>
+    <div class="decision-box">
+      <div class="decision-header">
+        <span class="decision-header-label">Why no retrieval pipeline?</span>
+        <span class="vs-badge">Full corpus chosen</span>
+      </div>
+      <div class="decision-grid">
+        <div class="decision-col chosen">
+          <div class="decision-col-name">Full Corpus Loading (chosen)</div>
+          <ul class="decision-list">
+            <li>Entire docs/help/user/ loaded into the system prompt on every call</li>
+            <li>No synonym blindness — the model sees exact phrasing from every doc</li>
+            <li>No missing-context refusals from incomplete chunk retrieval</li>
+            <li>Prompt caching makes it cheap after the first call (~50–80K tokens cached)</li>
+            <li>Works at this corpus size — help docs are intentionally small</li>
+          </ul>
+        </div>
+        <div class="decision-col rejected">
+          <div class="decision-col-name">RAG / Chunk Retrieval (not used)</div>
+          <ul class="decision-list">
+            <li>Keyword search misses synonyms and paraphrased questions</li>
+            <li>Wrong chunks surface for ambiguous queries</li>
+            <li>Partial context causes the model to refuse or hallucinate gaps</li>
+            <li>Vector index is available as an admin debug tool only — not on the answer path</li>
+            <li>Over-engineered for a corpus this size</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Prompt caching -->
+  <div class="section">
+    <div class="section-label">Prompt Structure and Caching</div>
+    <div class="cache-diagram">
+      <div class="cache-row">
+        <span class="cache-pill pill-system">SYSTEM</span>
+        <span class="cache-label">Behavior Instructions</span>
+        <span class="cache-desc">Voice, fabrication constraints, canonical "what is" answer, rubric dimensions, supported file types</span>
+        <span class="cache-cost cost-small">per-call</span>
+      </div>
+      <div class="cache-row">
+        <span class="cache-pill pill-cached">CACHED</span>
+        <span class="cache-label">Full Help Corpus</span>
+        <span class="cache-desc">Every docs/help/user/*.md file concatenated into one block. Pinned with cache_control: ephemeral. Only paid once until docs change.</span>
+        <span class="cache-cost cost-free">cached</span>
+      </div>
+      <div class="cache-row">
+        <span class="cache-pill pill-history">HISTORY</span>
+        <span class="cache-label">Last 3 Exchanges</span>
+        <span class="cache-desc">The previous 6 messages (3 user + 3 assistant). Enough context for follow-ups without inflating cost.</span>
+        <span class="cache-cost cost-small">per-call</span>
+      </div>
+      <div class="cache-row">
+        <span class="cache-pill pill-user">USER</span>
+        <span class="cache-label">Current Question</span>
+        <span class="cache-desc">The new question appended as the final user message</span>
+        <span class="cache-cost cost-small">per-call</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Anti-fabrication rules -->
+  <div class="section">
+    <div class="section-label">Anti-Fabrication Guardrails</div>
+    <div class="rules-grid">
+      <div class="rule-card">
+        <div class="rule-title">UI Elements</div>
+        <div class="rule-desc">Never name buttons, fields, toggles, or menu items that don't appear in the corpus. If the context doesn't confirm the label, don't use it.</div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-title">Features and Capabilities</div>
+        <div class="rule-desc">No describing features, behaviors, or workflows not confirmed by the retrieved context. Includes speculative "you could probably also..." phrasing.</div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-title">Numerical Thresholds</div>
+        <div class="rule-desc">No inventing scoring tiers, color-coded ranges, or numeric cutoffs. Eval rubric dimensions and weights are hard-coded in the system prompt as the canonical source.</div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-title">Output Artifacts</div>
+        <div class="rule-desc">Agent Factory has four named build outputs: Workflow Mode JSON, Auto Mode brief, Skill (SKILL.md), Custom Action (OpenAPI spec). No secondary artifacts beyond what the corpus names.</div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-title">Third-Party Integrations</div>
+        <div class="rule-desc">No speculating about integrations (Slack, webhooks, scrapers) not in the corpus. If the user asks about something uncovered, say so and suggest contacting an admin.</div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-title">Legal and Ethical Edge Cases</div>
+        <div class="rule-desc">If a question raises legal or ethical concerns (web scraping, surveillance, TOS evasion), flag the concern explicitly first. Don't decline on technical grounds alone. Direct to legal or compliance.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Self-eval loop -->
+  <div class="section">
+    <div class="section-label">Self-Evaluation Loop</div>
+    <div class="eval-loop">
+      <div class="eval-steps">
+        <div class="eval-step">
+          <div class="eval-step-num">01</div>
+          <div class="eval-step-title">Load Help Corpus</div>
+          <div class="eval-step-desc">Reads all docs/help/user/*.md as the KB source for test generation</div>
+        </div>
+        <div class="eval-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+        <div class="eval-step">
+          <div class="eval-step-num">02</div>
+          <div class="eval-step-title">Generate Test Plan</div>
+          <div class="eval-step-desc">Uses the shared testplan_generator with a help-specific PRD to produce Q&A pairs from the corpus</div>
+        </div>
+        <div class="eval-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+        <div class="eval-step">
+          <div class="eval-step-num">03</div>
+          <div class="eval-step-title">Run Each Question</div>
+          <div class="eval-step-desc">Calls help_service.ask() for every generated question — same code path as live user queries</div>
+        </div>
+        <div class="eval-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+        <div class="eval-step">
+          <div class="eval-step-num">04</div>
+          <div class="eval-step-title">Score Accuracy</div>
+          <div class="eval-step-desc">score_accuracy() evaluates each answer. Results persisted to evaluations with reserved agent_id="__help_system__"</div>
+        </div>
+      </div>
+      <div class="eval-note">The eval uses the same scoring pipeline as agent evals — no separate tooling. The help system grades itself using its own infrastructure. Scores are visible in the Evaluate section filtered to the __help_system__ agent.</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

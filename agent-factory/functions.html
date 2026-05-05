@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Factory - Functions Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+    --bg: #f5f7fa;
+    --surface: #ffffff;
+    --surface2: #eef1f6;
+    --border: rgba(0, 0, 0, 0.08);
+    --border-bright: rgba(0, 0, 0, 0.16);
+    --text: #1e293b;
+    --text-dim: #64748b;
+    --text-muted: #94a3b8;
+    --step1: #0369a1; --step1-dim: rgba(3,105,161,0.08);
+    --step2: #6d28d9; --step2-dim: rgba(109,40,217,0.08);
+    --step3: #0f766e; --step3-dim: rgba(15,118,110,0.08);
+    --step4: #b45309; --step4-dim: rgba(180,83,9,0.09);
+    --step5: #b91c1c; --step5-dim: rgba(185,28,28,0.08);
+    --util: #475569; --util-dim: rgba(71,85,105,0.07);
+    --green: #166534; --green-dim: rgba(22,101,52,0.07);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface2: #283548;
+      --border: rgba(255,255,255,0.07);
+      --border-bright: rgba(255,255,255,0.14);
+      --text: #e2e8f0;
+      --text-dim: #94a3b8;
+      --text-muted: #64748b;
+      --step1: #38bdf8; --step1-dim: rgba(56,189,248,0.10);
+      --step2: #a78bfa; --step2-dim: rgba(167,139,250,0.10);
+      --step3: #2dd4bf; --step3-dim: rgba(45,212,191,0.10);
+      --step4: #fbbf24; --step4-dim: rgba(251,191,36,0.10);
+      --step5: #f87171; --step5-dim: rgba(248,113,113,0.10);
+      --util: #94a3b8; --util-dim: rgba(148,163,184,0.07);
+      --green: #4ade80; --green-dim: rgba(74,222,128,0.08);
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    padding: 40px 24px 80px;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; }
+  .back { margin-bottom: 28px; }
+  .back a { color: var(--text-dim); text-decoration: none; font-family: var(--font-mono); font-size: 12px; }
+  .back a:hover { color: var(--text); }
+  .hdr { margin-bottom: 40px; }
+  .hdr h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .hdr-sub { color: var(--text-dim); font-size: 14px; line-height: 1.5; max-width: 620px; }
+
+  .section { margin-bottom: 40px; }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  /* ---- Numbered step cards ---- */
+  .step-cards { display: flex; flex-direction: column; gap: 3px; }
+
+  .step-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .step-header {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    align-items: stretch;
+    cursor: default;
+  }
+  .step-num-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px 0;
+    border-right: 1px solid var(--border);
+  }
+  .step-badge {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .step-head-body {
+    padding: 14px 20px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .step-title { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+  .step-tagline { font-size: 13px; color: var(--text-dim); line-height: 1.4; }
+  .step-route {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    align-self: flex-start;
+    margin-top: 2px;
+  }
+
+  .step-body {
+    border-top: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .step-col {
+    padding: 14px 18px;
+    border-right: 1px solid var(--border);
+  }
+  .step-col:last-child { border-right: none; }
+  .step-col-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .step-col ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .step-col ul li {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.4;
+    padding-left: 10px;
+    position: relative;
+  }
+  .step-col ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 6px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--text-muted);
+  }
+
+  /* Sub-functions / modes block */
+  .step-modes {
+    border-top: 1px solid var(--border);
+    padding: 12px 20px 14px;
+    background: var(--surface2);
+  }
+  .step-modes-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .modes-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .mode-chip {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border-bright);
+    background: var(--surface);
+    color: var(--text-dim);
+    line-height: 1.4;
+  }
+  .mode-chip strong { color: var(--text); font-weight: 600; display: block; font-size: 11px; }
+
+  /* HITL note */
+  .hitl-note {
+    border-top: 1px solid var(--border);
+    padding: 10px 20px;
+    background: rgba(180,83,9,0.04);
+    border-left: 3px solid var(--step4);
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+  .hitl-note strong { color: var(--step4); }
+
+  /* Step-specific color theming */
+  .s1 .step-badge { background: var(--step1-dim); color: var(--step1); }
+  .s1 .step-title { color: var(--step1); }
+  .s1 .step-route { background: var(--step1-dim); color: var(--step1); }
+  .s2 .step-badge { background: var(--step2-dim); color: var(--step2); }
+  .s2 .step-title { color: var(--step2); }
+  .s2 .step-route { background: var(--step2-dim); color: var(--step2); }
+  .s3 .step-badge { background: var(--step3-dim); color: var(--step3); }
+  .s3 .step-title { color: var(--step3); }
+  .s3 .step-route { background: var(--step3-dim); color: var(--step3); }
+  .s4 .step-badge { background: var(--step4-dim); color: var(--step4); }
+  .s4 .step-title { color: var(--step4); }
+  .s4 .step-route { background: var(--step4-dim); color: var(--step4); }
+  .s5 .step-badge { background: var(--step5-dim); color: var(--step5); }
+  .s5 .step-title { color: var(--step5); }
+  .s5 .step-route { background: var(--step5-dim); color: var(--step5); }
+
+  /* ---- Utility tools ---- */
+  .util-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .util-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    border-top: 3px solid var(--util);
+  }
+  .util-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--util);
+    margin-bottom: 3px;
+  }
+  .util-route {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .util-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  /* ---- Connection map ---- */
+  .connection-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 13px;
+  }
+  .connection-table th {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-bright);
+    background: var(--surface2);
+  }
+  .connection-table td {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .connection-table tr:last-child td { border-bottom: none; }
+  .connection-table td:first-child { font-weight: 600; white-space: nowrap; }
+  .connection-table td:nth-child(2) { color: var(--text-dim); }
+  .conn-arrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    padding: 0 6px;
+  }
+
+  @media (max-width: 640px) {
+    .step-body { grid-template-columns: 1fr; }
+    .step-col { border-right: none; border-bottom: 1px solid var(--border); }
+    .step-col:last-child { border-bottom: none; }
+    .util-grid { grid-template-columns: 1fr 1fr; }
+    .step-head-body { flex-direction: column; gap: 6px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="back"><a href="../">&larr; All Diagrams</a></div>
+
+  <div class="hdr">
+    <h1>Agent Factory — Functions Reference</h1>
+    <p class="hdr-sub">All 5 numbered nav steps, what each one does, what it takes in, what it outputs, and how they connect to each other.</p>
+  </div>
+
+  <!-- 5 numbered steps -->
+  <div class="section">
+    <div class="section-label">Numbered Steps</div>
+    <div class="step-cards">
+
+      <!-- Step 1: Discovery -->
+      <div class="step-card s1">
+        <div class="step-header">
+          <div class="step-num-col">
+            <div class="step-badge">1</div>
+          </div>
+          <div class="step-head-body">
+            <div>
+              <div class="step-title">Discovery</div>
+              <div class="step-tagline">Turn a fuzzy idea into a scoped PRD before any building starts. Two entry points: conversational chat or structured interview form.</div>
+            </div>
+            <span class="step-route">/discovery &nbsp; /interview</span>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="step-col">
+            <div class="step-col-label">Takes In</div>
+            <ul>
+              <li>An idea, problem statement, or existing doc (uploaded)</li>
+              <li>Optional reference docs to pre-fill answers</li>
+              <li>Mode selection (Quick / Thorough / Gap-Fill)</li>
+            </ul>
+          </div>
+          <div class="step-col">
+            <div class="step-col-label">What Happens</div>
+            <ul>
+              <li>Conversational chat across 6 stages: problem, scale, stakeholders, systems, success, risks</li>
+              <li>Or: structured interview form with section-by-section questions</li>
+              <li>Doc analysis fills fields automatically; conversation fills gaps</li>
+              <li>Agent generates triage summary or full PRD at the end</li>
+            </ul>
+          </div>
+          <div class="step-col">
+            <div class="step-col-label">Outputs</div>
+            <ul>
+              <li>Triage summary (Quick mode) — 1-page brief, ready for Build</li>
+              <li>Full PRD (Thorough / Gap-Fill) — scoped requirements doc</li>
+              <li>Brief text passed directly to the Build form</li>
+            </ul>
+          </div>
+        </div>
+        <div class="step-modes">
+          <div class="step-modes-label">Discovery Modes</div>
+          <div class="modes-grid">
+            <div class="mode-chip"><strong>Quick (~5 min)</strong>Fuzzy idea &rarr; triage summary. No docs required.</div>
+            <div class="mode-chip"><strong>Thorough (~15 min)</strong>Notes or draft &rarr; full PRD. More depth on each stage.</div>
+            <div class="mode-chip"><strong>Gap-Fill (~10 min)</strong>Existing PRD or doc &rarr; completed PRD with gaps filled. Docs required.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: KB Audit -->
+      <div class="step-card s2">
+        <div class="step-header">
+          <div class="step-num-col">
+            <div class="step-badge">2</div>
+          </div>
+          <div class="step-head-body">
+            <div>
+              <div class="step-title">KB Audit</div>
+              <div class="step-tagline">Audit the knowledge base documents that will power the agent before spending time on a build. Catches gaps, conflicts, and quality problems early.</div>
+            </div>
+            <span class="step-route">/kb-audit</span>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="step-col">
+            <div class="step-col-label">Takes In</div>
+            <ul>
+              <li>A named KB (set of documents to audit)</li>
+              <li>Uploaded documents or existing KB reference</li>
+            </ul>
+          </div>
+          <div class="step-col">
+            <div class="step-col-label">What Happens</div>
+            <ul>
+              <li>Scores each document across quality dimensions</li>
+              <li>Identifies conflicts between documents</li>
+              <li>Flags stale, incomplete, or ambiguous content</li>
+              <li>Generates repair recommendations per document</li>
+            </ul>
+          </div>
+          <div class="step-col">
+            <div class="step-col-label">Outputs</div>
+            <ul>
+              <li>Overall risk level (low / medium / high)</li>
+              <li>Per-document quality scores</li>
+              <li>Conflict map across docs</li>
+              <li>Prioritized repair list</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Build -->
+      <div class="step-card s3">
+        <div class="step-header">
+          <div class="step-num-col">
+            <div class="step-badge">3</div>
+          </div>
+          <div class="step-head-body">
+            <div>
+              <div class="step-title">Build</div>
+              <div class="step-tagline">6-phase AI pipeline that turns a brief into a deployable Glean agent. Routes to one of four build modes based on what kind of output the brief calls for.</div>
+            </div>
+            <span class="step-route">/build &nbsp; /build-detail</span>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="step-col">
+            <div class="step-col-label">Takes In</div>
+            <ul>
+              <li>Brief text (from Discovery, Interview, or paste)</li>
+              <li>Model selection</li>
+              <li>Optional reference docs</li>
+              <li>Build mode (auto-detected or manual)</li>
+            </ul>
+          </div>
+          <div class="step-col">
+            <div class="step-col-label">What Happens</div>
+            <ul>
+              <li>Phase 0: Fitness check — is Glean the right platform?</li>
+              <li>Phase 1: Gap analysis — what's missing? HITL checkpoint.</li>
+              <li>Phase 2–3: Workflow design + instruction writing</li>
+              <li>Phase 4: Artifact generation (JSON, specs, etc.)</li>
+              <li>Phase 5: Summary + lessons learned</li>
+              <li>Post-build: JSON validation + budget audit</li>
+            </ul>
+          </div>
+          <div class="step-col">
+            <div class="step-col-label">Outputs</div>
+            <ul>
+              <li>agent-config.json (importable to Glean)</li>
+              <li>gap-analysis.md</li>
+              <li>phase-3-instructions.md</li>
+              <li>build-summary.md</li>
+              <li>SKILL.md (Skill builds)</li>
+              <li>OpenAPI spec (Action builds)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="step-modes">
+          <div class="step-modes-label">Build Modes</div>
+          <div class="modes-grid">
+            <div class="mode-chip"><strong>Agent Build</strong>Full 6-phase pipeline &rarr; Glean Workflow JSON</div>
+            <div class="mode-chip"><strong>Auto Mode Build</strong>Phases 0, 1, 2A, 3A &rarr; Auto Mode brief (no JSON)</div>
+            <div class="mode-chip"><strong>Skill Build</strong>Phases 0, 1, then single Skill phase &rarr; SKILL.md</div>
+            <div class="mode-chip"><strong>Custom Action</strong>Phases 0, 1, then single Action phase &rarr; OpenAPI spec</div>
+          </div>
+        </div>
+        <div class="hitl-note">
+          <strong>HITL Checkpoint</strong> — After Phase 1, the gap analysis surfaces a verdict (PROCEED / CAUTION / BLOCK). You review and approve or cancel before the build continues. BLOCK requires a checkbox override.
+        </div>
+      </div>
+
+      <!-- Step 4: Evaluate -->
+      <div class="step-card s4">
+        <div class="step-header">
+          <div class="step-num-col">
+            <div class="step-badge">4</div>
+          </div>
+          <div class="step-head-body">
+            <div>
+              <div class="step-title">Evaluate</div>
+              <div class="step-tagline">Run structured tests against a built agent to measure accuracy, citation quality, and conversation behavior. Produces scored results that feed directly into Repair.</div>
+            </div>
+            <span class="step-route">/evaluate</span>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="step-col">
+            <div class="step-col-label">Takes In</div>
+            <ul>
+              <li>Agent ID (selects which built agent to test)</li>
+              <li>Q&A CSV (for QA eval) — question + expected answer pairs</li>
+              <li>Scenario definitions (for Conversation eval)</li>
+            </ul>
+          </div>
+          <div class="step-col">
+            <div class="step-col-label">What Happens</div>
+            <ul>
+              <li>QA eval: sends each question to the agent, scores accuracy and citation quality per response</li>
+              <li>Conversation eval: runs multi-turn scenarios, scores each turn and overall session across 6 dimensions</li>
+              <li>Results aggregated with averages, failing questions flagged</li>
+            </ul>
+          </div>
+          <div class="step-col">
+            <div class="step-col-label">Outputs</div>
+            <ul>
+              <li>Per-question accuracy scores</li>
+              <li>Per-question citation quality scores</li>
+              <li>Conversation rubric scores (6 dimensions)</li>
+              <li>Failing questions list — input for Repair</li>
+              <li>Eval run stored with agent_id for history</li>
+            </ul>
+          </div>
+        </div>
+        <div class="step-modes">
+          <div class="step-modes-label">Eval Modes</div>
+          <div class="modes-grid">
+            <div class="mode-chip"><strong>Q&A Eval</strong>Upload CSV of Q&A pairs. Scores accuracy + citation quality. Best for factual agents.</div>
+            <div class="mode-chip"><strong>Conversation Eval</strong>Multi-turn scenario testing. 6 rubric dimensions: Goal Completion (25%), Process Quality (20%), Red Flag Detection (15%), Output Quality (15%), Downstream Readiness (15%), Conversational Skill (10%).</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5: Repair -->
+      <div class="step-card s5">
+        <div class="step-header">
+          <div class="step-num-col">
+            <div class="step-badge">5</div>
+          </div>
+          <div class="step-head-body">
+            <div>
+              <div class="step-title">Repair</div>
+              <div class="step-tagline">Takes eval failures as input and generates targeted instruction patches. Versioned — each repair run produces diffs you can review before applying.</div>
+            </div>
+            <span class="step-route">/repair</span>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="step-col">
+            <div class="step-col-label">Takes In</div>
+            <ul>
+              <li>Eval run (from Evaluate) — the failing questions and scores</li>
+              <li>Agent ID — which agent's instructions to repair</li>
+              <li>Current phase-3-instructions.md from the build</li>
+            </ul>
+          </div>
+          <div class="step-col">
+            <div class="step-col-label">What Happens</div>
+            <ul>
+              <li>Analyzes patterns across all failing questions — not just individual fixes</li>
+              <li>Identifies which task instructions are responsible for failures</li>
+              <li>Generates specific diffs to those instructions</li>
+              <li>Each repair is versioned and stored with a changelog</li>
+            </ul>
+          </div>
+          <div class="step-col">
+            <div class="step-col-label">Outputs</div>
+            <ul>
+              <li>Repair diff — what changed and why</li>
+              <li>Updated instructions for affected tasks</li>
+              <li>Repair changelog entry</li>
+              <li>Ready to re-run Evaluate to measure improvement</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Utility tools -->
+  <div class="section">
+    <div class="section-label">Utility Tools (always accessible)</div>
+    <div class="util-grid">
+      <div class="util-card">
+        <div class="util-name">Validate</div>
+        <div class="util-route">/validate</div>
+        <div class="util-desc">Checks agent-config.json against the Glean schema. Flags trigger config errors, toolConfig name mismatches, missing required fields, and sharingSettings nesting issues.</div>
+      </div>
+      <div class="util-card">
+        <div class="util-name">Budget</div>
+        <div class="util-route">/budget</div>
+        <div class="util-desc">Audits instruction token count across all tasks. Shows per-task breakdown and total. Flags steps that exceed Glean's instruction budget limit.</div>
+      </div>
+      <div class="util-card">
+        <div class="util-name">Patterns</div>
+        <div class="util-route">/patterns</div>
+        <div class="util-desc">Pattern library of reusable Glean agent designs. Includes Search + Think + Respond, Plan & Execute, branch-after-search patterns, and Tyler's anti-patterns.</div>
+      </div>
+      <div class="util-card">
+        <div class="util-name">Help</div>
+        <div class="util-route">HelpPanel (sidebar)</div>
+        <div class="util-desc">In-app conversational help. Claude Haiku reads the full help corpus on every question. No retrieval — the whole corpus is loaded and prompt-cached. Persistent conversation history.</div>
+      </div>
+      <div class="util-card">
+        <div class="util-name">History</div>
+        <div class="util-route">/ (home)</div>
+        <div class="util-desc">Activity timeline showing all builds, repairs, evals, discovery sessions, and KB audits. Status-filtered, with direct links to each artifact.</div>
+      </div>
+      <div class="util-card">
+        <div class="util-name">Settings / System</div>
+        <div class="util-route">/settings &nbsp; /system</div>
+        <div class="util-desc">Settings: model selection, API key configuration, team access. System: backend health, app version, current runtime info.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- How they connect -->
+  <div class="section">
+    <div class="section-label">How the Steps Connect</div>
+    <table class="connection-table">
+      <thead>
+        <tr>
+          <th>From</th>
+          <th>Hands off to</th>
+          <th>What passes between them</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1. Discovery</td>
+          <td>3. Build</td>
+          <td>Brief text (triage summary or full PRD) pre-fills the Build form. User confirms and starts the build.</td>
+        </tr>
+        <tr>
+          <td>1. Discovery (Interview)</td>
+          <td>3. Build</td>
+          <td>Interview answers assembled into brief text + reference docs, passed directly to the new build.</td>
+        </tr>
+        <tr>
+          <td>2. KB Audit</td>
+          <td>3. Build</td>
+          <td>Indirect — you fix KB gaps before starting a build. No automated handoff; the audit informs document prep.</td>
+        </tr>
+        <tr>
+          <td>3. Build — Phase 0</td>
+          <td>Build — Phase 1 (or stops)</td>
+          <td>FAIL verdict auto-stops the pipeline. PASS + mode recommendation (Agent vs Auto) routes the remaining phases.</td>
+        </tr>
+        <tr>
+          <td>3. Build — Phase 1</td>
+          <td>HITL Checkpoint</td>
+          <td>Gap analysis with PROCEED / CAUTION / BLOCK verdict. Human approves before phases 2–5 run.</td>
+        </tr>
+        <tr>
+          <td>3. Build</td>
+          <td>Validate + Budget</td>
+          <td>agent-config.json automatically checked post-build. Results shown in the build detail view.</td>
+        </tr>
+        <tr>
+          <td>3. Build</td>
+          <td>4. Evaluate</td>
+          <td>Agent ID assigned at build time. Evaluate uses it to target the right agent for testing.</td>
+        </tr>
+        <tr>
+          <td>4. Evaluate</td>
+          <td>5. Repair</td>
+          <td>Eval run ID + failing question list. Repair loads these to scope what needs fixing.</td>
+        </tr>
+        <tr>
+          <td>5. Repair</td>
+          <td>4. Evaluate</td>
+          <td>Updated instructions. Re-run eval against the patched agent to measure improvement. Iterate until scores stabilize.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+</body>
+</html>

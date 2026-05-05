@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Thesis Manifesto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-display: 'Instrument Serif', Georgia, serif;
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+    --bg: #0C141C;
+    --surface: #1B273A;
+    --surface-2: #202E42;
+    --border: rgba(174, 193, 204, 0.15);
+    --border-bright: rgba(174, 193, 204, 0.28);
+    --text: #E7EBEE;
+    --text-dim: #8994A8;
+    --text-muted: #5A657C;
+    --accent: #98CBFF;
+    --accent-dim: rgba(152, 203, 255, 0.08);
+    --accent-mid: rgba(152, 203, 255, 0.18);
+    --divider: rgba(174, 193, 204, 0.10);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    padding: 40px 24px 80px;
+  }
+  .wrap {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+  .back {
+    margin-bottom: 32px;
+  }
+  .back a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    transition: color 0.15s;
+  }
+  .back a:hover { color: var(--text); }
+
+  /* Hero */
+  .hero { margin-bottom: 56px; }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 6vw, 52px);
+    font-weight: 400;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .hero-lead {
+    color: var(--text-dim);
+    font-size: 16px;
+    line-height: 1.7;
+    max-width: 620px;
+  }
+
+  /* Section headers */
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+
+  /* Principle cards (poster layer) */
+  .principles {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 56px;
+  }
+  .principle {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 0 16px;
+    align-items: start;
+  }
+  .principle:hover {
+    border-color: var(--border-bright);
+    background: var(--surface-2);
+  }
+  .principle-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1.6;
+    padding-top: 2px;
+  }
+  .principle-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.5;
+    margin-bottom: 4px;
+  }
+  .principle-body {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  /* Rationale sections */
+  .rationale { margin-bottom: 56px; }
+  .rationale-item {
+    border-top: 1px solid var(--divider);
+    padding: 28px 0;
+  }
+  .rationale-item:last-child { border-bottom: 1px solid var(--divider); }
+  .rationale-header {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .rationale-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+    width: 20px;
+  }
+  .rationale-title {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: -0.2px;
+    line-height: 1.2;
+  }
+  .rationale-body {
+    padding-left: 34px;
+  }
+  .rationale-body p {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+  .rationale-body p:last-child { margin-bottom: 0; }
+  .rationale-body strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+  .rationale-body em {
+    font-style: italic;
+    color: var(--text);
+  }
+  .output-types {
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-mid);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 16px 0;
+  }
+  .output-types ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .output-types li {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.55;
+    padding-left: 16px;
+    position: relative;
+  }
+  .output-types li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.5;
+  }
+  .output-types li strong { color: var(--text); }
+  .humans-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 12px 0;
+  }
+  .humans-list li {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    padding: 6px 0 6px 20px;
+    position: relative;
+    border-bottom: 1px solid var(--divider);
+  }
+  .humans-list li:last-child { border-bottom: none; }
+  .humans-list li::before {
+    content: counter(item);
+    counter-increment: item;
+    position: absolute;
+    left: 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent);
+    top: 8px;
+  }
+  ol.humans-list { counter-reset: item; }
+
+  /* Self-check table */
+  .check-section { margin-bottom: 56px; }
+  .check-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .check-table th {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-bright);
+  }
+  .check-table td {
+    padding: 14px 14px;
+    border-bottom: 1px solid var(--divider);
+    vertical-align: top;
+    line-height: 1.55;
+  }
+  .check-table td:first-child {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    white-space: nowrap;
+    width: 32px;
+  }
+  .check-table td:nth-child(2) {
+    font-weight: 600;
+    color: var(--text);
+    width: 200px;
+  }
+  .check-table td:nth-child(3) {
+    color: var(--text-dim);
+  }
+  .check-table tr:last-child td { border-bottom: none; }
+
+  /* Protocol section */
+  .protocol { margin-bottom: 56px; }
+  .protocol-step {
+    display: flex;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--divider);
+  }
+  .protocol-step:last-child { border-bottom: none; }
+  .step-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+    width: 20px;
+    padding-top: 2px;
+  }
+  .step-content { flex: 1; }
+  .step-action {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+  .step-detail {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.55;
+  }
+
+  /* Footer note */
+  .footer-note {
+    padding-top: 40px;
+    border-top: 1px solid var(--divider);
+    font-size: 13px;
+    color: var(--text-muted);
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 24px 16px 60px; }
+    .principle { grid-template-columns: 32px 1fr; gap: 0 12px; padding: 16px; }
+    .rationale-body { padding-left: 0; }
+    .check-table td:nth-child(2) { width: auto; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="back"><a href="../">&larr; All Diagrams</a></div>
+
+  <div class="hero">
+    <h1>The Thesis Manifesto</h1>
+    <p class="hero-lead">The principles behind every agent, every process, every recommendation that comes out of this platform. If something we build doesn't align with these, we fix the build — not the principles.</p>
+  </div>
+
+  <!-- Layer 1: The Poster -->
+  <div class="section-label">Layer 1 — The Poster</div>
+  <div class="principles">
+
+    <div class="principle">
+      <div class="principle-num">01</div>
+      <div>
+        <div class="principle-title">State change or it doesn't count.</div>
+        <div class="principle-body">If nothing moved — no behavior shifted, no mindset changed, no system updated — then nothing happened. Show me what moved.</div>
+      </div>
+    </div>
+
+    <div class="principle">
+      <div class="principle-num">02</div>
+      <div>
+        <div class="principle-title">Problems before solutions.</div>
+        <div class="principle-body">Explore the problem deeply before ever discussing tools. The right answer might be "do nothing."</div>
+      </div>
+    </div>
+
+    <div class="principle">
+      <div class="principle-num">03</div>
+      <div>
+        <div class="principle-title">Evidence over eloquence.</div>
+        <div class="principle-body">Fluency feels like truth. A polished demo feels like progress. Neither is. Show your receipts.</div>
+      </div>
+    </div>
+
+    <div class="principle">
+      <div class="principle-num">04</div>
+      <div>
+        <div class="principle-title">Know what you need and what you're getting.</div>
+        <div class="principle-body">Define the output before you build the system. Match the evaluation to the type — and decide what "good enough" means before you ship, not after.</div>
+      </div>
+    </div>
+
+    <div class="principle">
+      <div class="principle-num">05</div>
+      <div>
+        <div class="principle-title">People are the center.</div>
+        <div class="principle-body">Technology adoption is a community problem, not a technology problem. The human experience determines whether everything else works.</div>
+      </div>
+    </div>
+
+    <div class="principle">
+      <div class="principle-num">06</div>
+      <div>
+        <div class="principle-title">Humans decide.</div>
+        <div class="principle-body">Agents explore paths; humans choose the destination. No automation by default.</div>
+      </div>
+    </div>
+
+    <div class="principle">
+      <div class="principle-num">07</div>
+      <div>
+        <div class="principle-title">Multiple perspectives.</div>
+        <div class="principle-body">No single viewpoint is sufficient for complex decisions. The goal isn't consensus — it's completeness.</div>
+      </div>
+    </div>
+
+    <div class="principle">
+      <div class="principle-num">08</div>
+      <div>
+        <div class="principle-title">Context is kindness. Brevity is respect.</div>
+        <div class="principle-body">Supply enough context that people can engage. Cut everything else. Use your big and beautiful brain for thinking, not synthesizing.</div>
+      </div>
+    </div>
+
+    <div class="principle">
+      <div class="principle-num">09</div>
+      <div>
+        <div class="principle-title">Guardrails, not gates.</div>
+        <div class="principle-body">Governance isn't gatekeeping. The right framework frees people to build with confidence. Guardrails keep you on the road; gates keep you off it.</div>
+      </div>
+    </div>
+
+    <div class="principle">
+      <div class="principle-num">10</div>
+      <div>
+        <div class="principle-title">Trace the connections.</div>
+        <div class="principle-body">Everything is connected. Follow the ripples before you drop the stone.</div>
+      </div>
+    </div>
+
+    <div class="principle">
+      <div class="principle-num">11</div>
+      <div>
+        <div class="principle-title">The questions stay the same.</div>
+        <div class="principle-body">The methodology is shared. The conclusions are context-specific. When the team shares a common way of discovering, their work compounds.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Layer 2: The Rationale -->
+  <div class="section-label">Layer 2 — The Rationale</div>
+  <div class="rationale">
+
+    <div class="rationale-item">
+      <div class="rationale-header">
+        <span class="rationale-num">01</span>
+        <span class="rationale-title">State change or it doesn't count.</span>
+      </div>
+      <div class="rationale-body">
+        <p>State change isn't just money. Not just time saved. It's <em>psychological</em>. Did someone's understanding shift? Did a team start working differently? Did a process actually change, or did we just document a new one that nobody follows?</p>
+        <p>Nobody buys AI. They buy state change. And verified reality — what actually happened, not what was projected — is the only truth that counts. A document that nobody reads didn't change state. A demo that doesn't connect to production didn't change state. A strategy deck that sits in a SharePoint folder gathering digital dust didn't change state.</p>
+        <p>So we ask: <em>What state are we trying to change? How will we know it changed? And if it didn't change, what do we do differently?</em></p>
+        <p>This is the foundation. Every other principle serves this one.</p>
+      </div>
+    </div>
+
+    <div class="rationale-item">
+      <div class="rationale-header">
+        <span class="rationale-num">02</span>
+        <span class="rationale-title">Problems before solutions.</span>
+      </div>
+      <div class="rationale-body">
+        <p>The technology is exciting. You see a demo and your brain immediately starts connecting dots. That creative impulse is valuable. But it's dangerous when it runs ahead of understanding.</p>
+        <p>Starting with the solution is how you end up with a graveyard of proofs of concept that solved problems nobody actually had. It's like prescribing medication before running the diagnosis. Don't start from what the model can generate. Start from which state must change. Go and see. Understand the current state before imagining the future one.</p>
+        <p>The right answer might be "do nothing." It might be "this doesn't need AI." It might be "we need to fix the process first." Those are all valid outcomes of good problem discovery. DISCO exists precisely for this — structured exploration of the problem space before anyone starts building.</p>
+      </div>
+    </div>
+
+    <div class="rationale-item">
+      <div class="rationale-header">
+        <span class="rationale-num">03</span>
+        <span class="rationale-title">Evidence over eloquence.</span>
+      </div>
+      <div class="rationale-body">
+        <p>Fluency — whether from a person or an AI model — <em>feels</em> like truth. A well-structured argument, a polished presentation, a confident recommendation. Our brains are wired to trust eloquence. And that's exactly the vulnerability.</p>
+        <p>Receipts, not promises. Tone feels like truth — but it isn't. Lines of code are a vanity metric. A good demo vibe is not a test result.</p>
+        <p>If you can't point to data, documents, observed reality, or measured outcomes, you're guessing. And guessing at enterprise scale is expensive — not just financially, it erodes trust. So we cite our sources. We show our work. When an agent makes a recommendation, it points to the knowledge base documents, the interview transcripts, the research that informed it.</p>
+      </div>
+    </div>
+
+    <div class="rationale-item">
+      <div class="rationale-header">
+        <span class="rationale-num">04</span>
+        <span class="rationale-title">Know what you need and what you're getting.</span>
+      </div>
+      <div class="rationale-body">
+        <p>Start from the output, not the input. Before building anything, define what kind of answer you need — because that determines the system, the evaluation, and the trust model.</p>
+        <div class="output-types">
+          <ul>
+            <li><strong>Must be deterministic:</strong> Financial calculations, compliance checks, data transformations, audit trails. Use traditional software or constrained AI with validation layers.</li>
+            <li><strong>Can be non-deterministic:</strong> Research synthesis, brainstorming, qualitative analysis, creative drafting. Use generative AI with the understanding that outputs are informed interpretations, not ground truth.</li>
+            <li><strong>The dangerous middle:</strong> Risk assessments, evaluations, recommendations, summaries. These feel deterministic — formatted like facts, with confidence and structure — but they're interpretations. Label them as such. Never ship them as facts without human verification.</li>
+          </ul>
+        </div>
+        <p>Define your evaluation criteria at the same time you define your output requirements. Not after the demo. Not after the pilot. Before you build. A calculator and a consultant both give you numbers. Knowing which one you're talking to — and how you'd check their work — changes everything.</p>
+      </div>
+    </div>
+
+    <div class="rationale-item">
+      <div class="rationale-header">
+        <span class="rationale-num">05</span>
+        <span class="rationale-title">People are the center.</span>
+      </div>
+      <div class="rationale-body">
+        <p>The sequencing matters: people first, then processes, then platforms. Not as a sentiment. As an operational sequence. Figure out the human experience before you design the process. Design the process before you choose the platform.</p>
+        <p>Fear of job loss is rational. I need to say that clearly because too many AI conversations dance around it. When you tell someone "AI will handle the repetitive parts of your job," what they hear is "AI will handle the parts of my job that justify my salary." Address that honestly or lose trust permanently.</p>
+        <p>Show me the incentive and I'll show you the outcome. Champions burn out without support. Dignity isn't sentiment; it's an operational control. The human experience isn't a nice-to-have bolt-on. It's the thing that determines whether everything else works.</p>
+      </div>
+    </div>
+
+    <div class="rationale-item">
+      <div class="rationale-header">
+        <span class="rationale-num">06</span>
+        <span class="rationale-title">Humans decide.</span>
+      </div>
+      <div class="rationale-body">
+        <p>Non-negotiable, and simpler than people make it.</p>
+        <ol class="humans-list">
+          <li>Agents explore paths. Humans choose the destination.</li>
+          <li>AI recommends. Humans decide.</li>
+          <li>No automation by default.</li>
+          <li>Veto power without justification required.</li>
+          <li>You don't have to explain why you're overriding the AI. The fact that you want to is enough.</li>
+        </ol>
+        <p>The process of human judgment — messy, intuitive, experience-driven, sometimes irrational — has value. It should never be optimized away, even when the optimization looks like efficiency. The agents do the synthesis, the analysis, the pattern-finding. The human brings the judgment that no amount of training data can replicate.</p>
+      </div>
+    </div>
+
+    <div class="rationale-item">
+      <div class="rationale-header">
+        <span class="rationale-num">07</span>
+        <span class="rationale-title">Multiple perspectives.</span>
+      </div>
+      <div class="rationale-body">
+        <p>Thesis has a bustling party of agents instead of one really good one. There's a reason for that.</p>
+        <p>No single viewpoint is sufficient for complex decisions. Finance sees ROI and payback periods. Security sees attack surfaces and compliance gaps. Legal sees liability and regulatory exposure. People-focused analysis sees adoption barriers and change fatigue. Systems thinking sees second-order effects nobody else is looking for.</p>
+        <p>The goal isn't consensus. Consensus is often just the lowest-common-denominator answer that nobody disagrees with strongly enough to fight. The goal is <em>completeness</em>. Put all the perspectives on the table, let them genuinely interrogate each other, and then the human decides.</p>
+        <p>We also need the courage to build inside uncertainty rather than collapsing nuance into false simplicity. "It depends" is sometimes the most honest answer. The value is in understanding <em>what</em> it depends on.</p>
+      </div>
+    </div>
+
+    <div class="rationale-item">
+      <div class="rationale-header">
+        <span class="rationale-num">08</span>
+        <span class="rationale-title">Context is kindness. Brevity is respect.</span>
+      </div>
+      <div class="rationale-body">
+        <p>Two sides of the same coin, and the whole reason Thesis exists.</p>
+        <p>Leaving out context is a tax on everyone downstream. When you send a recommendation without the reasoning, every recipient has to reconstruct the logic themselves — or worse, they just trust the conclusion without understanding it. That's not efficiency. That's a setup for misalignment.</p>
+        <p>But leaving in filler is a tax on everyone's time. Nobody needs the preamble. Nobody needs three paragraphs of background before the recommendation. Say what matters, cut everything else, and if someone needs more depth, they'll ask.</p>
+        <p>Thinking — framing, judgment, evaluation, empathy, systems reasoning, perspective-shifting, sense-making — these are the cognitive acts that change outcomes. Synthesis is the cost of entry; thinking is the value creation. We handle the synthesis so you can do the work that actually requires human judgment.</p>
+      </div>
+    </div>
+
+    <div class="rationale-item">
+      <div class="rationale-header">
+        <span class="rationale-num">09</span>
+        <span class="rationale-title">Guardrails, not gates.</span>
+      </div>
+      <div class="rationale-body">
+        <p>Gates keep you off the road. They say "stop, justify yourself, wait for approval, proceed if deemed worthy." Gates create bottlenecks, breed resentment, and incentivize people to find ways around them.</p>
+        <p>Guardrails keep you <em>on</em> the road. They say "go ahead, build, experiment — and here are the important questions to answer along the way." These are the questions that must have answers before anything ships:</p>
+        <div class="output-types">
+          <ul>
+            <li><strong>Evaluation:</strong> How do you know it works? What are the criteria, who defined them, and how are they measured?</li>
+            <li><strong>Testing and QA:</strong> What happens when it fails? Have you tested failure modes, not just the happy path?</li>
+            <li><strong>Adoption:</strong> Who will use this, and have you talked to them? Not surveyed. Not assumed. Talked to.</li>
+            <li><strong>Maintenance:</strong> Who owns this after launch? If the answer is "nobody," you're building an orphan.</li>
+            <li><strong>Sustainability:</strong> What does this cost to run — in money, in attention, in organizational overhead?</li>
+          </ul>
+        </div>
+        <p>None of these are optional. Skip them and you're not moving fast — you're accumulating debt that someone else will pay.</p>
+      </div>
+    </div>
+
+    <div class="rationale-item">
+      <div class="rationale-header">
+        <span class="rationale-num">10</span>
+        <span class="rationale-title">Trace the connections.</span>
+      </div>
+      <div class="rationale-body">
+        <p>Everything is connected. There are no isolated changes in a complex organization. Deploy a new tool in one department and it affects the workflows of three others. Change an incentive structure and watch behavior shift in places you didn't predict. Automate a process and discover that the "inefficiency" you eliminated was actually serving a communication function nobody documented.</p>
+        <p>"And then what happens?" is the most important question you can ask. And you need to ask it more than once. First-order effects are obvious. Second-order effects are where the real consequences live. Third-order effects are where the surprises hide.</p>
+        <p>The obvious intervention is rarely the most effective one. Follow the ripples before you drop the stone. Today's solution becomes tomorrow's problem without looking at the whole system.</p>
+      </div>
+    </div>
+
+    <div class="rationale-item">
+      <div class="rationale-header">
+        <span class="rationale-num">11</span>
+        <span class="rationale-title">The questions stay the same.</span>
+      </div>
+      <div class="rationale-body">
+        <p>The scaling principle. The one that makes everything else compound.</p>
+        <p>DISCO doesn't prescribe the same answer every time. It asks the right <em>questions</em> every time. Discovery, Intelligence, Synthesis, Convergence, Operationalize — the methodology is the same whether you're evaluating a customer service chatbot or a company-wide knowledge management overhaul.</p>
+        <p>Standardized work isn't about making everyone do the same thing. It's about making the <em>process of improvement</em> consistent so that insights transfer. When one team discovers a better way to evaluate AI readiness, that insight should be immediately available to every other team.</p>
+        <p>When everyone freelances, you get fragmentation — parallel isolation with no compounding, no shared learning. The questions stay the same. That's how we scale.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Layer 3: The Check -->
+  <div class="section-label">Layer 3 — The Manifesto Check</div>
+
+  <div class="check-section">
+    <table class="check-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Principle</th>
+          <th>Ask Yourself</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>01</td>
+          <td>State Change</td>
+          <td>What specifically will be different after this? Who will behave differently, and how?</td>
+        </tr>
+        <tr>
+          <td>02</td>
+          <td>Problems Before Solutions</td>
+          <td>Have I fully explored the problem, or am I jumping to a tool or approach?</td>
+        </tr>
+        <tr>
+          <td>03</td>
+          <td>Evidence Over Eloquence</td>
+          <td>Can I point to evidence for this recommendation, or does it just sound right?</td>
+        </tr>
+        <tr>
+          <td>04</td>
+          <td>Know What You Need</td>
+          <td>What kind of output does this require? How will I evaluate whether it's good enough?</td>
+        </tr>
+        <tr>
+          <td>05</td>
+          <td>People Are the Center</td>
+          <td>Have I considered the human experience — fear, incentives, dignity, adoption?</td>
+        </tr>
+        <tr>
+          <td>06</td>
+          <td>Humans Decide</td>
+          <td>Is there a clear human decision point, or is this running on autopilot?</td>
+        </tr>
+        <tr>
+          <td>07</td>
+          <td>Multiple Perspectives</td>
+          <td>Whose viewpoint am I missing? What would security, legal, finance, or users say?</td>
+        </tr>
+        <tr>
+          <td>08</td>
+          <td>Context and Brevity</td>
+          <td>Am I providing enough context to act on, without burying the signal in noise?</td>
+        </tr>
+        <tr>
+          <td>09</td>
+          <td>Guardrails Not Gates</td>
+          <td>Can I answer the five guardrail questions — evaluation, testing, adoption, maintenance, sustainability?</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td>Trace the Connections</td>
+          <td>What are the second and third-order effects? And then what happens?</td>
+        </tr>
+        <tr>
+          <td>11</td>
+          <td>The Questions Stay the Same</td>
+          <td>Am I following the shared methodology, or freelancing?</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-label">Stop-and-Present Protocol</div>
+  <div class="protocol">
+    <div class="protocol-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-action">Stop</div>
+        <div class="step-detail">Halt the current output direction when a genuine manifesto conflict is identified.</div>
+      </div>
+    </div>
+    <div class="protocol-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-action">Name</div>
+        <div class="step-detail">Identify the specific principle being violated. Not a vague concern — the numbered principle.</div>
+      </div>
+    </div>
+    <div class="protocol-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-action">Explain</div>
+        <div class="step-detail">Describe why the current path conflicts with the principle. Be direct; do not soften it into a footnote.</div>
+      </div>
+    </div>
+    <div class="protocol-step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-action">Present</div>
+        <div class="step-detail">Surface the conflict to the user clearly and as part of the main response, not as an aside.</div>
+      </div>
+    </div>
+    <div class="protocol-step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <div class="step-action">Ask</div>
+        <div class="step-detail">Let the user decide how to proceed. The manifesto informs; it doesn't override human judgment. That would violate Principle 6.</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="footer-note">This manifesto is a living document. It will evolve as the team grows, as we learn what works, and as the methodology matures. That's not a weakness — it's Principle 1 in action. If the manifesto stops changing state, it stopped working.</p>
+
+</div>
+</body>
+</html>

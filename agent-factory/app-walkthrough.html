@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Factory - App Walkthrough</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+    --bg: #f5f7fa;
+    --surface: #ffffff;
+    --surface2: #eef1f6;
+    --border: rgba(0, 0, 0, 0.08);
+    --border-bright: rgba(0, 0, 0, 0.16);
+    --text: #1e293b;
+    --text-dim: #64748b;
+    --text-muted: #94a3b8;
+
+    --c-purple: #6d28d9;
+    --c-purple-dim: rgba(109, 40, 217, 0.07);
+    --c-blue: #0369a1;
+    --c-blue-dim: rgba(3, 105, 161, 0.07);
+    --c-indigo: #4338ca;
+    --c-indigo-dim: rgba(67, 56, 202, 0.07);
+    --c-teal: #0f766e;
+    --c-teal-dim: rgba(15, 118, 110, 0.07);
+    --c-amber: #b45309;
+    --c-amber-dim: rgba(180, 83, 9, 0.09);
+    --c-green: #166534;
+    --c-green-dim: rgba(22, 101, 52, 0.07);
+    --c-red: #b91c1c;
+    --c-red-dim: rgba(185, 28, 28, 0.07);
+    --c-slate: #475569;
+    --c-slate-dim: rgba(71, 85, 105, 0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface2: #283548;
+      --border: rgba(255, 255, 255, 0.07);
+      --border-bright: rgba(255, 255, 255, 0.14);
+      --text: #e2e8f0;
+      --text-dim: #94a3b8;
+      --text-muted: #64748b;
+
+      --c-purple: #a78bfa;
+      --c-purple-dim: rgba(167, 139, 250, 0.12);
+      --c-blue: #38bdf8;
+      --c-blue-dim: rgba(56, 189, 248, 0.10);
+      --c-indigo: #818cf8;
+      --c-indigo-dim: rgba(129, 140, 248, 0.12);
+      --c-teal: #2dd4bf;
+      --c-teal-dim: rgba(45, 212, 191, 0.10);
+      --c-amber: #fbbf24;
+      --c-amber-dim: rgba(251, 191, 36, 0.12);
+      --c-green: #4ade80;
+      --c-green-dim: rgba(74, 222, 128, 0.10);
+      --c-red: #f87171;
+      --c-red-dim: rgba(248, 113, 113, 0.10);
+      --c-slate: #94a3b8;
+      --c-slate-dim: rgba(148, 163, 184, 0.08);
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    padding: 40px 24px 80px;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; }
+  .back { margin-bottom: 28px; }
+  .back a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  .back a:hover { color: var(--text); }
+
+  /* Header */
+  .hdr { margin-bottom: 40px; }
+  .hdr h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+  .hdr-sub {
+    color: var(--text-dim);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* Section row label */
+  .row-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  /* Flow arrow */
+  .flow-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0;
+    color: var(--text-muted);
+  }
+  .flow-arrow svg { width: 20px; height: 20px; }
+
+  /* ---- Entry row ---- */
+  .entry-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .entry-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    border-top: 3px solid var(--c-purple);
+  }
+  .entry-card h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--c-purple);
+    margin-bottom: 4px;
+  }
+  .entry-card .entry-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.55;
+    margin-bottom: 12px;
+  }
+  .mode-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .mode-item {
+    background: var(--c-purple-dim);
+    border: 1px solid rgba(109,40,217,0.12);
+    border-radius: 8px;
+    padding: 8px 12px;
+  }
+  .mode-item .mode-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--c-purple);
+    margin-bottom: 2px;
+  }
+  .mode-item .mode-time {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+  }
+  .mode-item .mode-out {
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  /* interview card */
+  .entry-card.interview { border-top-color: var(--c-indigo); }
+  .entry-card.interview h3 { color: var(--c-indigo); }
+  .entry-card.interview .mode-item { background: var(--c-indigo-dim); border-color: rgba(67,56,202,0.12); }
+  .entry-card.interview .mode-item .mode-name { color: var(--c-indigo); }
+
+  .section-row { margin-bottom: 8px; }
+  .io-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    background: var(--surface2);
+    border: 1px solid var(--border-bright);
+    border-radius: 4px;
+    padding: 2px 6px;
+    color: var(--text-dim);
+    margin-top: 10px;
+  }
+
+  /* ---- Pipeline ---- */
+  .pipeline {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .pipeline-header {
+    background: var(--c-blue-dim);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .pipeline-header-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--c-blue);
+  }
+  .mode-tags {
+    display: flex;
+    gap: 6px;
+  }
+  .mode-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 99px;
+    border: 1px solid;
+  }
+  .mode-tag-agent { color: var(--c-blue); border-color: var(--c-blue); background: var(--c-blue-dim); }
+  .mode-tag-auto { color: var(--c-teal); border-color: var(--c-teal); background: var(--c-teal-dim); }
+  .mode-tag-skill { color: var(--c-green); border-color: var(--c-green); background: var(--c-green-dim); }
+  .mode-tag-action { color: var(--c-amber); border-color: var(--c-amber); background: var(--c-amber-dim); }
+
+  .phase-list { padding: 0; }
+  .phase {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+  .phase:last-child { border-bottom: none; }
+  .phase-num-col {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 16px 0 16px;
+    border-right: 1px solid var(--border);
+  }
+  .phase-badge {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .phase-body { padding: 14px 18px; }
+  .phase-title {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+  .phase-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.55;
+  }
+  .phase-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 8px;
+  }
+  .phase-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
+  .tag-output { background: var(--c-green-dim); color: var(--c-green); }
+  .tag-hitl { background: var(--c-amber-dim); color: var(--c-amber); }
+  .tag-auto-mode { background: var(--c-teal-dim); color: var(--c-teal); }
+  .tag-agent-mode { background: var(--c-blue-dim); color: var(--c-blue); }
+  .tag-skill-mode { background: var(--c-green-dim); color: var(--c-green); }
+  .tag-action-mode { background: var(--c-amber-dim); color: var(--c-amber); }
+  .tag-stop { background: var(--c-red-dim); color: var(--c-red); }
+  .tag-all { background: var(--c-slate-dim); color: var(--c-slate); border: 1px solid var(--border-bright); }
+
+  /* phase color variants */
+  .phase-0 .phase-badge { background: var(--c-indigo-dim); color: var(--c-indigo); }
+  .phase-0 .phase-title { color: var(--c-indigo); }
+  .phase-1 .phase-badge { background: var(--c-blue-dim); color: var(--c-blue); }
+  .phase-1 .phase-title { color: var(--c-blue); }
+  .phase-2 .phase-badge { background: var(--c-teal-dim); color: var(--c-teal); }
+  .phase-2 .phase-title { color: var(--c-teal); }
+  .phase-3 .phase-badge { background: var(--c-purple-dim); color: var(--c-purple); }
+  .phase-3 .phase-title { color: var(--c-purple); }
+  .phase-4 .phase-badge { background: var(--c-green-dim); color: var(--c-green); }
+  .phase-4 .phase-title { color: var(--c-green); }
+  .phase-5 .phase-badge { background: var(--c-slate-dim); color: var(--c-slate); }
+  .phase-5 .phase-title { color: var(--c-slate); }
+
+  /* HITL highlight */
+  .phase-hitl {
+    background: rgba(180, 83, 9, 0.03);
+    border-left: 3px solid var(--c-amber);
+  }
+  .hitl-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--c-amber);
+    margin-bottom: 4px;
+  }
+  .hitl-verdicts {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  .verdict {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .verdict-proceed { background: var(--c-green-dim); color: var(--c-green); }
+  .verdict-caution { background: var(--c-amber-dim); color: var(--c-amber); }
+  .verdict-block { background: var(--c-red-dim); color: var(--c-red); }
+
+  /* Mode fork */
+  .mode-fork {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 20px;
+  }
+  .mode-fork-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .mode-fork-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+  .fork-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .fork-card-name {
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .fork-card-path {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .fork-agent { border-top: 2px solid var(--c-blue); }
+  .fork-agent .fork-card-name { color: var(--c-blue); }
+  .fork-auto { border-top: 2px solid var(--c-teal); }
+  .fork-auto .fork-card-name { color: var(--c-teal); }
+  .fork-skill { border-top: 2px solid var(--c-green); }
+  .fork-skill .fork-card-name { color: var(--c-green); }
+  .fork-action { border-top: 2px solid var(--c-amber); }
+  .fork-action .fork-card-name { color: var(--c-amber); }
+
+  /* ---- Post-build row ---- */
+  .post-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .post-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    border-top: 3px solid var(--c-green);
+  }
+  .post-card h3 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--c-green);
+    margin-bottom: 4px;
+  }
+  .post-card .post-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.55;
+  }
+  .post-card.validate { border-top-color: var(--c-indigo); }
+  .post-card.validate h3 { color: var(--c-indigo); }
+
+  /* ---- Quality loop ---- */
+  .quality-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    border-top: 3px solid var(--c-red);
+  }
+  .q-card h3 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--c-red);
+    margin-bottom: 4px;
+  }
+  .q-card .q-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.55;
+    margin-bottom: 8px;
+  }
+  .q-card.kb { border-top-color: var(--c-purple); }
+  .q-card.kb h3 { color: var(--c-purple); }
+  .q-card.repair { border-top-color: var(--c-amber); }
+  .q-card.repair h3 { color: var(--c-amber); }
+
+  .sub-items {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 6px;
+  }
+  .sub-item {
+    font-size: 11px;
+    color: var(--text-dim);
+    padding: 5px 9px;
+    background: var(--surface2);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    line-height: 1.4;
+  }
+  .sub-item strong {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 1px;
+  }
+
+  /* loop-back note */
+  .loop-back {
+    background: var(--c-amber-dim);
+    border: 1px solid rgba(180,83,9,0.15);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 12px;
+    color: var(--text-dim);
+    text-align: center;
+    margin-bottom: 8px;
+    font-style: italic;
+  }
+
+  /* import banner */
+  .import-banner {
+    background: var(--c-green-dim);
+    border: 1px solid rgba(22,101,52,0.15);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .import-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--c-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .import-icon svg { width: 18px; height: 18px; color: white; }
+  .import-text .import-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--c-green);
+    margin-bottom: 2px;
+  }
+  .import-text .import-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  @media (max-width: 640px) {
+    .entry-row, .post-row, .quality-row { grid-template-columns: 1fr; }
+    .mode-fork-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="back"><a href="../">&larr; All Diagrams</a></div>
+
+  <div class="hdr">
+    <h1>Agent Factory — App Walkthrough</h1>
+    <p class="hdr-sub">End-to-end flow from brief to deployed Glean agent: entry points, 6-phase build pipeline, build mode branches, and the quality loop.</p>
+  </div>
+
+  <!-- Entry points -->
+  <div class="row-label">Step 1 — Start Here</div>
+  <div class="entry-row section-row">
+
+    <div class="entry-card">
+      <h3>Discovery (PuRDy)</h3>
+      <p class="entry-desc">Conversational requirements gathering across 6 stages: problem, scale, stakeholders, systems, success, and risks. Outputs a PRD ready to hand off to Build.</p>
+      <div class="mode-list">
+        <div class="mode-item">
+          <div class="mode-name">Quick Discovery</div>
+          <div class="mode-time">~5 min</div>
+          <div class="mode-out">Fuzzy idea in your head &rarr; 1-page triage summary</div>
+        </div>
+        <div class="mode-item">
+          <div class="mode-name">Thorough Discovery</div>
+          <div class="mode-time">~15 min</div>
+          <div class="mode-out">Notes or draft &rarr; full PRD</div>
+        </div>
+        <div class="mode-item">
+          <div class="mode-name">Gap-Fill Discovery</div>
+          <div class="mode-time">~10 min</div>
+          <div class="mode-out">Existing PRD or doc &rarr; completed PRD with gaps filled</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry-card interview">
+      <h3>Interview (Brief Builder)</h3>
+      <p class="entry-desc">Form-based intake for users who already know what they want to build. Asks structured questions about trigger type, workflow, data sources, and department context.</p>
+      <div class="mode-list">
+        <div class="mode-item">
+          <div class="mode-name">Structured questionnaire</div>
+          <div class="mode-out">Section-by-section: basics, trigger, data sources, delivery, dept details</div>
+        </div>
+        <div class="mode-item">
+          <div class="mode-name">Optional reference docs</div>
+          <div class="mode-out">Upload existing docs to pre-fill answers before the interview starts</div>
+        </div>
+        <div class="mode-item">
+          <div class="mode-name">Output</div>
+          <div class="mode-out">Brief text passed directly to Build &rarr; skips Discovery</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="flow-arrow">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14m0 0l-4-4m4 4l4-4"/>
+    </svg>
+  </div>
+
+  <!-- Build pipeline -->
+  <div class="row-label">Step 2 — Build Pipeline</div>
+  <div class="pipeline section-row">
+
+    <div class="pipeline-header">
+      <span class="pipeline-header-label">6-Phase Build Pipeline</span>
+      <div class="mode-tags">
+        <span class="mode-tag mode-tag-agent">Agent</span>
+        <span class="mode-tag mode-tag-auto">Auto Mode</span>
+        <span class="mode-tag mode-tag-skill">Skill</span>
+        <span class="mode-tag mode-tag-action">Custom Action</span>
+      </div>
+    </div>
+
+    <div class="phase-list">
+
+      <div class="phase phase-0">
+        <div class="phase-num-col">
+          <div class="phase-badge">0</div>
+        </div>
+        <div class="phase-body">
+          <div class="phase-title">Fitness Check</div>
+          <div class="phase-desc">Evaluates whether Glean is the right platform for this use case. Scans 5 signals to recommend Agent Mode vs Auto Mode. Auto-stops with a FAIL verdict if Glean is the wrong tool entirely.</div>
+          <div class="phase-tags">
+            <span class="phase-tag tag-all">All modes</span>
+            <span class="phase-tag tag-stop">Auto-stop on FAIL</span>
+            <span class="phase-tag tag-output">Mode recommendation</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase phase-1">
+        <div class="phase-num-col">
+          <div class="phase-badge">1</div>
+        </div>
+        <div class="phase-body">
+          <div class="phase-title">Gap Analysis</div>
+          <div class="phase-desc">Identifies missing requirements, ambiguities, and risks in the brief before any building begins. Includes a mode validation check (confirms or overrides Phase 0 recommendation).</div>
+          <div class="phase-tags">
+            <span class="phase-tag tag-all">All modes</span>
+            <span class="phase-tag tag-output">gap-analysis.md</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase phase-hitl">
+        <div class="phase-num-col" style="padding-top: 16px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--c-amber)" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01"/>
+          </svg>
+        </div>
+        <div class="phase-body">
+          <div class="hitl-label">Human-in-the-Loop Checkpoint</div>
+          <div class="phase-desc">You review the gap analysis before the build continues. The engine parses a verdict from the analysis and surfaces it in the UI. You approve, override, or cancel.</div>
+          <div class="hitl-verdicts">
+            <span class="verdict verdict-proceed">PROCEED — approve and continue</span>
+            <span class="verdict verdict-caution">CAUTION — flag raised, you decide</span>
+            <span class="verdict verdict-block">BLOCK — serious issue, checkbox override required</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mode-fork">
+        <div class="mode-fork-label">Build mode fork — route determined by brief content and Phase 0/1 output</div>
+        <div class="mode-fork-grid">
+          <div class="fork-card fork-agent">
+            <div class="fork-card-name">Agent Build</div>
+            <div class="fork-card-path">Phase 2 Workflow Design<br>Phase 3 Write Instructions<br>Phase 4 Generate Outputs<br>Phase 5 Summary</div>
+          </div>
+          <div class="fork-card fork-auto">
+            <div class="fork-card-name">Auto Mode Build</div>
+            <div class="fork-card-path">Phase 2A Instruction Design<br>Phase 3A Build Brief<br>(no JSON export)</div>
+          </div>
+          <div class="fork-card fork-skill">
+            <div class="fork-card-name">Skill Build</div>
+            <div class="fork-card-path">Single phase<br>generates SKILL.md<br>+ supporting files</div>
+          </div>
+          <div class="fork-card fork-action">
+            <div class="fork-card-name">Custom Action</div>
+            <div class="fork-card-path">Single phase<br>generates OpenAPI spec<br>+ deployment guide</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase phase-2">
+        <div class="phase-num-col">
+          <div class="phase-badge">2</div>
+        </div>
+        <div class="phase-body">
+          <div class="phase-title">Workflow Design <span style="font-weight:400;color:var(--text-muted)">/ Instruction Design (Auto)</span></div>
+          <div class="phase-desc">Agent mode: designs the step-by-step workflow — task sequence, branching logic, search strategies. Auto Mode: designs the instruction architecture for a single-step Auto Mode agent.</div>
+          <div class="phase-tags">
+            <span class="phase-tag tag-agent-mode">Agent</span>
+            <span class="phase-tag tag-auto-mode">Auto Mode</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase phase-3">
+        <div class="phase-num-col">
+          <div class="phase-badge">3</div>
+        </div>
+        <div class="phase-body">
+          <div class="phase-title">Write Instructions <span style="font-weight:400;color:var(--text-muted)">/ Build Brief (Auto)</span></div>
+          <div class="phase-desc">Agent mode: writes full task-by-task instructions for every step in the workflow. Auto Mode: produces the complete instruction set for the Auto agent in Build Brief format.</div>
+          <div class="phase-tags">
+            <span class="phase-tag tag-agent-mode">Agent</span>
+            <span class="phase-tag tag-auto-mode">Auto Mode</span>
+            <span class="phase-tag tag-output">phase-3-instructions.md</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase phase-4">
+        <div class="phase-num-col">
+          <div class="phase-badge">4</div>
+        </div>
+        <div class="phase-body">
+          <div class="phase-title">Generate Outputs</div>
+          <div class="phase-desc">Assembles all artifacts: the importable Glean JSON config, agent-config.json, trigger config, and any supporting files. Runs JSON schema validation immediately after extraction.</div>
+          <div class="phase-tags">
+            <span class="phase-tag tag-agent-mode">Agent</span>
+            <span class="phase-tag tag-output">agent-config.json</span>
+            <span class="phase-tag tag-output">Glean import JSON</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase phase-5">
+        <div class="phase-num-col">
+          <div class="phase-badge">5</div>
+        </div>
+        <div class="phase-body">
+          <div class="phase-title">Summary</div>
+          <div class="phase-desc">Produces a plain-language build summary — what was built, key decisions made, known gaps, and lessons learned. Lessons are appended to a repo-level lessons file for future builds.</div>
+          <div class="phase-tags">
+            <span class="phase-tag tag-agent-mode">Agent</span>
+            <span class="phase-tag tag-output">build-summary.md</span>
+            <span class="phase-tag tag-output">lessons-learned.md</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="flow-arrow">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14m0 0l-4-4m4 4l4-4"/>
+    </svg>
+  </div>
+
+  <!-- Post-build checks -->
+  <div class="row-label">Step 3 — Post-Build Checks</div>
+  <div class="post-row section-row">
+
+    <div class="post-card validate">
+      <h3>JSON Validation</h3>
+      <p class="post-desc">Validates agent-config.json against the Glean schema. Checks trigger configs (CHAT_MESSAGE, SCHEDULED), toolConfig names, sharingSettings nesting, and required fields. Surfaces errors in the UI before you attempt an import.</p>
+    </div>
+
+    <div class="post-card">
+      <h3>Budget Audit</h3>
+      <p class="post-desc">Audits instruction token count across all tasks. Flags steps that are over the Glean instruction budget limit so you can trim before importing. Shows per-task breakdown and total.</p>
+    </div>
+
+  </div>
+
+  <div class="import-banner">
+    <div class="import-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+      </svg>
+    </div>
+    <div class="import-text">
+      <div class="import-title">One-Click Import to Glean</div>
+      <div class="import-desc">Once validation passes, the build detail page shows an Import button. The app calls the Glean API to create the agent directly — no copy-paste. Returns an edit URL to the agent in the Glean console.</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14m0 0l-4-4m4 4l4-4"/>
+    </svg>
+  </div>
+
+  <!-- Quality loop -->
+  <div class="row-label">Step 4 — Quality Loop</div>
+  <div class="quality-row section-row">
+
+    <div class="q-card">
+      <h3>Evaluate</h3>
+      <p class="q-desc">Run structured evals against the live agent. Two modes:</p>
+      <div class="sub-items">
+        <div class="sub-item">
+          <strong>Q&A Eval</strong>
+          Upload a CSV of questions and expected answers. Scores accuracy and citation quality per question.
+        </div>
+        <div class="sub-item">
+          <strong>Conversation Eval</strong>
+          Run multi-turn conversation scenarios. Scores each turn and the overall session.
+        </div>
+      </div>
+    </div>
+
+    <div class="q-card repair">
+      <h3>Repair</h3>
+      <p class="q-desc">Takes eval failures as input. Analyzes patterns across failing questions and generates targeted instruction repairs. Each repair is versioned — you can compare before and after.</p>
+      <div class="sub-items">
+        <div class="sub-item">Analyzes failure patterns across questions</div>
+        <div class="sub-item">Generates diffs for specific task instructions</div>
+        <div class="sub-item">Re-run eval after repair to track improvement</div>
+      </div>
+    </div>
+
+    <div class="q-card kb">
+      <h3>KB Audit</h3>
+      <p class="q-desc">Audits knowledge base documents for quality and coherence. Runs independently of the build pipeline — useful before starting a build or after adding new docs.</p>
+      <div class="sub-items">
+        <div class="sub-item">Scores doc quality across multiple dimensions</div>
+        <div class="sub-item">Flags conflicts between documents</div>
+        <div class="sub-item">Outputs an overall risk level and repair recommendations</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="loop-back">Repair outputs feed back into the next eval run — iterate until scores stabilize.</div>
+
+</div>
+</body>
+</html>
