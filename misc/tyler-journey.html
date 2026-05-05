@@ -6,554 +6,436 @@
 <title>AI Solutions Architect — Tyler's Journey</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #06080f;
     --surface: #0d1120;
-    --surface2: #131825;
     --border: rgba(255,255,255,0.07);
-    --border-bright: rgba(255,255,255,0.14);
+    --border-bright: rgba(255,255,255,0.13);
     --text: #dde4f0;
-    --text-mid: #7a8ba8;
-    --text-dim: #3d4e66;
-
+    --text-mid: #6b7f9a;
+    --text-dim: #2e3d52;
     --s1: #3b82f6;
     --s2: #6366f1;
     --s3: #8b5cf6;
     --s4: #a855f7;
     --s5: #d946ef;
-    --s6: #4a5568;
+    --s6: #475569;
     --end: #f59e0b;
-
-    --line-w: 2px;
-    --dot-size: 36px;
-    --card-radius: 12px;
+    --dot: 32px;
+    --r: 10px;
   }
-
   @media (prefers-color-scheme: light) {
     :root {
-      --bg: #f6f8fb;
-      --surface: #ffffff;
-      --surface2: #f0f4f9;
+      --bg: #f5f7fb;
+      --surface: #fff;
       --border: rgba(0,0,0,0.08);
-      --border-bright: rgba(0,0,0,0.15);
+      --border-bright: rgba(0,0,0,0.14);
       --text: #0f1929;
-      --text-mid: #526070;
-      --text-dim: #a0aec0;
+      --text-mid: #52667a;
+      --text-dim: #b0bec8;
     }
   }
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     font-family: 'Space Grotesk', system-ui, sans-serif;
     background: var(--bg);
     color: var(--text);
-    min-height: 100vh;
-    padding: 64px 24px 100px;
-    background-image:
-      radial-gradient(ellipse 80% 30% at 50% 0%, rgba(99,102,241,0.06) 0%, transparent 60%);
+    padding: 56px 24px 80px;
+    background-image: radial-gradient(ellipse 70% 25% at 50% 0%, rgba(99,102,241,0.07) 0%, transparent 60%);
   }
 
-  /* ── Page header ── */
-  .page-header {
+  /* Header */
+  .hd {
     text-align: center;
-    max-width: 640px;
-    margin: 0 auto 72px;
-    animation: fadeUp 0.5s ease both;
+    max-width: 520px;
+    margin: 0 auto 60px;
+    animation: up .45s ease both;
   }
-
-  .eyebrow {
+  .hd-eye {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.14em;
+    font-size: 10px;
+    letter-spacing: .14em;
     text-transform: uppercase;
     color: var(--text-dim);
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
-
-  .page-header h1 {
-    font-size: 34px;
+  .hd h1 {
+    font-size: 28px;
     font-weight: 700;
-    letter-spacing: -0.03em;
-    line-height: 1.15;
-    margin-bottom: 14px;
+    letter-spacing: -.025em;
+    line-height: 1.2;
   }
-
-  .page-header h1 .dest {
-    color: var(--end);
-  }
-
-  .page-header p {
-    font-size: 15px;
+  .hd h1 .gold { color: var(--end); }
+  .hd-sub {
+    margin-top: 10px;
+    font-size: 13px;
     color: var(--text-mid);
-    line-height: 1.65;
+    line-height: 1.6;
   }
 
-  /* ── Timeline container ── */
-  .timeline {
-    max-width: 680px;
+  /* Timeline */
+  .tl {
+    max-width: 600px;
     margin: 0 auto;
     position: relative;
   }
-
-  /* Vertical line */
-  .timeline::before {
+  .tl::before {
     content: '';
     position: absolute;
-    left: calc(var(--dot-size) / 2 - var(--line-w) / 2);
-    top: 18px;
+    left: calc(var(--dot)/2 - 1px);
+    top: 16px;
     bottom: 0;
-    width: var(--line-w);
-    background: linear-gradient(
-      to bottom,
-      var(--s1) 0%,
-      var(--s2) 16%,
-      var(--s3) 32%,
-      var(--s4) 48%,
-      var(--s5) 64%,
-      rgba(245,158,11,0.4) 85%,
-      var(--end) 100%
-    );
-    opacity: 0.45;
-    border-radius: 2px;
+    width: 2px;
+    background: linear-gradient(to bottom,
+      var(--s1) 0%, var(--s2) 17%, var(--s3) 34%,
+      var(--s4) 51%, var(--s5) 68%,
+      rgba(245,158,11,.35) 84%, var(--end) 100%);
+    opacity: .4;
   }
 
-  /* ── Stage row ── */
-  .stage-row {
+  /* Row */
+  .row {
     display: grid;
-    grid-template-columns: var(--dot-size) 1fr;
-    gap: 0 20px;
-    margin-bottom: 32px;
-    animation: fadeUp 0.5s ease both;
-    animation-delay: calc(var(--i, 0) * 0.1s);
+    grid-template-columns: var(--dot) 1fr;
+    gap: 0 18px;
+    margin-bottom: 20px;
+    animation: up .45s ease both;
+    animation-delay: calc(var(--i,0) * .09s);
   }
+  .row--opt { opacity: .65; }
 
-  .stage-row--optional {
-    opacity: 0.72;
-    padding-left: 20px;
-    grid-template-columns: var(--dot-size) 1fr;
-  }
-
-  /* ── Timeline dot ── */
+  /* Dot */
   .dot {
-    width: var(--dot-size);
-    height: var(--dot-size);
+    width: var(--dot);
+    height: var(--dot);
     border-radius: 50%;
-    background: var(--stage-color, var(--s1));
+    background: var(--c, var(--s1));
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 500;
-    color: rgba(0,0,0,0.7);
+    color: rgba(0,0,0,.75);
     flex-shrink: 0;
     position: relative;
     z-index: 1;
-    margin-top: 18px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    margin-top: 14px;
   }
-
-  .stage-row--optional .dot {
+  .row--opt .dot {
     background: none;
     border: 2px dashed var(--s6);
     color: var(--s6);
     font-size: 10px;
   }
 
-  /* ── Stage card ── */
+  /* Card */
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-left: 3px solid var(--stage-color, var(--s1));
-    border-radius: var(--card-radius);
-    padding: 24px 26px 22px;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    border-left: 3px solid var(--c, var(--s1));
+    border-radius: var(--r);
+    padding: 16px 20px 14px;
+    transition: box-shadow .2s;
   }
-
-  .card:hover {
-    border-color: var(--border-bright);
-    box-shadow: 0 4px 24px rgba(0,0,0,0.2);
-  }
-
-  .stage-row--optional .card {
+  .card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.18); }
+  .row--opt .card {
     border-style: dashed;
     border-left-style: dashed;
-    background: rgba(255,255,255,0.02);
   }
 
-  .card-header {
+  .card-top {
     display: flex;
     align-items: baseline;
-    gap: 12px;
-    margin-bottom: 10px;
+    gap: 10px;
+    margin-bottom: 6px;
   }
-
-  .stage-label {
+  .lbl {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.1em;
+    font-size: 9.5px;
+    letter-spacing: .1em;
     text-transform: uppercase;
-    color: var(--stage-color, var(--s1));
+    color: var(--c, var(--s1));
     flex-shrink: 0;
   }
-
-  .card-title {
-    font-size: 19px;
+  .title {
+    font-size: 16px;
     font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.25;
+    letter-spacing: -.018em;
     color: var(--text);
   }
-
-  .card-value {
-    font-size: 13.5px;
-    color: var(--text-mid);
-    line-height: 1.65;
-    margin-bottom: 16px;
-    border-left: 2px solid rgba(255,255,255,0.06);
-    padding-left: 12px;
-  }
-
-  .card-value strong {
-    color: var(--text);
-    font-weight: 500;
-  }
-
-  .card-abilities {
-    list-style: none;
-    margin-bottom: 16px;
-  }
-
-  .card-abilities li {
+  .big {
     font-size: 13px;
     color: var(--text-mid);
-    padding: 4px 0 4px 16px;
-    position: relative;
-    line-height: 1.5;
+    line-height: 1.55;
+    margin-bottom: 10px;
   }
+  .big strong { color: var(--text); font-weight: 600; }
 
-  .card-abilities li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 11px;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--stage-color, var(--s1));
-    opacity: 0.6;
-  }
-
-  .card-tags {
+  .pts {
+    list-style: none;
     display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-
-  .tag {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    padding: 3px 9px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    color: var(--text-dim);
-  }
-
-  .tag--accent {
-    border-color: rgba(255,255,255,0.1);
-    color: var(--text-mid);
-  }
-
-  /* ── Optional label ── */
-  .optional-badge {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 2px 8px;
-    border: 1px dashed var(--s6);
-    border-radius: 20px;
-    color: var(--s6);
-    align-self: center;
-  }
-
-  /* ── End state card ── */
-  .end-row {
-    display: grid;
-    grid-template-columns: var(--dot-size) 1fr;
-    gap: 0 20px;
-    animation: fadeUp 0.5s 0.75s ease both;
-  }
-
-  .end-dot {
-    width: var(--dot-size);
-    height: var(--dot-size);
-    border-radius: 50%;
-    background: var(--end);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    position: relative;
-    z-index: 1;
-    margin-top: 24px;
-    box-shadow: 0 0 0 6px rgba(245,158,11,0.12), 0 0 32px rgba(245,158,11,0.2);
-  }
-
-  .end-dot svg {
-    width: 16px;
-    height: 16px;
-    fill: rgba(0,0,0,0.7);
-  }
-
-  .end-card {
-    background: linear-gradient(145deg, rgba(245,158,11,0.1), rgba(245,158,11,0.04));
-    border: 1px solid rgba(245,158,11,0.25);
-    border-left: 3px solid var(--end);
-    border-radius: var(--card-radius);
-    padding: 28px 28px 26px;
-    box-shadow: 0 0 48px rgba(245,158,11,0.07);
-    transition: box-shadow 0.2s;
-  }
-
-  .end-card:hover {
-    box-shadow: 0 0 48px rgba(245,158,11,0.12);
-  }
-
-  .end-card .stage-label {
-    color: var(--end);
-    opacity: 0.7;
-  }
-
-  .end-card .card-title {
-    font-size: 24px;
-    color: var(--end);
+    flex-direction: column;
+    gap: 3px;
     margin-bottom: 12px;
   }
-
-  .end-card .card-value {
-    border-left-color: rgba(245,158,11,0.2);
-    font-size: 14px;
-    margin-bottom: 0;
+  .pts li {
+    font-size: 12px;
+    color: var(--text-mid);
+    padding-left: 13px;
+    position: relative;
+    line-height: 1.45;
+  }
+  .pts li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 7px;
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--c, var(--s1));
+    opacity: .55;
   }
 
-  /* ── Manifesto footer ── */
-  .manifesto-line {
-    max-width: 680px;
-    margin: 56px auto 0;
-    padding: 20px 0 0;
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    padding: 2px 8px;
+    background: rgba(255,255,255,0.035);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-dim);
+  }
+  .tag--hi { color: var(--text-mid); border-color: rgba(255,255,255,.1); }
+
+  /* Optional inline section */
+  .optional-block {
+    margin-top: 12px;
+    padding-top: 11px;
+    border-top: 1px solid var(--border);
+  }
+  .opt-lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 7px;
+  }
+
+  /* End state */
+  .end-row {
+    display: grid;
+    grid-template-columns: var(--dot) 1fr;
+    gap: 0 18px;
+    animation: up .45s .65s ease both;
+  }
+  .end-dot {
+    width: var(--dot); height: var(--dot);
+    border-radius: 50%;
+    background: var(--end);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; position: relative; z-index: 1;
+    margin-top: 14px;
+    box-shadow: 0 0 0 5px rgba(245,158,11,.1), 0 0 24px rgba(245,158,11,.18);
+  }
+  .end-dot::after {
+    content: '★';
+    font-size: 13px;
+    color: rgba(0,0,0,.7);
+  }
+  .end-card {
+    background: linear-gradient(135deg, rgba(245,158,11,.09), rgba(245,158,11,.03));
+    border: 1px solid rgba(245,158,11,.22);
+    border-left: 3px solid var(--end);
+    border-radius: var(--r);
+    padding: 18px 22px 16px;
+  }
+  .end-card .lbl { color: var(--end); opacity: .65; }
+  .end-card .title { font-size: 20px; color: var(--end); margin-bottom: 6px; }
+  .end-card .big { font-size: 13px; margin-bottom: 0; }
+
+  /* Footer */
+  .footer {
+    max-width: 600px;
+    margin: 44px auto 0;
+    padding-top: 18px;
     border-top: 1px solid var(--border);
     text-align: center;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
+    font-size: 10px;
     color: var(--text-dim);
-    letter-spacing: 0.04em;
-    line-height: 1.7;
-    animation: fadeUp 0.5s 0.9s ease both;
+    letter-spacing: .04em;
+    animation: up .45s .75s ease both;
   }
 
-  /* ── Animations ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(14px); }
+  @keyframes up {
+    from { opacity: 0; transform: translateY(10px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-
-  @media (prefers-reduced-motion: reduce) {
-    * { animation: none !important; }
-  }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
 </style>
 </head>
 <body>
 
-<header class="page-header">
-  <div class="eyebrow">Tyler's Onboarding Journey</div>
-  <h1>Knowledge Worker<br>to <span class="dest">AI Solutions Architect</span></h1>
-  <p>Each stage removes cognitive overhead from synthesis — freeing judgment for the work that only a human can do. Scroll down to see the full arc.</p>
+<header class="hd">
+  <div class="hd-eye">Tyler's Journey</div>
+  <h1>Knowledge Worker<br>to <span class="gold">AI Solutions Architect</span></h1>
+  <p class="hd-sub">Each stage removes synthesis overhead — freeing judgment for the work only a human can do.</p>
 </header>
 
-<div class="timeline">
+<div class="tl">
 
-  <!-- Stage 1 -->
-  <div class="stage-row" style="--stage-color:var(--s1); --i:0;">
+  <!-- 1 -->
+  <div class="row" style="--c:var(--s1); --i:0;">
     <div class="dot">01</div>
     <div class="card">
-      <div class="card-header">
-        <div class="stage-label">Stage 1</div>
-        <div class="card-title">Your Brain, Externalized</div>
+      <div class="card-top">
+        <span class="lbl">Stage 1</span>
+        <span class="title">Your Brain, Externalized</span>
       </div>
-      <p class="card-value">Right now context lives in your head, scattered across Slack threads, and in meeting notes you'll never see again. <strong>This gives you one place where your work lives and one interface that reads all of it</strong> — so you stop spending mental energy on retrieval and start spending it on judgment.</p>
-      <ul class="card-abilities">
-        <li>Ask Claude what's open, what was decided, what needs to happen — against your actual work</li>
-        <li>Turn a raw transcript into a structured meeting note in seconds</li>
-        <li>Draft Slack messages, prep for meetings, surface forgotten context — from one place</li>
-        <li>Have a system that travels with you regardless of employer or machine</li>
+      <p class="big"><strong>One place for your work. One interface that reads all of it.</strong> Stop holding context in your head.</p>
+      <ul class="pts">
+        <li>Ask Claude what's open, what was decided, what needs to happen</li>
+        <li>Turn a transcript into a structured note in seconds</li>
       </ul>
-      <div class="card-tags">
-        <span class="tag tag--accent">Vault folder</span>
-        <span class="tag tag--accent">CLAUDE.md</span>
-        <span class="tag tag--accent">Claude Code CLI</span>
+      <div class="tags">
+        <span class="tag tag--hi">Vault</span>
+        <span class="tag tag--hi">CLAUDE.md</span>
+        <span class="tag tag--hi">Claude Code CLI</span>
         <span class="tag">Obsidian (optional)</span>
       </div>
     </div>
   </div>
 
-  <!-- Stage 2 -->
-  <div class="stage-row" style="--stage-color:var(--s2); --i:1;">
+  <!-- 2 -->
+  <div class="row" style="--c:var(--s2); --i:1;">
     <div class="dot">02</div>
     <div class="card">
-      <div class="card-header">
-        <div class="stage-label">Stage 2</div>
-        <div class="card-title">Your Tools Come to You</div>
+      <div class="card-top">
+        <span class="lbl">Stage 2</span>
+        <span class="title">Your Tools Come to You</span>
       </div>
-      <p class="card-value">Every tool switch is a tax on thinking. You open Jira, lose your place, switch to Glean, lose your thread. <strong>After Stage 2, Jira and Glean come to you</strong> — one conversation pulls tickets, searches agents, creates actions, and cross-references your notes. The synthesis is handled. What's left is the call.</p>
-      <ul class="card-abilities">
-        <li>Pull your Jira board and surface what's actually due — without opening Jira</li>
-        <li>Create and update tickets from a conversation</li>
-        <li>Search Glean, review agent inventory, cross-reference against your notes</li>
-        <li>Get a pre-meeting brief that combines notes, tickets, and Glean content in one ask</li>
+      <p class="big"><strong>Jira and Glean in one conversation.</strong> Stop switching. Start thinking.</p>
+      <ul class="pts">
+        <li>Create tickets, search agents, cross-reference notes — one ask</li>
+        <li>Pre-meeting brief: notes + tickets + Glean, assembled automatically</li>
       </ul>
-      <div class="card-tags">
-        <span class="tag tag--accent">Jira MCP</span>
-        <span class="tag tag--accent">Glean MCP</span>
+      <div class="tags">
+        <span class="tag tag--hi">Jira MCP</span>
+        <span class="tag tag--hi">Glean MCP</span>
       </div>
     </div>
   </div>
 
-  <!-- Stage 3 -->
-  <div class="stage-row" style="--stage-color:var(--s3); --i:2;">
+  <!-- 3 -->
+  <div class="row" style="--c:var(--s3); --i:2;">
     <div class="dot">03</div>
     <div class="card">
-      <div class="card-header">
-        <div class="stage-label">Stage 3</div>
-        <div class="card-title">GitHub + Memory — Your Work Has a Permanent Home</div>
+      <div class="card-top">
+        <span class="lbl">Stage 3</span>
+        <span class="title">GitHub + Memory</span>
       </div>
-      <p class="card-value">Your setup exists on one machine and Claude forgets everything between sessions. <strong>Memory and GitHub solve this together</strong> — decisions stick, context carries over, and your entire system is backed up to the internet and cloneable anywhere. You do all of it in plain language inside the CLI. You never touch the GitHub website.</p>
-      <ul class="card-abilities">
-        <li>Push your vault to GitHub from inside Claude Code — no browser needed</li>
-        <li>Have Claude carry decisions and preferences from one session to the next</li>
-        <li>Set up your own config repo (modeled on Charlie's clode) as personal infrastructure</li>
-        <li>Get your Anthropic API key — needed here and for the meeting enrichment in Stage 4</li>
+      <p class="big"><strong>Your decisions stick. Your setup travels.</strong> Claude carries context session to session. Your vault lives on GitHub — cloneable anywhere, all from the CLI.</p>
+      <ul class="pts">
+        <li>Push vault to GitHub in plain language — no browser needed</li>
+        <li>"Remember that" actually works the next time you open a session</li>
       </ul>
-      <div class="card-tags">
-        <span class="tag tag--accent">GitHub</span>
-        <span class="tag tag--accent">claude-mem</span>
-        <span class="tag tag--accent">Anthropic API key</span>
+      <div class="tags">
+        <span class="tag tag--hi">GitHub</span>
+        <span class="tag tag--hi">claude-mem</span>
+        <span class="tag tag--hi">Anthropic API key</span>
         <span class="tag">clode repo</span>
       </div>
-      <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border);">
-        <div class="stage-label" style="margin-bottom:8px; opacity:0.7;">Optional — if you want to build something</div>
-        <p style="font-size:12.5px; color:var(--text-mid); line-height:1.6; margin-bottom:10px;">Set up personal accounts now so they're there when the idea arrives. Free tiers cover everything you need to start. This is Charlie's personal stack.</p>
-        <div class="card-tags">
-          <span class="tag tag--accent">Vercel</span>
-          <span class="tag tag--accent">Supabase</span>
-          <span class="tag tag--accent">Railway</span>
+      <div class="optional-block">
+        <div class="opt-lbl">Optional — if you want to build something</div>
+        <div class="tags">
+          <span class="tag tag--hi">Vercel</span>
+          <span class="tag tag--hi">Supabase</span>
+          <span class="tag tag--hi">Railway</span>
+          <span class="tag">Charlie's personal build stack — free tiers, set up now, use when ready</span>
         </div>
-        <p style="font-size:11px; color:var(--text-dim); margin-top:8px; line-height:1.5;">Vercel = deploy front-end apps &nbsp;·&nbsp; Supabase = managed database &nbsp;·&nbsp; Railway = back-end services</p>
       </div>
     </div>
   </div>
 
-  <!-- Stage 4 -->
-  <div class="stage-row" style="--stage-color:var(--s4); --i:3;">
+  <!-- 4 -->
+  <div class="row" style="--c:var(--s4); --i:3;">
     <div class="dot">04</div>
     <div class="card">
-      <div class="card-header">
-        <div class="stage-label">Stage 4</div>
-        <div class="card-title">Meetings Enrich Themselves</div>
+      <div class="card-top">
+        <span class="lbl">Stage 4</span>
+        <span class="title">Meetings Enrich Themselves</span>
       </div>
-      <p class="card-value">Meetings are where most knowledge work happens and where most of it gets lost. <strong>After Stage 4, every meeting you record becomes a structured intelligence document automatically</strong> — decisions, actions, signals, and connections to everything else you're working on. The meeting note in your vault isn't a transcript. It's an analysis. This is where the system starts compounding.</p>
-      <ul class="card-abilities">
-        <li>Record a meeting; a fully enriched note appears in your vault within minutes</li>
-        <li>See automatically how a meeting connects to other things in your portfolio</li>
-        <li>Ask "what did we decide about X this month" and get a real answer</li>
-        <li>Never write a meeting note by hand again</li>
+      <p class="big"><strong>Record a meeting. A structured intelligence document appears.</strong> Decisions, actions, signals, portfolio connections — automatically.</p>
+      <ul class="pts">
+        <li>No manual note-writing — ever</li>
+        <li>"What did we decide about X?" gets a real answer, weeks later</li>
       </ul>
-      <div class="card-tags">
-        <span class="tag tag--accent">Granola</span>
-        <span class="tag tag--accent">Granola Sync</span>
-        <span class="tag tag--accent">Auto-enrichment pipeline</span>
-        <span class="tag">Charlie sets up the technical parts</span>
+      <div class="tags">
+        <span class="tag tag--hi">Granola</span>
+        <span class="tag tag--hi">Granola Sync</span>
+        <span class="tag tag--hi">Auto-enrichment</span>
+        <span class="tag">Charlie handles the technical setup</span>
       </div>
     </div>
   </div>
 
-  <!-- Stage 5 -->
-  <div class="stage-row" style="--stage-color:var(--s5); --i:4;">
+  <!-- 5 -->
+  <div class="row" style="--c:var(--s5); --i:4;">
     <div class="dot">05</div>
     <div class="card">
-      <div class="card-header">
-        <div class="stage-label">Stage 5</div>
-        <div class="card-title">Repeatable Workflows</div>
+      <div class="card-top">
+        <span class="lbl">Stage 5</span>
+        <span class="title">Repeatable Workflows</span>
       </div>
-      <p class="card-value">You've been doing things manually that could be one prompt. <strong>Slash commands turn your most common workflows into single words</strong> — standup, meeting brief, action item extraction, daily focus. And your entire setup is now in a GitHub repo you own, cloneable on any machine in minutes. You stop rebuilding. You continue.</p>
-      <ul class="card-abilities">
-        <li>Run /today for your Jira agenda + open notes in one shot</li>
-        <li>Run /meeting [person] for a pre-meeting brief in seconds</li>
-        <li>Run /process-meeting to extract actions and push them to Jira</li>
-        <li>Clone your setup on a new machine — everything back in minutes</li>
-        <li>Start building your own commands for workflows unique to your job</li>
+      <p class="big"><strong>Your most common workflows become one-word commands.</strong> Your entire setup is on GitHub — clone it on any machine in minutes.</p>
+      <ul class="pts">
+        <li>/today · /meeting · /jira-standup · /process-meeting · /glean-agent</li>
+        <li>Start building your own commands for work unique to you</li>
       </ul>
-      <div class="card-tags">
-        <span class="tag tag--accent">/today</span>
-        <span class="tag tag--accent">/meeting</span>
-        <span class="tag tag--accent">/jira-standup</span>
-        <span class="tag tag--accent">/process-meeting</span>
-        <span class="tag tag--accent">/think</span>
-        <span class="tag tag--accent">/glean-agent</span>
-        <span class="tag">clode config repo</span>
+      <div class="tags">
+        <span class="tag tag--hi">Slash commands</span>
+        <span class="tag tag--hi">clode config repo</span>
       </div>
     </div>
   </div>
 
-  <!-- Stage 6 — optional -->
-  <div class="stage-row stage-row--optional" style="--stage-color:var(--s6); --i:5;">
+  <!-- 6 optional -->
+  <div class="row row--opt" style="--c:var(--s6); --i:5;">
     <div class="dot">06</div>
     <div class="card">
-      <div class="card-header">
-        <div class="stage-label">Stage 6</div>
-        <div class="card-title">Platform Visibility</div>
-        <span class="optional-badge">optional</span>
+      <div class="card-top">
+        <span class="lbl">Stage 6 · optional</span>
+        <span class="title">Platform Visibility</span>
       </div>
-      <p class="card-value">700+ Glean agents in the library. Tyler knows maybe 100 of them. <strong>This stage connects Claude Code to the agent inventory</strong> — scoring against strategic objectives, auditing knowledge bases, surfacing what's valuable and what's withering. Not gatekeeping. Visibility. The call on what matters is still yours.</p>
-      <ul class="card-abilities">
-        <li>Run the KB audit tool against any agent's knowledge base</li>
-        <li>Score agents against strategic objectives and surface alignment gaps</li>
-        <li>Identify high-value agents that are underused or at risk of dying</li>
-        <li>Give teams meaningful signal on what to invest in and what to let go</li>
-      </ul>
-      <div class="card-tags">
-        <span class="tag">KB Audit tool</span>
+      <p class="big"><strong>700+ Glean agents. You know ~100.</strong> Score the rest against strategic objectives. Surface what matters. Let the rest go.</p>
+      <div class="tags">
+        <span class="tag">KB Audit</span>
         <span class="tag">Eval pipeline</span>
         <span class="tag">Strategic scoring</span>
-        <span class="tag">Glean agent inventory</span>
       </div>
     </div>
   </div>
 
-  <!-- End State -->
+  <!-- End state -->
   <div class="end-row">
-    <div class="end-dot">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-      </svg>
-    </div>
+    <div class="end-dot"></div>
     <div class="end-card">
-      <div class="stage-label" style="margin-bottom:8px;">End State</div>
-      <div class="card-title">AI Solutions Architect</div>
-      <p class="card-value">The bridge between technical capacity and business outcome. Claude handles the synthesis — pulling context, cross-referencing, formatting, connecting the dots. You do the work that requires a human: framing the right problem, making the call when data doesn't decide, modeling how people will experience what you're building, tracing second-order effects before you act, knowing what the signal means. Judgment at scale. That's the role. That's the destination.</p>
+      <div class="card-top" style="margin-bottom:6px;">
+        <span class="lbl">Destination</span>
+        <span class="title">AI Solutions Architect</span>
+      </div>
+      <p class="big">Bridge between technical capacity and business outcome. Claude handles the synthesis. <strong>You do the work that requires a human</strong> — framing, judgment, empathy, sense-making, direction.</p>
     </div>
   </div>
 
-</div><!-- /.timeline -->
+</div>
 
-<p class="manifesto-line">
-  "synthesis is the cost of entry — thinking is the value creation"<br>
-  <span style="opacity:0.5; font-size:9px;">The Thesis Manifesto</span>
-</p>
+<p class="footer">"synthesis is the cost of entry — thinking is the value creation" &nbsp;·&nbsp; The Thesis Manifesto</p>
 
 </body>
 </html>
