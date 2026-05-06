@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JD Generator — Auto Agent Flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+:root {
+  --bg: #060A10;
+  --surface: #0C1220;
+  --surface2: #111B30;
+  --surface3: #172240;
+  --border: rgba(255,255,255,0.06);
+  --border-bright: rgba(255,255,255,0.13);
+  --text: #D8E4F0;
+  --text-dim: #4A5E78;
+  --text-med: #7A94B0;
+
+  --blue: #4A9EFF;
+  --blue-dim: rgba(74,158,255,0.12);
+  --teal: #28D0A0;
+  --teal-dim: rgba(40,208,160,0.10);
+  --gold: #F5C842;
+  --gold-dim: rgba(245,200,66,0.10);
+  --amber: #FF9B42;
+  --amber-dim: rgba(255,155,66,0.10);
+  --green: #5CE892;
+  --green-dim: rgba(92,232,146,0.10);
+  --red: #FF5252;
+  --red-dim: rgba(255,82,82,0.10);
+  --purple: #A07AFF;
+  --purple-dim: rgba(160,122,255,0.10);
+
+  --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 70% 40% at 50% 0%, rgba(74,158,255,0.07) 0%, transparent 60%),
+    radial-gradient(circle, rgba(255,255,255,0.010) 1px, transparent 1px);
+  background-size: auto, 28px 28px;
+  color: var(--text);
+  font-family: var(--font);
+  min-height: 100vh;
+  padding: 52px 44px;
+  overflow-wrap: break-word;
+}
+
+.wrap { max-width: 1100px; margin: 0 auto; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.5s ease-out both; animation-delay: calc(var(--i,0) * 0.08s); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; }
+}
+
+/* ===== HEADER ===== */
+.project-tag {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--blue);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.project-tag::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 1.5px;
+  background: var(--blue);
+}
+h1 {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.7px;
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+.subtitle {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 32px;
+}
+
+/* ===== DIAGRAM PANEL ===== */
+.diagram-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.diagram-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.diagram-title {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+}
+
+/* Zoom controls */
+.zoom-controls {
+  display: flex;
+  gap: 4px;
+}
+.zoom-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border-bright);
+  color: var(--text-med);
+  font-family: var(--mono);
+  font-size: 12px;
+  width: 26px;
+  height: 26px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s, color 0.12s;
+}
+.zoom-btn:hover { background: var(--surface3); color: var(--text); }
+
+.mermaid-wrap {
+  overflow: hidden;
+  border-radius: 8px;
+  cursor: grab;
+  position: relative;
+}
+.mermaid-wrap:active { cursor: grabbing; }
+
+.mermaid-inner {
+  transform-origin: top left;
+  transition: transform 0.05s linear;
+}
+
+/* ===== LEGEND ===== */
+.legend-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+}
+.leg-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* ===== KEY BEHAVIORS GRID ===== */
+.behaviors-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.behavior-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+.behavior-card--blue   { border-color: rgba(74,158,255,0.20); }
+.behavior-card--green  { border-color: rgba(92,232,146,0.20); }
+.behavior-card--gold   { border-color: rgba(245,200,66,0.20); }
+.behavior-card--amber  { border-color: rgba(255,155,66,0.20); }
+.behavior-card--red    { border-color: rgba(255,82,82,0.20); }
+.behavior-card--teal   { border-color: rgba(40,208,160,0.20); }
+
+.behavior-tag {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 6px;
+}
+.behavior-card--blue  .behavior-tag { color: var(--blue); }
+.behavior-card--green .behavior-tag { color: var(--green); }
+.behavior-card--gold  .behavior-tag { color: var(--gold); }
+.behavior-card--amber .behavior-tag { color: var(--amber); }
+.behavior-card--red   .behavior-tag { color: var(--red); }
+.behavior-card--teal  .behavior-tag { color: var(--teal); }
+
+.behavior-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+.behavior-body {
+  font-size: 12px;
+  color: var(--text-med);
+  line-height: 1.5;
+}
+
+/* ===== FOOTNOTE ===== */
+.footnote {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  line-height: 1.7;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  margin: 20px 0 10px;
+}
+
+@media (max-width: 700px) {
+  body { padding: 24px 16px; }
+  .behaviors-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="page-header fade-up" style="--i:0">
+    <div class="project-tag">People / JD Generator</div>
+    <h1>Auto Agent &mdash; Execution Flow</h1>
+    <p class="subtitle">Instruction-following agent &bull; Auto mode (no sequential workflow) &bull; Conversational, multi-turn</p>
+  </div>
+
+  <div class="legend-row fade-up" style="--i:1">
+    <div class="legend-item"><span class="leg-swatch" style="background:rgba(74,158,255,0.6)"></span> Input / KB loading</div>
+    <div class="legend-item"><span class="leg-swatch" style="background:rgba(245,200,66,0.6)"></span> Decision point</div>
+    <div class="legend-item"><span class="leg-swatch" style="background:rgba(40,208,160,0.6)"></span> Generation / action</div>
+    <div class="legend-item"><span class="leg-swatch" style="background:rgba(92,232,146,0.6)"></span> Human-in-the-loop</div>
+    <div class="legend-item"><span class="leg-swatch" style="background:rgba(255,82,82,0.6)"></span> Scope boundary</div>
+    <div class="legend-item"><span class="leg-swatch" style="background:rgba(160,122,255,0.6)"></span> Output / delivery</div>
+  </div>
+
+  <div class="diagram-panel fade-up" style="--i:2">
+    <div class="diagram-header">
+      <span class="diagram-title">End-to-end agent execution</span>
+      <div class="zoom-controls">
+        <button class="zoom-btn" id="zoomIn">+</button>
+        <button class="zoom-btn" id="zoomOut">-</button>
+        <button class="zoom-btn" id="zoomReset" style="width:42px; font-size:10px">reset</button>
+      </div>
+    </div>
+    <div class="mermaid-wrap" id="mermaidWrap">
+      <div class="mermaid-inner" id="mermaidInner">
+        <div class="mermaid">
+%%{init: {
+  'theme': 'base',
+  'look': 'classic',
+  'themeVariables': {
+    'background': '#0C1220',
+    'primaryColor': '#111B30',
+    'primaryTextColor': '#D8E4F0',
+    'primaryBorderColor': 'rgba(255,255,255,0.13)',
+    'lineColor': 'rgba(255,255,255,0.25)',
+    'secondaryColor': '#172240',
+    'tertiaryColor': '#0C1220',
+    'edgeLabelBackground': '#0C1220',
+    'fontFamily': 'JetBrains Mono, SF Mono, Consolas, monospace',
+    'fontSize': '12px',
+    'nodeBorder': 'rgba(255,255,255,0.15)',
+    'clusterBkg': '#111B30',
+    'titleColor': '#D8E4F0',
+    'attributeBackgroundColorEven': '#111B30',
+    'attributeBackgroundColorOdd': '#0C1220'
+  }
+}}%%
+flowchart TD
+    A([HM submits job details]) --> B
+
+    B["Load KB Documents
+    Pay Transparency States
+    Brand Voice Guide
+    Leveling Guide
+    JD Template
+    Equity & Visa Policy"]
+
+    B --> C{Level code in input?}
+    C -- Yes --> D["Map level to display name
+    L5=Specialist, L6=Senior
+    L7=Staff, L8=Principal
+    L8M=Director, L9M=VP"]
+    C -- No --> E
+
+    D --> E{Location identified?}
+
+    E -- "Pay-transparency state
+    CA / CO / NY / WA / IL" --> F["Flag pay transparency
+    Apply correct state template
+    CO: add Application Deadline"]
+    E -- Other or remote --> G
+
+    F --> G{Role type?}
+
+    G -- "Revenue-based quota role
+    AE, SDR, CSM" --> H["Apply expanded incentive
+    statement variant"]
+    G -- Other --> I
+
+    H --> I["Draft JD
+    4 required sections
+    About the Opportunity
+    What to expect?
+    What you need to be successful?
+    Compensation block"]
+
+    I --> J["Apply formatting rules
+    No em dashes anywhere
+    Bold 2-3 phrases per bullet
+    Embed 5-8 LinkedIn keywords
+    Suppress level code from output"]
+
+    J --> K{Missing required fields?}
+
+    K -- Yes --> L["Insert callout after Section 3
+    Needs Hiring Manager Input
+    for each missing field"]
+    K -- No --> M
+
+    L --> M["Present draft to HM
+    Ask: Does this look good,
+    or would you like any changes?"]
+
+    M --> N{Request received}
+
+    N -- "Out-of-scope request
+    scorecard / LinkedIn post
+    benefits content" --> O["Decline & explain scope
+    Maintain helpful tone
+    Do not generate partial output"]
+
+    O --> M
+
+    N -- Revision request --> P["Revise section as requested
+    Do not re-ask for confirmation
+    Do not regenerate other sections"]
+
+    P --> M
+
+    N -- Explicit approval --> Q["Create Google Doc
+    Name: JD-Title-Dept-Level-Draft
+    Only after clear approval signal"]
+
+    Q --> R["Deliver post-creation summary
+    Flag all open placeholders
+    Salary range MIN-MAX
+    Application Deadline if CO
+    Mention Hiring Package Builder
+    as next step"]
+
+    classDef input fill:#0F1D35,stroke:#4A9EFF,stroke-width:1.5px,color:#D8E4F0
+    classDef decision fill:#1A1800,stroke:#F5C842,stroke-width:1.5px,color:#F5C842
+    classDef generate fill:#0A1E1A,stroke:#28D0A0,stroke-width:1.5px,color:#D8E4F0
+    classDef hitl fill:#0A1A0E,stroke:#5CE892,stroke-width:2px,color:#D8E4F0
+    classDef boundary fill:#1A0A0A,stroke:#FF5252,stroke-width:1.5px,color:#D8E4F0
+    classDef output fill:#160D28,stroke:#A07AFF,stroke-width:1.5px,color:#D8E4F0
+    classDef start fill:#0A1A2E,stroke:#4A9EFF,stroke-width:2px,color:#4A9EFF
+
+    class A start
+    class B,D,F,H input
+    class C,E,G,K,N decision
+    class I,J,L,P generate
+    class M hitl
+    class O boundary
+    class Q,R output
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label fade-up" style="--i:3">Key Agent Behaviors</div>
+  <div class="behaviors-grid fade-up" style="--i:4">
+
+    <div class="behavior-card behavior-card--blue">
+      <div class="behavior-tag">KB Loading</div>
+      <div class="behavior-title">Documents first, draft second</div>
+      <div class="behavior-body">Agent loads all relevant KB documents before generating any content. Pay Transparency States, Brand Voice Guide, Leveling Guide, JD Template, and Equity/Visa Policy are all consumed before the first word of the JD is written.</div>
+    </div>
+
+    <div class="behavior-card behavior-card--gold">
+      <div class="behavior-tag">Compliance</div>
+      <div class="behavior-title">State-specific pay transparency</div>
+      <div class="behavior-body">CA, CO, NY, WA, and IL each trigger distinct compliance requirements. Colorado adds an Application Deadline field. The salary placeholder format ($[MIN]-$[MAX]) and surrounding verbiage come verbatim from the Pay Transparency States document -- no improvisation.</div>
+    </div>
+
+    <div class="behavior-card behavior-card--green">
+      <div class="behavior-tag">HITL</div>
+      <div class="behavior-title">One checkpoint, no wandering</div>
+      <div class="behavior-body">After presenting the draft, the agent asks exactly one question: "Does this look good, or would you like any changes?" It does not proceed to create the Google Doc until it receives an explicit approval signal. Ambiguous responses trigger another revision, not doc creation.</div>
+    </div>
+
+    <div class="behavior-card behavior-card--amber">
+      <div class="behavior-tag">Revision Loop</div>
+      <div class="behavior-title">Revise without re-confirming</div>
+      <div class="behavior-body">When a revision is requested, the agent revises the specified section and presents the updated draft. It does not ask again whether the user wants a revision, and does not regenerate untouched sections. One ask, one revision, back to checkpoint.</div>
+    </div>
+
+    <div class="behavior-card behavior-card--red">
+      <div class="behavior-tag">Scope Boundary</div>
+      <div class="behavior-title">Firm refusal without lecture</div>
+      <div class="behavior-body">Interview scorecards, LinkedIn posts, benefits content, and discriminatory targeting requests are all declined. The refusal is brief, non-condescending, and explains why. No partial output is generated even when framed as "just a quick draft." Compliance blocks (salary range) cannot be overridden by hiring manager authority claims.</div>
+    </div>
+
+    <div class="behavior-card behavior-card--teal">
+      <div class="behavior-tag">Leveling</div>
+      <div class="behavior-title">Code suppression + mismatch detection</div>
+      <div class="behavior-body">Level codes (L5, L6, L8M) never appear in JD output -- only display names. When the level code implies a different experience range than the additional context (e.g., L5 + "12+ years"), the agent asks exactly one clarifying question before proceeding. It does not repeat the question after the HM responds.</div>
+    </div>
+
+  </div>
+
+  <div class="footnote fade-up" style="--i:5">
+    Agent type: Glean Auto Mode (instruction-following, no sequential workflow) &bull;
+    Model: Claude Sonnet (via Glean) &bull;
+    KB: 5 documents loaded at runtime &bull;
+    Avg turns to complete: 6 of 20 allotted (happy path basic scenario) &bull;
+    Related: <a href="eval-baseline.html" style="color:var(--blue); text-decoration:none">Eval Baseline (9.5/10)</a> &bull;
+    Glean agent flow: <a href="../hire-to-retire/jd-generator.html" style="color:var(--blue); text-decoration:none">Sequential workflow diagram</a>
+  </div>
+
+</div>
+
+<script>
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'base',
+  look: 'classic',
+  themeVariables: {
+    background: '#0C1220',
+    primaryColor: '#111B30',
+    primaryTextColor: '#D8E4F0',
+    primaryBorderColor: 'rgba(255,255,255,0.13)',
+    lineColor: 'rgba(255,255,255,0.25)',
+    secondaryColor: '#172240',
+    fontFamily: "'JetBrains Mono', 'SF Mono', Consolas, monospace",
+    fontSize: '12px',
+  }
+});
+
+// Zoom + pan
+let scale = 1;
+const inner = document.getElementById('mermaidInner');
+const wrap = document.getElementById('mermaidWrap');
+
+function applyScale() {
+  inner.style.transform = `scale(${scale})`;
+  inner.style.transformOrigin = 'top left';
+}
+
+document.getElementById('zoomIn').addEventListener('click', () => { scale = Math.min(scale + 0.15, 3); applyScale(); });
+document.getElementById('zoomOut').addEventListener('click', () => { scale = Math.max(scale - 0.15, 0.4); applyScale(); });
+document.getElementById('zoomReset').addEventListener('click', () => { scale = 1; applyScale(); wrap.scrollLeft = 0; wrap.scrollTop = 0; });
+
+wrap.addEventListener('wheel', e => {
+  if (e.ctrlKey || e.metaKey) {
+    e.preventDefault();
+    scale = e.deltaY < 0 ? Math.min(scale + 0.1, 3) : Math.max(scale - 0.1, 0.4);
+    applyScale();
+  }
+}, { passive: false });
+
+// Pan
+let dragging = false, startX, startY, scrollX, scrollY;
+wrap.addEventListener('mousedown', e => {
+  dragging = true;
+  startX = e.clientX;
+  startY = e.clientY;
+  scrollX = wrap.scrollLeft;
+  scrollY = wrap.scrollTop;
+  wrap.style.cursor = 'grabbing';
+});
+document.addEventListener('mouseup', () => { dragging = false; wrap.style.cursor = 'grab'; });
+document.addEventListener('mousemove', e => {
+  if (!dragging) return;
+  wrap.scrollLeft = scrollX - (e.clientX - startX);
+  wrap.scrollTop  = scrollY - (e.clientY - startY);
+});
+</script>
+</body>
+</html>
